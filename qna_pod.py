@@ -19,6 +19,7 @@ class QnAState(TypedDict):
     answer: str
     source: str
     error: Optional[str]
+    reasoning_steps: List[Dict[str, Any]]
 
 class RetryableError(Exception):
     """Exception for errors that should trigger retry logic."""
@@ -32,12 +33,26 @@ class QnAPod:
         self.graph = None
         self._setup_llm()
         self._build_graph()
-    
+
+    def _add_reasoning_step(self, state: dict, step_name: str, thought: str, details: Dict[str, Any] = None) -> dict:
+        """Add a reasoning step to track agent's thought process."""
+        if "reasoning_steps" not in state:
+            state["reasoning_steps"] = []
+        
+        reasoning_step = {
+            "step": step_name,
+            "thought": thought,
+            "timestamp": __import__('datetime').datetime.now().isoformat(),
+            "details": details or {}
+        }
+        
+        state["reasoning_steps"].append(reasoning_step)
+        logger.info(f"🤔 Agent Reasoning - {step_name}: {thought}")
+        return state
+
     def _setup_llm(self):
         """Initialize LLM with error handling."""
         try:
-            # Check if we have API keys and should use real LLM
-            # Prioritize Anthropic (Claude) for this test
             if config.ai.anthropic_api_key and not config.ai.enable_mock_mode:
                 from langchain_anthropic import ChatAnthropic
                 self.llm = ChatAnthropic(
@@ -64,12 +79,10 @@ class QnAPod:
         """Build the LangGraph workflow."""
         workflow = StateGraph(QnAState)
 
-        # Add nodes
         workflow.add_node("retrieve_from_knowledge_base", self._retrieve_from_knowledge_base)
         workflow.add_node("generate_qna_answer", self._generate_qna_answer)
         workflow.add_node("generate_general_answer", self._generate_general_answer)
 
-        # Define the workflow
         workflow.set_entry_point("retrieve_from_knowledge_base")
         workflow.add_conditional_edges(
             "retrieve_from_knowledge_base",
@@ -86,14 +99,14 @@ class QnAPod:
         logger.info("Q&A Pod graph compiled successfully")
     
     async def _retrieve_from_knowledge_base(self, state: dict) -> dict:
-        """
-        Placeholder for retrieving context from a real knowledge base (e.g., Pinecone).
-        For now, it returns no context, forcing a fallback to the general LLM.
-        """
-        logger.info("Attempting to retrieve context from knowledge base...")
-        # In the future, this will query Pinecone, SharePoint, etc.
+        """Placeholder for retrieving context."""
+        self._add_reasoning_step(
+            state,
+            "Knowledge Base Search",
+            "Searching internal knowledge base for relevant context to answer the user's question.",
+            {"query": state.get("question")}
+        )
         state["retrieved_context"] = []
-        logger.info("No context found in knowledge base.")
         return state
     
     def _should_use_retrieved_context(self, state: dict) -> str:
@@ -101,24 +114,29 @@ class QnAPod:
         if state.get("error"):
             return "use_general"
         
-        retrieved_context = state.get("retrieved_context", [])
-        if not retrieved_context:
+        if not state.get("retrieved_context", []):
+            self._add_reasoning_step(
+                state,
+                "Knowledge Base Search",
+                "No relevant context found in the internal knowledge base. Falling back to general LLM knowledge."
+            )
             return "use_general"
         
-        # Check if we have high-confidence matches
-        max_score = max(pair.get('score', 0) for pair in retrieved_context)
-        threshold = config.ai.similarity_threshold
-        
-        if max_score >= threshold:
-            logger.info(f"Using retrieved context (max score: {max_score:.3f})")
-            return "use_context"
-        else:
-            logger.info(f"Using general knowledge (max score: {max_score:.3f} < {threshold})")
-            return "use_general"
+        self._add_reasoning_step(
+            state,
+            "Context Analysis",
+            "Found relevant context in the knowledge base. Preparing to generate a context-aware answer."
+        )
+        return "use_context"
     
     async def _generate_qna_answer(self, state: dict) -> dict:
         """Generate answer using retrieved context."""
         try:
+            self._add_reasoning_step(
+                state,
+                "Contextual Answer Generation",
+                "Generating a precise answer using the context retrieved from the BMO knowledge base."
+            )
             retrieved_context = state.get("retrieved_context", [])
             question = state.get("question", "")
             context_text = self._format_context(retrieved_context)
@@ -132,23 +150,25 @@ User Question: {question}
 
 Please provide a helpful answer based on the BMO documentation above. If the context doesn't fully answer the question, mention what information is available and suggest contacting the appropriate department."""
 
-            # Use retry logic for LLM calls
             answer = await self._call_llm_with_retry(prompt)
             
             state["answer"] = answer
             state["source"] = "BMO Knowledge Base"
-            
             return state
             
         except Exception as e:
             logger.error(f"Error generating QnA answer: {str(e)}")
             state["error"] = f"Failed to generate answer: {str(e)}"
-            # Fallback to general answer
             return await self._generate_general_answer(state)
     
     async def _generate_general_answer(self, state: dict) -> dict:
         """Generate answer using general knowledge."""
         try:
+            self._add_reasoning_step(
+                state,
+                "General Answer Generation",
+                "Using the general-purpose Large Language Model to answer the user's question."
+            )
             question = state.get("question", "")
             
             prompt = f"""Please provide a helpful and professional response to this question: {question}
@@ -159,7 +179,6 @@ If this appears to be a BMO-specific question that you cannot answer with certai
             
             state["answer"] = answer
             state["source"] = "General LLM Knowledge"
-            
             return state
             
         except Exception as e:
@@ -175,7 +194,7 @@ If this appears to be a BMO-specific question that you cannot answer with certai
             return "No relevant context found."
         
         formatted_context = []
-        for i, pair in enumerate(context_pairs[:3], 1):  # Use top 3 results
+        for i, pair in enumerate(context_pairs[:3], 1):
             category = pair.get('category', 'General')
             content = pair.get('content', '')
             question = pair.get('question', '')
@@ -193,7 +212,6 @@ If this appears to be a BMO-specific question that you cannot answer with certai
         
         for attempt in range(max_retries):
             try:
-                # Add timeout handling
                 response = await asyncio.wait_for(
                     self.llm.ainvoke([HumanMessage(content=prompt)]),
                     timeout=config.ai.timeout_seconds
@@ -214,12 +232,11 @@ If this appears to be a BMO-specific question that you cannot answer with certai
                 if attempt == max_retries - 1:
                     raise RetryableError(f"LLM call failed after retries: {str(e)}")
                 
-                # Exponential backoff
                 await asyncio.sleep(2 ** attempt)
         
         raise RetryableError("All retry attempts exhausted")
     
-    async def process_question(self, question: str) -> Dict[str, Any]:
+    async def process_question(self, question: str, reasoning_log: List = None) -> Dict[str, Any]:
         """Process a question through the Q&A workflow."""
         try:
             logger.info(f"Processing question: '{question[:50]}...'")
@@ -229,10 +246,10 @@ If this appears to be a BMO-specific question that you cannot answer with certai
                 "retrieved_context": [],
                 "answer": "",
                 "source": "",
-                "error": None
+                "error": None,
+                "reasoning_steps": reasoning_log if reasoning_log is not None else []
             }
             
-            # Run the graph
             result = await self.graph.ainvoke(initial_state)
             
             return {
@@ -240,7 +257,8 @@ If this appears to be a BMO-specific question that you cannot answer with certai
                 "source": result.get("source", "Unknown"),
                 "error": result.get("error"),
                 "context_used": len(result.get("retrieved_context", [])) > 0,
-                "num_context_pairs": len(result.get("retrieved_context", []))
+                "num_context_pairs": len(result.get("retrieved_context", [])),
+                "reasoning_steps": result.get("reasoning_steps", [])
             }
             
         except Exception as e:
@@ -250,7 +268,8 @@ If this appears to be a BMO-specific question that you cannot answer with certai
                 "source": "Error Handler",
                 "error": str(e),
                 "context_used": False,
-                "num_context_pairs": 0
+                "num_context_pairs": 0,
+                "reasoning_steps": reasoning_log or []
             }
 
 # Global Q&A Pod instance

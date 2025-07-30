@@ -215,22 +215,32 @@ if prompt := st.chat_input("Ask a question or request document analysis..."):
         if success:
             # Show reasoning steps if available
             if reasoning_steps:
-                with st.expander("🤔 **Agent Thinking Process**", expanded=False):
-                    st.markdown("*See how the AI agent reasoned through your request step by step*")
-                    
-                    for i, step in enumerate(reasoning_steps, 1):
-                        step_name = step.get("step", f"Step {i}")
-                        thought = step.get("thought", "")
-                        timestamp = step.get("timestamp", "")
-                        
-                        st.markdown(f"**{i}. {step_name}**")
-                        st.markdown(f"💭 *{thought}*")
-                        
-                        if timestamp:
-                            st.caption(f"⏰ {timestamp}")
-                        
-                        if i < len(reasoning_steps):
-                            st.markdown("---")
+                st.markdown("**🤔 Agent Thinking Process**")
+                
+                # Custom CSS for tighter spacing
+                st.markdown("""
+                <style>
+                    ul.reasoning-steps {
+                        list-style-type: none;
+                        padding-left: 0;
+                        margin-top: 0.5rem;
+                        margin-bottom: 0;
+                    }
+                    ul.reasoning-steps li {
+                        margin-bottom: 0.2rem;
+                        padding-left: 0;
+                    }
+                </style>
+                """, unsafe_allow_html=True)
+
+                reasoning_html = "<ul class='reasoning-steps'>"
+                for i, step in enumerate(reasoning_steps, 1):
+                    step_name = step.get("step", f"Step {i}")
+                    thought = step.get("thought", "")
+                    reasoning_html += f"<li><small><b>{i}. {step_name}:</b> <i>{thought}</i></small></li>"
+                reasoning_html += "</ul>"
+                
+                st.markdown(reasoning_html, unsafe_allow_html=True)
             
             # Show the main response
             st.write(response_content)

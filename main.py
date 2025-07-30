@@ -147,9 +147,27 @@ async def chat(request: ChatRequest):
     correlation_id = str(uuid.uuid4())
     logger.info(f"Chat request - session: {request.session_id}, correlation_id: {correlation_id}")
     
+    # Initialize the global reasoning log
+    reasoning_steps = []
+    
+    def add_reasoning_step(step_name: str, thought: str, details: dict = None):
+        """Helper to add steps to the main reasoning log."""
+        reasoning_steps.append({
+            "step": step_name,
+            "thought": thought,
+            "timestamp": datetime.now().isoformat(),
+            "details": details or {}
+        })
+
     try:
         # Route to appropriate pod based on uploaded files
         if request.uploaded_files:
+            # Add routing reasoning step
+            add_reasoning_step(
+                "Orchestration",
+                f"User has uploaded {len(request.uploaded_files)} file(s). Routing to Document Analysis Pod for in-depth content processing."
+            )
+            
             user_message = request.messages[-1].content if request.messages else ""
             
             template_instructions = ""
@@ -157,11 +175,13 @@ async def chat(request: ChatRequest):
             if template_files:
                 template_instructions = f"Analysis guided by {len(template_files)} template file(s)"
             
+            # Pass the reasoning log to the pod
             analysis_result = await document_analysis_pod.analyze_documents(
                 user_query=user_message,
                 uploaded_files=request.uploaded_files,
                 template_instructions=template_instructions,
-                session_id=request.session_id
+                session_id=request.session_id,
+                reasoning_log=reasoning_steps  # Pass the log
             )
             
             response = ChatResponse(
@@ -177,14 +197,26 @@ async def chat(request: ChatRequest):
                         f"chunks: {analysis_result.get('chunks_processed', 0)}, "
                         f"status: {analysis_result.get('status', 'unknown')}, correlation_id: {correlation_id}")
         else:
+            # Add routing reasoning step
+            add_reasoning_step(
+                "Orchestration",
+                "No files uploaded. Routing to Q&A Pod for a general knowledge question."
+            )
+            
             user_message = request.messages[-1].content if request.messages else ""
-            qna_result = await qna_pod.process_question(user_message)
+            
+            # Pass the reasoning log to the pod
+            qna_result = await qna_pod.process_question(
+                user_message,
+                reasoning_log=reasoning_steps  # Pass the log
+            )
             
             response = ChatResponse(
                 role="assistant",
                 content=qna_result["answer"],
                 status="success" if not qna_result.get("error") else "error",
-                source=qna_result["source"]
+                source=qna_result["source"],
+                reasoning_steps=qna_result.get("reasoning_steps", [])
             )
             
             logger.info(f"Q&A Pod result - context_used: {qna_result.get('context_used', False)}, "

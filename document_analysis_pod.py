@@ -124,13 +124,14 @@ class DocumentAnalysisPod:
             
             uploaded_files = state.get("uploaded_files", {})
             file_count = len(uploaded_files)
+            file_names = list(uploaded_files.keys())
             
             # Add reasoning step
             self._add_reasoning_step(
                 state, 
                 "Loading Documents", 
-                f"I need to analyze {file_count} uploaded file(s). Let me start by loading and processing the document content to understand what I'm working with.",
-                {"file_count": file_count, "files": list(uploaded_files.keys())}
+                f"Found {file_count} file(s) to analyze: {', '.join(file_names)}. I will now load, parse, and split them into manageable chunks.",
+                {"file_count": file_count, "files": file_names}
             )
             all_chunks = []
             
@@ -145,33 +146,38 @@ class DocumentAnalysisPod:
             for filename, file_info in content_files.items():
                 try:
                     file_id = file_info.id
+                    if not file_id:
+                        logger.error(f"File ID is missing for {filename}. Skipping file.")
+                        continue
+                    
                     session_id = state.get("session_id", "unknown")
                     
-                    logger.info(f"Debug - session_id from state: '{session_id}', file_id: '{file_id}'")
-                    logger.info(f"Debug - Full state keys: {list(state.keys())}")
-                    if session_id == "unknown":
-                        logger.error(f"❌ session_id is 'unknown'! State: {state}")
-                    
-                    # Construct file path
-                    file_path = Path(f"./uploads/{session_id}/{file_info.id}_{filename}")
+                    # Construct file path using the correct file_id
+                    file_path = Path(f"./uploads/{session_id}/{file_id}_{filename}")
                     
                     logger.info(f"Processing document: {filename} at path: {file_path}")
                     
                     # Check if file exists
                     if not file_path.exists():
                         logger.error(f"File does not exist: {file_path}")
-                        # Try to find the file with different naming
                         upload_dir = Path(f"./uploads/{session_id}")
+                        
+                        # Add detailed logging to debug
                         if upload_dir.exists():
-                            matching_files = list(upload_dir.glob(f"{file_id}_*"))
-                            if matching_files:
-                                file_path = matching_files[0]
-                                logger.info(f"Found file at: {file_path}")
-                            else:
-                                logger.error(f"No files found with ID {file_id} in {upload_dir}")
-                                continue
+                            logger.info(f"Contents of upload directory '{upload_dir}':")
+                            for item in upload_dir.iterdir():
+                                logger.info(f"- {item.name}")
                         else:
                             logger.error(f"Upload directory does not exist: {upload_dir}")
+                            continue
+
+                        # Try to find the file with different naming
+                        matching_files = list(upload_dir.glob(f"{file_id}_*"))
+                        if matching_files:
+                            file_path = matching_files[0]
+                            logger.info(f"Found file at: {file_path}")
+                        else:
+                            logger.error(f"No files found with ID {file_id} in {upload_dir}")
                             continue
                     
                     # Process document
@@ -212,13 +218,14 @@ class DocumentAnalysisPod:
             user_query = state.get("user_query", "")
             template_instructions = state.get("template_instructions", "")
             doc_chunks = state.get("doc_chunks", [])
+            total_chars = sum(len(chunk.page_content) for chunk in doc_chunks)
             
             # Add reasoning step
             self._add_reasoning_step(
                 state, 
                 "Planning Analysis", 
-                f"Now I need to understand what the user wants me to do with the document. The request is: '{user_query}'. I have {len(doc_chunks)} document chunks to analyze. Let me plan the best approach.",
-                {"user_query": user_query, "chunk_count": len(doc_chunks), "has_templates": bool(template_instructions)}
+                f"The user's request is: '{user_query}'. I have processed the document(s) into {len(doc_chunks)} chunk(s), totaling {total_chars} characters.",
+                {"user_query": user_query, "chunk_count": len(doc_chunks), "total_chars": total_chars, "has_templates": bool(template_instructions)}
             )
             
             # Stage 1: Extract core task and instructions
@@ -406,7 +413,7 @@ Your response must be in this exact format:
             self._add_reasoning_step(
                 state, 
                 "Analyzing Documents", 
-                f"Now I'll analyze the actual document content. I have {len(doc_chunks)} chunks of text to process. Let me read through the content and provide the analysis the user requested.",
+                f"I will now analyse the {len(doc_chunks)} text chunk(s) comprehensively, iteratively updating the analysis to build a comprehensive answer.",
                 {"chunk_count": len(doc_chunks), "total_chars": sum(len(chunk.page_content) for chunk in doc_chunks)}
             )
             
@@ -530,7 +537,7 @@ Your response must be in this exact format:
             self._add_reasoning_step(
                 state, 
                 "Finalizing Results", 
-                f"Perfect! I've completed the document analysis. Now let me format the results in a clear, professional way that directly addresses the user's request.",
+                f"The core analysis is complete. I will now format this into a clean, structured report for the user.",
                 {"has_results": bool(final_result), "result_length": len(final_result)}
             )
             
@@ -592,7 +599,7 @@ Generated with comprehensive document processing and AI-powered insights."""
         raise RetryableAnalysisError("All retry attempts exhausted")
     
     async def analyze_documents(self, user_query: str, uploaded_files: Dict[str, Dict], 
-                              template_instructions: str = "", session_id: str = "") -> Dict[str, Any]:
+                              template_instructions: str = "", session_id: str = "", reasoning_log: List = None) -> Dict[str, Any]:
         """Analyze documents through the complete workflow."""
         try:
             logger.info(f"Starting document analysis for {len(uploaded_files)} files")
@@ -606,7 +613,8 @@ Generated with comprehensive document processing and AI-powered insights."""
                 "planner_prompts": {},
                 "final_result": "",
                 "error": None,
-                "processing_status": "started"
+                "processing_status": "started",
+                "reasoning_steps": reasoning_log if reasoning_log is not None else []  # Use the passed-in log
             }
             
             # Run the graph
