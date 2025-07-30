@@ -1,0 +1,275 @@
+You are absolutely right. The previous TRD was a good summary, but it lacked the granular, implementation-level detail required to serve as a true development blueprint. My apologies for that oversight. A robust plan now will prevent costly redesigns later.
+
+I have performed a thorough review of our entire conversation and the HLRD. I have expanded every section of the TRD with specific architectural decisions, data structures, and logic flows to provide a clear and actionable guide for development.
+
+---
+
+### **Technical Requirements Document (TRD) - BMO Documentation Analysis Tool v1.0 (Detailed Edition)**
+
+This document provides a comprehensive technical blueprint for the BMO Documentation Analysis Tool.
+
+#### **1. System Overview & Architecture**
+
+The system follows a three-tier architecture, ensuring separation of concerns between the user interface, business logic, and AI core. Communication between the Frontend and Backend will be via a RESTful API using JSON payloads.
+
+**System Architecture Diagram:**
+
+```mermaid
+graph TD
+    subgraph Browser
+        A[Streamlit Frontend]
+    end
+
+    subgraph Server
+        B[FastAPI Backend]
+        subgraph LangGraph Agent Core
+            C[Top-Level Router]
+            D[Q&A Pod]
+            E[Document Analysis Pod]
+            F[Universal Tools & Managers]
+        end
+    end
+
+    subgraph External Services
+        G[Claude 3.5 Sonnet API]
+        H[Mock Data Service]
+    end
+
+    A -- HTTP Request (JSON) --> B
+    B -- Calls --> C
+    C -- Routes to --> D
+    C -- Routes to --> E
+    D -- Uses --> F
+    E -- Uses --> F
+    D -- Calls --> G
+    D -- Queries --> H
+    E -- Calls --> G
+```
+
+---
+
+#### **2. Component Deep Dive**
+
+**2.1. Streamlit Frontend**
+
+The UI will be built as a stateful single-page application using Streamlit's session state.
+
+*   **State Management (`st.session_state`):**
+    *   `session_id`: (string) A UUID generated on the first user interaction.
+    *   `messages`: (list of dicts) The conversation history, e.g., `[{ "role": "user", "content": "Hello" }]`.
+    *   `uploaded_files`: (dict) Maps the uploaded file's name to a dict containing its `file_id` and assigned `role` (`Content` or `Template`). E.g., `{"report.pdf": {"id": "uuid-123", "role": "Content"}}`.
+
+*   **UI Components & Logic:**
+    *   **Main Chat (`st.chat_message`):** Iterates through `st.session_state.messages` to display the conversation.
+    *   **File Uploader (`st.file_uploader`):** Located in the sidebar (`st.sidebar`). It accepts multiple files with validation:
+        *   **File Size Validation:** Maximum 10MB per file
+        *   **File Type Validation:** Only accepts `.doc`, `.docx`, `.xlsx`, `.csv`, `.pdf` extensions
+        *   **Upload Process:**
+        1.  Client-side validation checks file size and type before upload
+        2.  If validation passes, makes a `POST` request to the `/upload` backend endpoint
+        3.  Backend performs server-side validation and returns a `file_id` or error
+        4.  The file name, `file_id`, and a `st.selectbox` for role selection (`Content`/`Template`) are displayed in the sidebar and stored in `st.session_state.uploaded_files`
+        5.  Display error messages for validation failures
+    *   **User Input (`st.chat_input`):** On submission, it appends the message to `st.session_state.messages` and triggers the main interaction logic.
+    *   **Interaction Logic:**
+        1.  Constructs a JSON payload containing `session_id`, the full `messages` history, and the `uploaded_files` dictionary.
+        2.  Sends this payload to the `POST /chat` endpoint.
+        3.  The response from the backend (the agent's message, potentially with download links) is appended to `st.session_state.messages` and the UI re-renders.
+    *   **Export Buttons (`st.button`):** Buttons for "Export as Word", "PDF", "CSV" appear under the last agent message. Clicking one sends a request to a dedicated `/export` endpoint with the message content and desired format.
+
+**2.2. FastAPI Backend**
+
+*   **API Data Models (Pydantic):**
+
+    ```python
+    from pydantic import BaseModel
+    from typing import List, Dict, Literal
+
+    class ChatMessage(BaseModel):
+        role: Literal["user", "assistant"]
+        content: str
+
+    class UploadedFileInfo(BaseModel):
+        id: str
+        role: Literal["Content", "Template"]
+
+    class ChatRequest(BaseModel):
+        session_id: str
+        messages: List[ChatMessage]
+        uploaded_files: Dict[str, UploadedFileInfo] # key is original filename
+    ```
+
+*   **Endpoints:**
+    *   `POST /upload`:
+        *   **Input Validation:**
+            *   File size must be ≤ 10MB
+            *   File extension must be in ['.doc', '.docx', '.xlsx', '.csv', '.pdf']
+            *   MIME type validation for additional security
+        *   **Error Responses:**
+            *   `400 Bad Request` for validation failures with specific error message
+            *   `413 Payload Too Large` for oversized files
+            *   `415 Unsupported Media Type` for invalid file types
+        *   **Success Flow:**
+            *   Generates a `file_id` using `uuid.uuid4()`
+            *   Saves the file to `./uploads/{session_id}/{file_id}_{original_filename}`
+            *   Returns `{"file_id": new_file_id, "status": "success"}`
+    *   `POST /chat`:
+        *   **Error Handling:**
+            *   `400 Bad Request` for malformed request body or missing required fields
+            *   `500 Internal Server Error` for LLM API failures with retry logic (3 attempts)
+            *   `503 Service Unavailable` when mock data service is unreachable
+            *   Timeout handling for long-running document processing (30s timeout)
+        *   **Success Flow:**
+            *   Validates `ChatRequest` body structure
+            *   Initiates the LangGraph Agent Core with error wrapping
+            *   Returns the agent's final response as JSON, e.g., `{"role": "assistant", "content": "Here is the summary...", "status": "success"}`
+    *   `GET /download/{session_id}/{filename}`:
+        *   **Error Handling:**
+            *   `404 Not Found` for non-existent files or invalid session IDs
+            *   `403 Forbidden` for unauthorized access attempts
+            *   `500 Internal Server Error` for file system issues
+        *   **Success Flow:**
+            *   Validates session ID format and file existence
+            *   Provides a `FileResponse` to download a file from the `./generated/{session_id}/` directory
+    *   `DELETE /session/{session_id}`:
+        *   **New Endpoint for Session Cleanup:**
+            *   Removes all files in `./uploads/{session_id}/` and `./generated/{session_id}/`
+            *   Returns `{"status": "success", "message": "Session cleaned up"}`
+            *   `404 Not Found` if session doesn't exist
+
+**2.3. LangGraph Agent Core**
+
+*   **A. Top-Level Router:**
+    *   **Implementation:** A conditional edge in the main graph.
+    *   **Logic:** A simple Python function checks the `ChatRequest` payload. `if len(request.uploaded_files) > 0 and any(f.role == 'Content' for f in request.uploaded_files.values()): route_to_doc_analysis_pod else: route_to_qna_pod`.
+
+*   **B. Q&A Pod Graph:**
+    *   **State Object:** `(question: str, retrieved_context: List[str], answer: str, source: str)`
+    *   **Mock Data Service:** 
+        *   **Sample Responses:** Pre-defined JSON file with BMO-specific Q&A pairs
+        *   **Fallback Logic:** Returns relevant mock context based on keyword matching
+    *   **Nodes:**
+        1.  `retrieve_from_mock`: Takes `question`, queries mock data service using keyword matching, returns context chunks, populates `retrieved_context`.
+        2.  `generate_qna_answer`: Takes `question` and `retrieved_context`, prompts the LLM for an answer based on mock context, populates `answer` and sets `source` to "BMO Mock Data."
+        3.  `generate_general_answer`: Takes `question`, prompts the LLM for an answer from its general knowledge, populates `answer` and sets `source` to "General LLM Knowledge."
+    *   **Edges:**
+        *   Entry Point -> `retrieve_from_mock`.
+        *   `retrieve_from_mock` -> **Conditional Edge `should_use_retrieved_context`**:
+            *   **Condition:** `if len(retrieved_context) > 0 and keyword_match_score > config.ai.similarity_threshold`.
+            *   **True:** -> `generate_qna_answer`.
+            *   **False:** -> `generate_general_answer`.
+        *   `generate_qna_answer` -> END.
+        *   `generate_general_answer` -> END.
+
+*   **C. Document Analysis Pod Graph:**
+    *   **Orchestrator Logic:** The entry point to this pod is a Python function, not a graph node. It iterates through the `Content` documents from the request: `results = [run_analysis_graph(doc) for doc in content_docs]`. After the loop, it calls a final `synthesize_results(results)` node.
+    *   **Analysis Sub-Graph State:** `(user_query: str, template_instructions: str, doc_chunks: List[str], planner_prompts: Dict, final_result: str)`
+    *   **Analysis Sub-Graph Nodes:**
+        1.  `planner_node`:
+            *   Performs the two-stage LLM call described previously to separate the user query into a `core_task` and `instructions`.
+            *   Combines these with `template_instructions`.
+            *   Makes a final LLM call with the persona prompt to generate the `{ "initial_prompt": "...", "refine_prompt": "..." }` JSON.
+            *   Populates `planner_prompts` in the state object.
+        2.  `executor_node`:
+            *   Receives `doc_chunks` and `planner_prompts`.
+            *   Uses LangChain's `load_summarize_chain` with `chain_type="refine"`, providing the custom prompts from the planner.
+            *   Executes the chain on the `doc_chunks`.
+            *   Populates `final_result`.
+    *   **Final Synthesizer Node:** An LLM call that takes the list of `final_result` strings from each document analysis run and generates a single, consolidated response.
+
+*   **D. Universal Tools & Managers:**
+    *   **Document Preprocessing:** A set of functions called by the backend before initiating a LangGraph run.
+        *   `def get_doc_chunks(file_path: str) -> List[Document]:` - a factory function that detects file type and calls the appropriate loader. Uses `RecursiveCharacterTextSplitter` with `chunk_size=config.ai.chunk_size`, `chunk_overlap=config.ai.chunk_overlap`.
+    *   **Conversation Memory Manager:** Implemented in the `POST /chat` endpoint logic *before* calling the agent.
+        *   `history = request.messages`
+        *   `if len(history) > config.ai.max_conversation_history:`
+            *   `summary_prompt = f"Concisely summarize this conversation: {history[:-10]}"`
+            *   `long_term_summary = llm.invoke(summary_prompt)`
+            *   `context_for_agent = [{"role": "system", "content": long_term_summary}] + history[-10:]`
+        *   `else: context_for_agent = history`
+    *   **File Export Tool:** A set of functions callable by the agent or backend.
+        *   `def create_word_doc(text: str, session_id: str) -> str:` (uses `python-docx`, returns filename)
+        *   `def create_pdf(text: str, session_id: str) -> str:` (uses `fpdf2`, returns filename)
+        *   `def create_csv_from_text(text: str, session_id: str) -> str:` (uses `pandas` and string parsing to find markdown tables, returns filename)
+        *   All functions prepend the text with `config.export.ai_generated_prefix` before writing.
+
+#### **3. Configuration Management**
+
+*   **Config File (`config.yaml`):**
+    ```yaml
+    # File Upload Settings
+    upload:
+      max_file_size_mb: 10
+      allowed_extensions: ['.doc', '.docx', '.xlsx', '.csv', '.pdf']
+      allowed_mime_types: 
+        - 'application/pdf'
+        - 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        - 'application/msword'
+        - 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        - 'text/csv'
+    
+    # AI Processing Settings
+    ai:
+      similarity_threshold: 0.8
+      max_conversation_history: 10
+      chunk_size: 1500
+      chunk_overlap: 200
+      
+    # Session Management
+    session:
+      cleanup_on_chat_end: true
+      auto_cleanup_hours: 24
+      
+    # Export Settings
+    export:
+      ai_generated_prefix: "AI generated content\n\n"
+    ```
+
+*   **Config Loading:** Use `pydantic-settings` for type-safe configuration loading with environment variable overrides.
+
+#### **4. Data & State Management**
+
+*   **Local File Storage:** A strict directory structure will be enforced.
+    *   `./uploads/{session_id}/`: Stores user-uploaded files, named `{file_id}_{original_filename}`.
+    *   `./generated/{session_id}/`: Stores agent-generated files for download.
+*   **Session Lifecycle:** A `session_id` is created by the Streamlit frontend on its first run and is passed with every API call. The backend uses this ID to scope all file operations.
+*   **Session Cleanup Mechanisms:**
+    *   **Manual Cleanup:** "Clear Session" button in the UI clears `st.session_state` and calls `DELETE /session/{session_id}` endpoint
+    *   **Auto Cleanup on Chat End:** When `config.session.cleanup_on_chat_end` is true, sessions are cleaned when user ends chat
+    *   **Scheduled Cleanup:** Background task removes sessions older than `config.session.auto_cleanup_hours`
+    *   **Error Recovery:** Failed cleanup attempts are logged and retried on next startup
+
+#### **5. Error Handling & Resilience**
+
+*   **Frontend Error Handling:**
+    *   **File Upload Errors:** Display user-friendly messages for size/type validation failures
+    *   **API Connection Errors:** Show retry options and offline mode messaging
+    *   **Chat Errors:** Graceful error display with option to retry failed messages
+
+*   **Backend Error Handling:**
+    *   **Structured Error Responses:** All errors return consistent JSON format:
+        ```json
+        {
+          "error": "validation_failed",
+          "message": "File size exceeds 10MB limit",
+          "details": {"max_size": "10MB", "actual_size": "15MB"},
+          "timestamp": "2025-01-15T10:30:00Z"
+        }
+        ```
+    *   **Retry Logic:** Exponential backoff for LLM API calls (3 attempts max)
+    *   **Circuit Breaker:** Fail fast when external services are consistently unavailable
+    *   **Graceful Degradation:** Fall back to basic responses when advanced features fail
+
+*   **LangGraph Error Handling:**
+    *   **Node-Level Error Catching:** Each graph node wrapped in try-catch with specific error types
+    *   **State Recovery:** Ability to resume from last successful state on transient failures
+    *   **Timeout Handling:** All LLM calls have 30-second timeouts with cleanup
+
+*   **Logging Strategy:**
+    *   **Error Logs:** Structured JSON logs with correlation IDs for tracking user sessions
+    *   **Performance Metrics:** Track processing times, file sizes, and success rates
+    *   **Security Events:** Log failed upload attempts, invalid session access
+
+---
+
+This updated TRD addresses your specific requirements: file upload validations (10MB, 4 types), configurable settings, mock data implementation, comprehensive error handling, and session cleanup mechanisms. The document provides a production-ready foundation for development.

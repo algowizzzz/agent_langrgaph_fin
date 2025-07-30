@@ -1,0 +1,16 @@
+Employee_ID,First_Name,Last_Name,Department,Position,Salary,Hire_Date,Performance_Rating,Location
+E001,John,Smith,Engineering,Senior Developer,95000,2021-03-15,Excellent,Toronto
+E002,Sarah,Johnson,Marketing,Marketing Manager,82000,2020-07-22,Good,Montreal
+E003,Michael,Brown,Engineering,Lead Architect,110000,2019-11-05,Excellent,Vancouver
+E004,Emily,Davis,Human Resources,HR Specialist,68000,2022-01-10,Good,Toronto
+E005,David,Wilson,Finance,Financial Analyst,75000,2021-09-18,Satisfactory,Calgary
+E006,Lisa,Anderson,Engineering,DevOps Engineer,88000,2022-05-30,Excellent,Toronto
+E007,James,Taylor,Marketing,Content Specialist,65000,2023-02-14,Good,Montreal
+E008,Jennifer,Lee,Finance,Senior Accountant,82000,2020-12-03,Excellent,Vancouver
+E009,Robert,Garcia,Human Resources,Recruiter,62000,2022-08-25,Good,Toronto
+E010,Mary,Martinez,Engineering,QA Engineer,78000,2021-06-12,Excellent,Calgary
+E011,William,Johnson,Sales,Account Manager,85000,2020-04-08,Good,Toronto
+E012,Jessica,Brown,IT,System Administrator,72000,2021-10-19,Satisfactory,Vancouver
+E013,Christopher,Davis,Marketing,Digital Marketer,70000,2022-03-07,Good,Montreal
+E014,Amanda,Wilson,Finance,Budget Analyst,69000,2023-01-22,Satisfactory,Calgary
+E015,Matthew,Anderson,Engineering,Software Developer,82000,2021-12-15,Excellent,Toronto

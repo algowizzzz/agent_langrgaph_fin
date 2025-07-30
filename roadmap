@@ -1,0 +1,199 @@
+Of course. Transforming a detailed technical plan into an actionable agile development plan is the essential next step to ensure a structured and successful project delivery.
+
+Based on our comprehensive Technical Requirements Document, here is a complete project plan broken down into epics, stories, and sprints.
+
+---
+
+### **Agile Project Plan: BMO Documentation Analysis Tool**
+
+### **Epics**
+
+The project is organized into four high-level epics, representing major feature sets:
+
+1.  **Core Application Foundation:** Establishes the project skeleton, UI shell, and basic communication pathways.
+2.  **Q&A Knowledge Base:** Implements the ability to answer questions from the trusted SharePoint/Pinecone knowledge base.
+3.  **Dynamic Document Analysis Engine:** Builds the core AI functionality for analyzing user-uploaded documents with the dynamic Planner/Executor model.
+4.  **Advanced Features & Integration:** Incorporates sophisticated features like multi-document analysis, conversation memory, file exports, and final end-to-end integration.
+
+---
+
+### **Sprint 1: Foundation & Configuration** ✅ COMPLETED
+
+*   **Goal:** Build the skeleton of the application with configuration management and file validation. By the end of this sprint, we will have a runnable project with proper config setup and file upload validation.
+*   **Epic(s) Covered:** Core Application Foundation
+*   **Status:** ✅ COMPLETED - All stories implemented and tested
+*   **Key Deliverables:** FastAPI backend, Streamlit frontend, config management, file validation, API communication
+
+| Story ID | Story Description | Acceptance Criteria (AC) | Test Cases |
+| :--- | :--- | :--- | :--- |
+| **1.1** | **As a developer,** I want to set up the project structure with FastAPI and Streamlit with configuration management, so that we have a clean foundation for development. | 1. `requirements.txt` is created with all necessary libraries including `pydantic-settings`. <br> 2. A basic FastAPI app runs successfully. <br> 3. A basic Streamlit app runs successfully. <br> 4. `config.yaml` is created with all configurable values from TRD. | 1. Run `pip install -r requirements.txt`. <br> 2. Run `uvicorn main:app` and see the server start. <br> 3. Run `streamlit run app.py` and see the UI launch. <br> 4. Verify config values are loaded correctly. |
+| **1.2** | **As a user,** I want to see a clean interface with a chat area and a sidebar with proper file upload validation, so that I can safely upload files. | 1. Streamlit app has a main panel for chat and a sidebar for controls. <br> 2. A chat input box is visible at the bottom. <br> 3. File uploader validates size (≤10MB) and type (.doc, .docx, .xlsx, .csv, .pdf). <br> 4. Clear error messages for validation failures. <br> 5. "Clear Session" button is present. | 1. Upload a valid file and verify it's accepted. <br> 2. Upload a >10MB file and verify error message. <br> 3. Upload an invalid file type and verify error message. <br> 4. Verify all UI components are visible and interactive. |
+| **1.3** | **As a developer,** I want the Streamlit frontend to communicate with the FastAPI backend with proper error handling, so that we can establish robust API contracts. | 1. Sending a message in the UI triggers a `POST` request to the `/chat` endpoint. <br> 2. The backend `/chat` endpoint returns structured JSON responses. <br> 3. File upload endpoint validates files server-side with proper HTTP error codes. <br> 4. UI displays user-friendly error messages for API failures. | 1. Use FastAPI logs to confirm successful `POST` requests. <br> 2. Test file upload with invalid files and verify 400/413/415 responses. <br> 3. Simulate API failures and verify UI error handling. |
+| **1.4** | **As a developer,** I want comprehensive error handling at the API level, so that failures are handled gracefully. | 1. All API endpoints return structured error responses with consistent JSON format. <br> 2. Error responses include error type, message, details, and timestamp. <br> 3. Logging captures all errors with correlation IDs. | 1. Test each endpoint with invalid inputs and verify error response format. <br> 2. Check logs contain structured error information with correlation IDs. |
+
+---
+
+### **Sprint 2: Q&A Knowledge Base with Mock Data** ✅ COMPLETED
+
+*   **Goal:** Deliver the first end-to-end piece of user value by enabling the Q&A Pod with mock data service.
+*   **Epic(s) Covered:** Q&A Knowledge Base
+*   **Status:** ✅ COMPLETED - Q&A Pod with mock data service fully functional
+*   **Key Deliverables:** Mock data service, Q&A Pod LangGraph workflow, session management, end-to-end Q&A functionality
+
+| Story ID | Story Description | Acceptance Criteria (AC) | Test Cases |
+| :--- | :--- | :--- | :--- |
+| **2.1** | **As a developer,** I want to create a mock data service that simulates BMO knowledge base responses for testing. | 1. A JSON file with BMO-specific Q&A pairs is created. <br> 2. A function `retrieve_from_mock(question: str)` returns relevant mock context using keyword matching. <br> 3. Mock service handles edge cases (no matches, empty queries). | 1. Unit test with questions matching mock data keywords; assert correct context is returned. <br> 2. Test with irrelevant questions; assert empty or low-score results. <br> 3. Test error handling with malformed inputs. |
+| **2.2** | **As an agent,** I want to follow a prioritized workflow for answering questions, using mock BMO data first, then my general knowledge. | 1. A LangGraph graph exists for the Q&A Pod. <br> 2. It has a conditional node to check for retrieved context from mock service. <br> 3. The final response includes a citation for the knowledge source ("BMO Mock Data" or "General LLM Knowledge"). <br> 4. Retry logic for LLM failures (3 attempts with exponential backoff). | 1. Pass a question with known mock data; verify response uses context and correct citation. <br> 2. Pass a general knowledge question; verify response accuracy and citation. <br> 3. Test LLM failure scenarios and verify retry mechanism. |
+| **2.3** | **As a user,** I want to ask a question in the UI and get a real answer from the Q&A Pod with proper error handling. | 1. The FastAPI `/chat` endpoint correctly routes requests (with no uploaded files) to the Q&A Pod. <br> 2. Successful responses are displayed in the chat with source citations. <br> 3. Error responses show user-friendly messages with retry options. <br> 4. Loading states are shown during processing. | 1. End-to-end test: type a question matching mock data, verify correct response and citation. <br> 2. Test with general knowledge questions. <br> 3. Simulate service failures and verify error handling. |
+| **2.4** | **As a developer,** I want session management functionality for tracking user interactions. | 1. Session IDs are generated and tracked across requests. <br> 2. Session state is maintained in memory during chat interactions. <br> 3. Basic session cleanup functionality is implemented. | 1. Verify session ID generation and persistence across multiple chat requests. <br> 2. Test session isolation between different users. <br> 3. Test manual session cleanup functionality. |
+
+---
+
+### **Sprint 3: Dynamic Document Analysis Engine** ✅ COMPLETED + ENHANCED
+
+*   **Goal:** Build the core AI functionality for analyzing single documents with robust error handling and timeout management.
+*   **Epic(s) Covered:** Dynamic Document Analysis Engine
+*   **Status:** ✅ COMPLETED + ENHANCED with Agent Reasoning Visibility
+*   **Key Deliverables:** Document Analysis Pod (4-node LangGraph), document processing, planner/executor architecture, reasoning visibility system
+*   **Enhancement Added:** Real-time agent reasoning display showing step-by-step AI thinking process
+*   **Critical Bug Fixed:** Document analysis now properly analyzes actual content instead of generic responses
+
+| Story ID | Story Description | Acceptance Criteria (AC) | Test Cases |
+| :--- | :--- | :--- | :--- |
+| **3.1** | **As a developer,** I want a robust tool for ingesting validated files and converting them into standardized text chunks with error handling. | 1. A function `get_doc_chunks(file_path: str)` exists using configurable chunk settings. <br> 2. It correctly parses all supported file types (.doc, .docx, .csv, .xlsx, .pdf). <br> 3. It returns standardized `Document` objects with proper error handling for corrupted files. <br> 4. Processing timeouts after 30 seconds with cleanup. | 1. Unit test with a sample file of each supported type; assert correct content extraction. <br> 2. Test with corrupted files; verify graceful error handling. <br> 3. Test timeout behavior with large files. <br> 4. Verify chunk size uses config values. |
+| **3.2** | **As an agent,** I want to dynamically create analysis plans with error recovery, so that document processing is resilient. | 1. A "Planner" node performs two-stage LLM calls with retry logic. <br> 2. It extracts `core_task` and `instructions` with timeout handling (30s). <br> 3. Outputs valid JSON with `initial_prompt` and `refine_prompt`. <br> 4. Graceful fallback to default prompts on LLM failures. | 1. Test planner with "summarize" query; verify appropriate prompts. <br> 2. Test with complex queries; assert robust prompt generation. <br> 3. Simulate LLM failures; verify fallback behavior. <br> 4. Test timeout scenarios and cleanup. |
+| **3.3** | **As an agent,** I want to execute analysis plans with comprehensive error handling and state recovery. | 1. "Executor" node runs refine chains with custom prompts and error wrapping. <br> 2. Node-level error catching with specific error types. <br> 3. State recovery capability for transient failures. <br> 4. Full "Planner -> Executor" sub-graph processes documents end-to-end. | 1. End-to-end test with sample document and "summarize" query; verify coherent output. <br> 2. Test error scenarios (LLM failures, timeouts) and verify recovery. <br> 3. Test state persistence across node failures. <br> 4. Integration test with backend file upload and analysis. |
+| **3.4** | **As a user,** I want reliable document analysis with clear feedback on processing status and errors. | 1. Upload progress indicators and processing status updates. <br> 2. Clear error messages for document processing failures. <br> 3. Ability to retry failed analyses. <br> 4. Proper cleanup of failed processing attempts. | 1. Upload and analyze a document; verify status updates. <br> 2. Test with problematic documents; verify error messaging. <br> 3. Test retry functionality after failures. <br> 4. Verify session cleanup after errors. |
+
+---
+
+### **Sprint 4: Memory & Export Features** 🔄 IN PROGRESS
+
+*   **Goal:** Implement conversation memory and file export capabilities with session management.
+*   **Epic(s) Covered:** Advanced Features & Integration (Part 1)
+*   **Status:** 🔄 READY TO START - Foundation completed, prerequisites met
+*   **Dependencies:** Sprint 3 completed with enhanced reasoning system
+
+| Story ID | Story Description | Acceptance Criteria (AC) | Test Cases |
+| :--- | :--- | :--- | :--- |
+| **4.1** | **As a user,** I want the agent to remember the context of long conversations with proper error handling. | 1. Rolling summary of conversation history beyond configurable limit (default 10 messages). <br> 2. Summary passed to agent as system context with fallback on LLM failures. <br> 3. Memory management uses configurable conversation history limit from config. | 1. Test conversation >10 messages; verify agent remembers early context. <br> 2. Simulate LLM failures during summarization; verify fallback behavior. <br> 3. Test with different config values for history limit. |
+| **4.2** | **As a user,** I want to export agent responses as Word, PDF, or CSV files with error handling. | 1. Universal "File Export" tool generates `.docx`, `.pdf`, and `.csv` files. <br> 2. Files prepended with configurable AI-generated prefix. <br> 3. Export errors show user-friendly messages with retry options. <br> 4. Generated files stored in session-specific directories. | 1. Generate response and export as Word/PDF; verify download. <br> 2. Export response with markdown table as CSV; verify data format. <br> 3. Test export failures and verify error handling. <br> 4. Verify file cleanup when session ends. |
+| **4.3** | **As a developer,** I want comprehensive session cleanup mechanisms for proper resource management. | 1. Manual session cleanup via "Clear Session" button with DELETE endpoint. <br> 2. Auto-cleanup on chat end when configured. <br> 3. Scheduled background cleanup for old sessions (configurable hours). <br> 4. Error recovery for failed cleanup attempts with logging. | 1. Test manual session cleanup; verify files and state cleared. <br> 2. Test auto-cleanup behavior with config enabled/disabled. <br> 3. Test scheduled cleanup with sessions older than config threshold. <br> 4. Test cleanup error scenarios and recovery mechanisms. |
+| **4.4** | **As a user,** I want a stable application with circuit breaker protection against service failures. | 1. Circuit breaker pattern for external LLM API calls. <br> 2. Graceful degradation when advanced features fail. <br> 3. Fast failure responses when services are consistently unavailable. <br> 4. Status monitoring and health check endpoints. | 1. Test circuit breaker behavior under LLM service failures. <br> 2. Verify application continues basic functionality during degradation. <br> 3. Test health check endpoints and status reporting. |
+
+---
+
+### **Sprint 5: Multi-Document Analysis & Final Integration** ⏳ PENDING
+
+*   **Goal:** Complete multi-document analysis capabilities and final end-to-end integration.
+*   **Epic(s) Covered:** Advanced Features & Integration (Part 2)
+*   **Status:** ⏳ PENDING - Awaiting Sprint 4 completion
+*   **Dependencies:** Sprint 4 memory & export features
+
+| Story ID | Story Description | Acceptance Criteria (AC) | Test Cases |
+| :--- | :--- | :--- | :--- |
+| **5.1** | **As a user,** I want to upload multiple documents and have them analyzed together with proper error handling. | 1. Agent iterates through multiple `Content` documents with individual error handling. <br> 2. Final "Synthesizer" node creates consolidated response from individual analyses. <br> 3. Partial failure handling - continue with successful documents if some fail. <br> 4. Clear feedback on which documents succeeded/failed. | 1. Upload multiple documents; verify consolidated analysis. <br> 2. Upload mix of valid/invalid documents; verify partial processing. <br> 3. Test with documents that fail processing; verify error reporting. |
+| **5.2** | **As a user,** I want Template files to guide document analysis with validation and error handling. | 1. System correctly identifies and uses `Template` files to guide analysis. <br> 2. Template validation ensures proper format and content. <br> 3. Fallback behavior when template processing fails. <br> 4. Clear error messages for invalid templates. | 1. Upload Content + Template files; verify template-guided analysis. <br> 2. Test with invalid template formats; verify error handling. <br> 3. Test template processing failures and fallback behavior. |
+| **5.3** | **As a developer,** I want the Top-Level Router to correctly direct requests with comprehensive error handling. | 1. Router correctly identifies Q&A vs Document Analysis scenarios. <br> 2. Proper routing based on uploaded file presence and roles. <br> 3. Error handling for routing failures and invalid scenarios. <br> 4. Logging and monitoring of routing decisions. | 1. Test routing with no files (Q&A Pod). <br> 2. Test routing with Content files (Document Analysis Pod). <br> 3. Test edge cases and invalid routing scenarios. <br> 4. Verify routing logs and decision tracking. |
+| **5.4** | **As a user,** I want a fully integrated application with comprehensive end-to-end testing. | 1. Complete chat, upload, analyze, and export workflow functional. <br> 2. All error scenarios properly handled with user feedback. <br> 3. Performance monitoring and logging throughout the system. <br> 4. Production-ready configuration and deployment setup. | 1. Full E2E test of Q&A Pod with mock data. <br> 2. Full E2E test of single-document analysis with export. <br> 3. Full E2E test of multi-document analysis with templates. <br> 4. Load testing and performance validation. |
+
+---
+
+## **PROJECT STATUS UPDATE - SPRINT 3 COMPLETION**
+
+### **🎯 Current Status: Sprint 3 COMPLETED + ENHANCED**
+
+#### **✅ Major Achievements Completed:**
+
+**1. Sprint 1 - Foundation & Configuration (100% Complete)**
+- ✅ FastAPI backend with Pydantic configuration management
+- ✅ Streamlit frontend with file upload validation  
+- ✅ API communication with structured error handling
+- ✅ Session management and correlation ID tracking
+- ✅ Configuration via YAML with environment variable support
+
+**2. Sprint 2 - Q&A Knowledge Base (100% Complete)**
+- ✅ Mock data service with BMO-specific Q&A pairs
+- ✅ Q&A Pod LangGraph workflow with conditional routing
+- ✅ Session-based state management
+- ✅ End-to-end Q&A functionality with source citations
+
+**3. Sprint 3 - Document Analysis Engine (100% Complete + Enhanced)**
+- ✅ Document Analysis Pod with 4-node LangGraph workflow:
+  - `_load_documents` - File processing and chunk creation
+  - `_planner_node` - Dynamic prompt generation with 2-stage LLM calls
+  - `_executor_node` - Document analysis with refine chains
+  - `_synthesizer_node` - Result formatting and presentation
+- ✅ Robust document processing for all supported file types (.pdf, .csv, .docx, .xlsx, .doc)
+- ✅ Error handling with retry logic and timeout management
+- ✅ **ENHANCEMENT ADDED:** Agent Reasoning Visibility System
+- ✅ **CRITICAL BUG FIXED:** Document content analysis now works properly
+
+#### **🔥 Sprint 3 Enhancement: Agent Reasoning Visibility**
+
+**Feature Overview:**
+Added comprehensive agent reasoning visibility system that shows users the AI's step-by-step thinking process, similar to reasoning models like Claude Sonnet with reasoning or GPT-o1.
+
+**Technical Implementation:**
+- **Backend:** Added `reasoning_steps` and `thoughts` fields to DocumentAnalysisState
+- **Workflow:** Each LangGraph node captures reasoning steps with timestamps and context
+- **API:** ChatResponse model enhanced to include reasoning data
+- **Frontend:** Expandable "Agent Thinking Process" component with step-by-step display
+
+**User Experience:**
+Users can now see:
+1. **Loading Documents** - File processing status and document count
+2. **Planning Analysis** - Query understanding and approach planning  
+3. **Analyzing Documents** - Content processing and analysis execution
+4. **Finalizing Results** - Result formatting and completion
+
+#### **🐛 Critical Bug Fix: Document Analysis**
+
+**Problem:** Document analysis was giving generic responses instead of analyzing actual uploaded content.
+
+**Root Cause:** When planner JSON parsing failed, fallback prompts didn't include user's actual request context.
+
+**Solution:** Created `_get_fallback_prompts_with_context()` method that includes user's specific query in prompts.
+
+**Validation:** ✅ Tested with real CSV data - system now correctly analyzes actual document content and provides specific answers.
+
+#### **📊 Technical Verification (Test Results)**
+
+**Test Case:** "Which department has the highest revenue?" with CSV data:
+```
+Department,Revenue,Employees
+Technology,2500000,45
+Marketing,800000,12  
+Operations,1200000,28
+Sales,3200000,35
+```
+
+**Result:** ✅ "The department with the highest revenue is the Sales department, with a revenue of $3,200,000."
+
+**System Architecture Verified:**
+- ✅ FastAPI backend with verbose logging
+- ✅ 4-node LangGraph workflow execution
+- ✅ Real OpenAI API integration
+- ✅ Document content processing (1 chunk, 335 characters)
+- ✅ Reasoning visibility with timestamps
+- ✅ Error handling and recovery
+
+#### **🎯 Next Phase: Sprint 4 Ready to Start**
+
+**Sprint 4 Prerequisites:** ✅ All met
+- Foundation architecture complete
+- Document analysis engine functional  
+- Agent reasoning system operational
+- Bug fixes verified and tested
+
+**Sprint 4 Focus:** Conversation memory, file export capabilities, and enhanced session management.
+
+#### **📈 Project Health: EXCELLENT**
+
+- **Code Quality:** High - comprehensive error handling and logging
+- **Test Coverage:** Good - end-to-end functionality verified
+- **Architecture:** Solid - modular LangGraph workflows with clear separation
+- **User Experience:** Enhanced - reasoning visibility provides transparency
+- **Technical Debt:** Low - clean implementation with proper configuration management
+
+**The BMO Documentation Analysis Tool foundation is robust and ready for advanced feature development.**

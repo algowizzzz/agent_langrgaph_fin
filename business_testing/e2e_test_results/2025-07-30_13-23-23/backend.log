@@ -1,0 +1,649 @@
+2025-07-30 12:53:48,269 - asyncio - DEBUG - Using selector: KqueueSelector
+INFO:     Started server process [99346]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:64501 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 12:53:59,272 - qna_pod - INFO - Using Anthropic LLM: claude-3-5-sonnet-20241022
+2025-07-30 12:53:59,272 - qna_pod - INFO - LLM initialized: ChatAnthropic
+2025-07-30 12:53:59,273 - qna_pod - INFO - Q&A Pod graph compiled successfully
+2025-07-30 12:53:59,273 - __main__ - INFO - Chat request - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, correlation_id: 804ab8f1-039d-429c-917b-8010a2093d0a
+2025-07-30 12:53:59,273 - qna_pod - INFO - Processing question: 'capital of france...'
+2025-07-30 12:53:59,274 - qna_pod - INFO - Attempting to retrieve context from knowledge base...
+2025-07-30 12:53:59,274 - qna_pod - INFO - No context found in knowledge base.
+2025-07-30 12:53:59,301 - anthropic._base_client - DEBUG - Request options: {'method': 'post', 'url': '/v1/messages', 'files': None, 'idempotency_key': 'stainless-python-retry-c09e9e46-c4e7-4467-9072-a23bcff8b656', 'json_data': {'max_tokens': 1024, 'messages': [{'role': 'user', 'content': 'Please provide a helpful and professional response to this question: capital of france\n\nIf this appears to be a BMO-specific question that you cannot answer with certainty, please suggest that the user contact the appropriate BMO department or check internal resources.'}], 'model': 'claude-3-5-sonnet-20241022', 'temperature': 0.7}}
+2025-07-30 12:53:59,301 - anthropic._base_client - DEBUG - Sending HTTP Request: POST https://api.anthropic.com/v1/messages
+2025-07-30 12:53:59,304 - httpcore.connection - DEBUG - connect_tcp.started host='api.anthropic.com' port=443 local_address=None timeout=None socket_options=None
+2025-07-30 12:53:59,326 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x105caf770>
+2025-07-30 12:53:59,326 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x105c75010> server_hostname='api.anthropic.com' timeout=None
+2025-07-30 12:53:59,347 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x105c12850>
+2025-07-30 12:53:59,347 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-07-30 12:53:59,347 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-07-30 12:53:59,347 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-07-30 12:53:59,347 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-07-30 12:53:59,347 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-07-30 12:54:04,462 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 30 Jul 2025 16:54:04 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'anthropic-ratelimit-input-tokens-limit', b'160000'), (b'anthropic-ratelimit-input-tokens-remaining', b'160000'), (b'anthropic-ratelimit-input-tokens-reset', b'2025-07-30T16:54:02Z'), (b'anthropic-ratelimit-output-tokens-limit', b'32000'), (b'anthropic-ratelimit-output-tokens-remaining', b'32000'), (b'anthropic-ratelimit-output-tokens-reset', b'2025-07-30T16:54:04Z'), (b'anthropic-ratelimit-requests-limit', b'2000'), (b'anthropic-ratelimit-requests-remaining', b'1999'), (b'anthropic-ratelimit-requests-reset', b'2025-07-30T16:53:59Z'), (b'anthropic-ratelimit-tokens-limit', b'192000'), (b'anthropic-ratelimit-tokens-remaining', b'192000'), (b'anthropic-ratelimit-tokens-reset', b'2025-07-30T16:54:02Z'), (b'request-id', b'req_011CRdYzxFTZ35GSihrZ9qm3'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'anthropic-organization-id', b'31219faf-91cc-482b-93f4-cc5aadc25785'), (b'via', b'1.1 google'), (b'cf-cache-status', b'DYNAMIC'), (b'X-Robots-Tag', b'none'), (b'Server', b'cloudflare'), (b'CF-RAY', b'967660164a8fabae-YYZ'), (b'Content-Encoding', b'gzip')])
+2025-07-30 12:54:04,464 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-30 12:54:04,465 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-07-30 12:54:04,465 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-07-30 12:54:04,465 - httpcore.http11 - DEBUG - response_closed.started
+2025-07-30 12:54:04,466 - httpcore.http11 - DEBUG - response_closed.complete
+2025-07-30 12:54:04,466 - anthropic._base_client - DEBUG - HTTP Response: POST https://api.anthropic.com/v1/messages "200 OK" Headers({'date': 'Wed, 30 Jul 2025 16:54:04 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'anthropic-ratelimit-input-tokens-limit': '160000', 'anthropic-ratelimit-input-tokens-remaining': '160000', 'anthropic-ratelimit-input-tokens-reset': '2025-07-30T16:54:02Z', 'anthropic-ratelimit-output-tokens-limit': '32000', 'anthropic-ratelimit-output-tokens-remaining': '32000', 'anthropic-ratelimit-output-tokens-reset': '2025-07-30T16:54:04Z', 'anthropic-ratelimit-requests-limit': '2000', 'anthropic-ratelimit-requests-remaining': '1999', 'anthropic-ratelimit-requests-reset': '2025-07-30T16:53:59Z', 'anthropic-ratelimit-tokens-limit': '192000', 'anthropic-ratelimit-tokens-remaining': '192000', 'anthropic-ratelimit-tokens-reset': '2025-07-30T16:54:02Z', 'request-id': 'req_011CRdYzxFTZ35GSihrZ9qm3', 'strict-transport-security': 'max-age=31536000; includeSubDomains; preload', 'anthropic-organization-id': '31219faf-91cc-482b-93f4-cc5aadc25785', 'via': '1.1 google', 'cf-cache-status': 'DYNAMIC', 'x-robots-tag': 'none', 'server': 'cloudflare', 'cf-ray': '967660164a8fabae-YYZ', 'content-encoding': 'gzip'})
+2025-07-30 12:54:04,466 - anthropic._base_client - DEBUG - request_id: req_011CRdYzxFTZ35GSihrZ9qm3
+2025-07-30 12:54:04,479 - __main__ - INFO - Q&A Pod result - context_used: False, num_pairs: 0, correlation_id: 804ab8f1-039d-429c-917b-8010a2093d0a
+2025-07-30 12:54:04,479 - __main__ - INFO - Chat response generated - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, correlation_id: 804ab8f1-039d-429c-917b-8010a2093d0a
+INFO:     127.0.0.1:64523 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64552 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 12:54:10,117 - __main__ - INFO - Chat request - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, correlation_id: 22660297-3f15-4a49-a7ba-62b341ad80eb
+2025-07-30 12:54:10,117 - qna_pod - INFO - Processing question: 'what is VaR ...'
+2025-07-30 12:54:10,119 - qna_pod - INFO - Attempting to retrieve context from knowledge base...
+2025-07-30 12:54:10,119 - qna_pod - INFO - No context found in knowledge base.
+2025-07-30 12:54:10,121 - anthropic._base_client - DEBUG - Request options: {'method': 'post', 'url': '/v1/messages', 'files': None, 'idempotency_key': 'stainless-python-retry-ceecb0c5-145a-47a1-a6dd-df82f00516d6', 'json_data': {'max_tokens': 1024, 'messages': [{'role': 'user', 'content': 'Please provide a helpful and professional response to this question: what is VaR \n\nIf this appears to be a BMO-specific question that you cannot answer with certainty, please suggest that the user contact the appropriate BMO department or check internal resources.'}], 'model': 'claude-3-5-sonnet-20241022', 'temperature': 0.7}}
+2025-07-30 12:54:10,122 - anthropic._base_client - DEBUG - Sending HTTP Request: POST https://api.anthropic.com/v1/messages
+2025-07-30 12:54:10,122 - httpcore.connection - DEBUG - close.started
+2025-07-30 12:54:10,122 - httpcore.connection - DEBUG - close.complete
+2025-07-30 12:54:10,123 - httpcore.connection - DEBUG - connect_tcp.started host='api.anthropic.com' port=443 local_address=None timeout=None socket_options=None
+2025-07-30 12:54:10,139 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x105ddc190>
+2025-07-30 12:54:10,139 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x105c75010> server_hostname='api.anthropic.com' timeout=None
+2025-07-30 12:54:10,163 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x105c84c30>
+2025-07-30 12:54:10,163 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-07-30 12:54:10,163 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-07-30 12:54:10,164 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-07-30 12:54:10,164 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-07-30 12:54:10,164 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-07-30 12:54:16,031 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 30 Jul 2025 16:54:16 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Content-Encoding', b'gzip'), (b'anthropic-ratelimit-input-tokens-limit', b'160000'), (b'anthropic-ratelimit-input-tokens-remaining', b'160000'), (b'anthropic-ratelimit-input-tokens-reset', b'2025-07-30T16:54:11Z'), (b'anthropic-ratelimit-output-tokens-limit', b'32000'), (b'anthropic-ratelimit-output-tokens-remaining', b'32000'), (b'anthropic-ratelimit-output-tokens-reset', b'2025-07-30T16:54:16Z'), (b'anthropic-ratelimit-requests-limit', b'2000'), (b'anthropic-ratelimit-requests-remaining', b'1999'), (b'anthropic-ratelimit-requests-reset', b'2025-07-30T16:54:10Z'), (b'anthropic-ratelimit-tokens-limit', b'192000'), (b'anthropic-ratelimit-tokens-remaining', b'192000'), (b'anthropic-ratelimit-tokens-reset', b'2025-07-30T16:54:11Z'), (b'request-id', b'req_011CRdZ1kiwf7Hbmu7TwYw7c'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'anthropic-organization-id', b'31219faf-91cc-482b-93f4-cc5aadc25785'), (b'via', b'1.1 google'), (b'cf-cache-status', b'DYNAMIC'), (b'X-Robots-Tag', b'none'), (b'Server', b'cloudflare'), (b'CF-RAY', b'96766059dac0ab5d-YYZ')])
+2025-07-30 12:54:16,032 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-30 12:54:16,033 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-07-30 12:54:16,033 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-07-30 12:54:16,033 - httpcore.http11 - DEBUG - response_closed.started
+2025-07-30 12:54:16,033 - httpcore.http11 - DEBUG - response_closed.complete
+2025-07-30 12:54:16,034 - anthropic._base_client - DEBUG - HTTP Response: POST https://api.anthropic.com/v1/messages "200 OK" Headers({'date': 'Wed, 30 Jul 2025 16:54:16 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'content-encoding': 'gzip', 'anthropic-ratelimit-input-tokens-limit': '160000', 'anthropic-ratelimit-input-tokens-remaining': '160000', 'anthropic-ratelimit-input-tokens-reset': '2025-07-30T16:54:11Z', 'anthropic-ratelimit-output-tokens-limit': '32000', 'anthropic-ratelimit-output-tokens-remaining': '32000', 'anthropic-ratelimit-output-tokens-reset': '2025-07-30T16:54:16Z', 'anthropic-ratelimit-requests-limit': '2000', 'anthropic-ratelimit-requests-remaining': '1999', 'anthropic-ratelimit-requests-reset': '2025-07-30T16:54:10Z', 'anthropic-ratelimit-tokens-limit': '192000', 'anthropic-ratelimit-tokens-remaining': '192000', 'anthropic-ratelimit-tokens-reset': '2025-07-30T16:54:11Z', 'request-id': 'req_011CRdZ1kiwf7Hbmu7TwYw7c', 'strict-transport-security': 'max-age=31536000; includeSubDomains; preload', 'anthropic-organization-id': '31219faf-91cc-482b-93f4-cc5aadc25785', 'via': '1.1 google', 'cf-cache-status': 'DYNAMIC', 'x-robots-tag': 'none', 'server': 'cloudflare', 'cf-ray': '96766059dac0ab5d-YYZ'})
+2025-07-30 12:54:16,034 - anthropic._base_client - DEBUG - request_id: req_011CRdZ1kiwf7Hbmu7TwYw7c
+2025-07-30 12:54:16,036 - __main__ - INFO - Q&A Pod result - context_used: False, num_pairs: 0, correlation_id: 22660297-3f15-4a49-a7ba-62b341ad80eb
+2025-07-30 12:54:16,036 - __main__ - INFO - Chat response generated - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, correlation_id: 22660297-3f15-4a49-a7ba-62b341ad80eb
+INFO:     127.0.0.1:64580 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64617 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_part_begin with no data
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_header_field with data[36:55]
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_header_value with data[57:112]
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_header_field with data[114:126]
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_header_value with data[128:136]
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_headers_finished with no data
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_part_data with data[140:490]
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_part_end with no data
+2025-07-30 12:54:19,829 - python_multipart.multipart - DEBUG - Calling on_end with no data
+2025-07-30 12:54:19,830 - __main__ - INFO - File upload request - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, file: quarterly_report.csv, correlation_id: 4473ebce-a9a2-40fb-aaa2-5e41b7107606
+2025-07-30 12:54:19,830 - __main__ - INFO - File uploaded successfully - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, file_id: 18436ff2-793c-45a1-8ee5-8cae911cd417, correlation_id: 4473ebce-a9a2-40fb-aaa2-5e41b7107606
+INFO:     127.0.0.1:64636 - "POST /upload?session_id=59293d7a-cef5-43f8-adfa-a12792866fa8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64638 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 12:54:27,556 - __main__ - INFO - Chat request - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, correlation_id: 10655abc-eafa-4364-bbc5-2463eaacceb9
+2025-07-30 12:54:27,556 - __main__ - ERROR - Chat error - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, error: name 'document_analysis_pod' is not defined, correlation_id: 10655abc-eafa-4364-bbc5-2463eaacceb9
+/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py:235: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+  ).dict()
+INFO:     127.0.0.1:64676 - "POST /chat HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 185, in chat
+    analysis_result = await document_analysis_pod.analyze_documents(
+                            ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'document_analysis_pod' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 228, in chat
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    ...<5 lines>...
+        ).dict()
+    )
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 190, in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 47, in __init__
+    self.body = self.render(content)
+                ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 193, in render
+    return json.dumps(
+           ~~~~~~~~~~^
+        content,
+        ^^^^^^^^
+    ...<3 lines>...
+        separators=(",", ":"),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ).encode("utf-8")
+    ^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type datetime is not JSON serializable
+INFO:     127.0.0.1:64678 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 12:55:26,606 - __main__ - INFO - Chat request - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, correlation_id: 3449a4b4-1960-4073-bedf-c830d68355ce
+2025-07-30 12:55:26,606 - __main__ - ERROR - Chat error - session: 59293d7a-cef5-43f8-adfa-a12792866fa8, error: name 'document_analysis_pod' is not defined, correlation_id: 3449a4b4-1960-4073-bedf-c830d68355ce
+INFO:     127.0.0.1:64982 - "POST /chat HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 185, in chat
+    analysis_result = await document_analysis_pod.analyze_documents(
+                            ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'document_analysis_pod' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 228, in chat
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    ...<5 lines>...
+        ).dict()
+    )
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 190, in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 47, in __init__
+    self.body = self.render(content)
+                ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 193, in render
+    return json.dumps(
+           ~~~~~~~~~~^
+        content,
+        ^^^^^^^^
+    ...<3 lines>...
+        separators=(",", ":"),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ).encode("utf-8")
+    ^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type datetime is not JSON serializable
+INFO:     127.0.0.1:64984 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65009 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65027 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 12:55:38,774 - __main__ - INFO - Chat request - session: 255a587b-98d8-4690-a9ce-9a17b62b6fc8, correlation_id: 74737efd-bf9d-4623-8356-71dc470e445f
+2025-07-30 12:55:38,774 - qna_pod - INFO - Processing question: 'what doies credit card mean ...'
+2025-07-30 12:55:38,776 - qna_pod - INFO - Attempting to retrieve context from knowledge base...
+2025-07-30 12:55:38,776 - qna_pod - INFO - No context found in knowledge base.
+2025-07-30 12:55:38,777 - anthropic._base_client - DEBUG - Request options: {'method': 'post', 'url': '/v1/messages', 'files': None, 'idempotency_key': 'stainless-python-retry-246bb712-e060-4a1b-b50e-11afadb0a4c2', 'json_data': {'max_tokens': 1024, 'messages': [{'role': 'user', 'content': 'Please provide a helpful and professional response to this question: what doies credit card mean \n\nIf this appears to be a BMO-specific question that you cannot answer with certainty, please suggest that the user contact the appropriate BMO department or check internal resources.'}], 'model': 'claude-3-5-sonnet-20241022', 'temperature': 0.7}}
+2025-07-30 12:55:38,778 - anthropic._base_client - DEBUG - Sending HTTP Request: POST https://api.anthropic.com/v1/messages
+2025-07-30 12:55:38,778 - httpcore.connection - DEBUG - close.started
+2025-07-30 12:55:38,778 - httpcore.connection - DEBUG - close.complete
+2025-07-30 12:55:38,778 - httpcore.connection - DEBUG - connect_tcp.started host='api.anthropic.com' port=443 local_address=None timeout=None socket_options=None
+2025-07-30 12:55:38,795 - httpcore.connection - DEBUG - connect_tcp.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x104a56ea0>
+2025-07-30 12:55:38,795 - httpcore.connection - DEBUG - start_tls.started ssl_context=<ssl.SSLContext object at 0x105c75010> server_hostname='api.anthropic.com' timeout=None
+2025-07-30 12:55:38,816 - httpcore.connection - DEBUG - start_tls.complete return_value=<httpcore._backends.anyio.AnyIOStream object at 0x105c9ac30>
+2025-07-30 12:55:38,816 - httpcore.http11 - DEBUG - send_request_headers.started request=<Request [b'POST']>
+2025-07-30 12:55:38,816 - httpcore.http11 - DEBUG - send_request_headers.complete
+2025-07-30 12:55:38,816 - httpcore.http11 - DEBUG - send_request_body.started request=<Request [b'POST']>
+2025-07-30 12:55:38,817 - httpcore.http11 - DEBUG - send_request_body.complete
+2025-07-30 12:55:38,817 - httpcore.http11 - DEBUG - receive_response_headers.started request=<Request [b'POST']>
+2025-07-30 12:55:43,997 - httpcore.http11 - DEBUG - receive_response_headers.complete return_value=(b'HTTP/1.1', 200, b'OK', [(b'Date', b'Wed, 30 Jul 2025 16:55:43 GMT'), (b'Content-Type', b'application/json'), (b'Transfer-Encoding', b'chunked'), (b'Connection', b'keep-alive'), (b'Content-Encoding', b'gzip'), (b'anthropic-ratelimit-input-tokens-limit', b'160000'), (b'anthropic-ratelimit-input-tokens-remaining', b'160000'), (b'anthropic-ratelimit-input-tokens-reset', b'2025-07-30T16:55:40Z'), (b'anthropic-ratelimit-output-tokens-limit', b'32000'), (b'anthropic-ratelimit-output-tokens-remaining', b'32000'), (b'anthropic-ratelimit-output-tokens-reset', b'2025-07-30T16:55:44Z'), (b'anthropic-ratelimit-requests-limit', b'2000'), (b'anthropic-ratelimit-requests-remaining', b'1999'), (b'anthropic-ratelimit-requests-reset', b'2025-07-30T16:55:38Z'), (b'anthropic-ratelimit-tokens-limit', b'192000'), (b'anthropic-ratelimit-tokens-remaining', b'192000'), (b'anthropic-ratelimit-tokens-reset', b'2025-07-30T16:55:40Z'), (b'request-id', b'req_011CRdZ8HYWqWVuUWQz6KPqR'), (b'strict-transport-security', b'max-age=31536000; includeSubDomains; preload'), (b'anthropic-organization-id', b'31219faf-91cc-482b-93f4-cc5aadc25785'), (b'via', b'1.1 google'), (b'cf-cache-status', b'DYNAMIC'), (b'X-Robots-Tag', b'none'), (b'Server', b'cloudflare'), (b'CF-RAY', b'96766283fde7ac52-YYZ')])
+2025-07-30 12:55:43,998 - httpx - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-30 12:55:43,998 - httpcore.http11 - DEBUG - receive_response_body.started request=<Request [b'POST']>
+2025-07-30 12:55:43,999 - httpcore.http11 - DEBUG - receive_response_body.complete
+2025-07-30 12:55:43,999 - httpcore.http11 - DEBUG - response_closed.started
+2025-07-30 12:55:44,000 - httpcore.http11 - DEBUG - response_closed.complete
+2025-07-30 12:55:44,000 - anthropic._base_client - DEBUG - HTTP Response: POST https://api.anthropic.com/v1/messages "200 OK" Headers({'date': 'Wed, 30 Jul 2025 16:55:43 GMT', 'content-type': 'application/json', 'transfer-encoding': 'chunked', 'connection': 'keep-alive', 'content-encoding': 'gzip', 'anthropic-ratelimit-input-tokens-limit': '160000', 'anthropic-ratelimit-input-tokens-remaining': '160000', 'anthropic-ratelimit-input-tokens-reset': '2025-07-30T16:55:40Z', 'anthropic-ratelimit-output-tokens-limit': '32000', 'anthropic-ratelimit-output-tokens-remaining': '32000', 'anthropic-ratelimit-output-tokens-reset': '2025-07-30T16:55:44Z', 'anthropic-ratelimit-requests-limit': '2000', 'anthropic-ratelimit-requests-remaining': '1999', 'anthropic-ratelimit-requests-reset': '2025-07-30T16:55:38Z', 'anthropic-ratelimit-tokens-limit': '192000', 'anthropic-ratelimit-tokens-remaining': '192000', 'anthropic-ratelimit-tokens-reset': '2025-07-30T16:55:40Z', 'request-id': 'req_011CRdZ8HYWqWVuUWQz6KPqR', 'strict-transport-security': 'max-age=31536000; includeSubDomains; preload', 'anthropic-organization-id': '31219faf-91cc-482b-93f4-cc5aadc25785', 'via': '1.1 google', 'cf-cache-status': 'DYNAMIC', 'x-robots-tag': 'none', 'server': 'cloudflare', 'cf-ray': '96766283fde7ac52-YYZ'})
+2025-07-30 12:55:44,000 - anthropic._base_client - DEBUG - request_id: req_011CRdZ8HYWqWVuUWQz6KPqR
+2025-07-30 12:55:44,003 - __main__ - INFO - Q&A Pod result - context_used: False, num_pairs: 0, correlation_id: 74737efd-bf9d-4623-8356-71dc470e445f
+2025-07-30 12:55:44,003 - __main__ - INFO - Chat response generated - session: 255a587b-98d8-4690-a9ce-9a17b62b6fc8, correlation_id: 74737efd-bf9d-4623-8356-71dc470e445f
+INFO:     127.0.0.1:65057 - "POST /chat HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65087 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49964 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 13:00:27,195 - python_multipart.multipart - DEBUG - Calling on_part_begin with no data
+2025-07-30 13:00:27,195 - python_multipart.multipart - DEBUG - Calling on_header_field with data[36:55]
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_header_value with data[57:116]
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_header_field with data[118:130]
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_header_value with data[132:142]
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_headers_finished with no data
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_part_data with data[146:802]
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_part_end with no data
+2025-07-30 13:00:27,196 - python_multipart.multipart - DEBUG - Calling on_end with no data
+2025-07-30 13:00:27,197 - __main__ - INFO - File upload request - session: b621f00c-f545-4f6f-a077-bdba9ab5517c, file: hermes_strategy_copy.txt, correlation_id: 7f8459d7-458b-436e-b997-6341fbc4843a
+2025-07-30 13:00:27,198 - __main__ - INFO - File uploaded successfully - session: b621f00c-f545-4f6f-a077-bdba9ab5517c, file_id: 7d1c3ff7-b3f0-4c0b-b378-c695eb773c9e, correlation_id: 7f8459d7-458b-436e-b997-6341fbc4843a
+INFO:     127.0.0.1:50167 - "POST /upload?session_id=b621f00c-f545-4f6f-a077-bdba9ab5517c HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50169 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 13:00:30,964 - __main__ - INFO - Chat request - session: b621f00c-f545-4f6f-a077-bdba9ab5517c, correlation_id: 4e47d19f-bafa-4e56-8426-34c3affbc544
+2025-07-30 13:00:30,964 - __main__ - ERROR - Chat error - session: b621f00c-f545-4f6f-a077-bdba9ab5517c, error: name 'document_analysis_pod' is not defined, correlation_id: 4e47d19f-bafa-4e56-8426-34c3affbc544
+/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py:235: PydanticDeprecatedSince20: The `dict` method is deprecated; use `model_dump` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.11/migration/
+  ).dict()
+INFO:     127.0.0.1:50193 - "POST /chat HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 185, in chat
+    analysis_result = await document_analysis_pod.analyze_documents(
+                            ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'document_analysis_pod' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 228, in chat
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    ...<5 lines>...
+        ).dict()
+    )
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 190, in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 47, in __init__
+    self.body = self.render(content)
+                ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 193, in render
+    return json.dumps(
+           ~~~~~~~~~~^
+        content,
+        ^^^^^^^^
+    ...<3 lines>...
+        separators=(",", ":"),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ).encode("utf-8")
+    ^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type datetime is not JSON serializable
+INFO:     127.0.0.1:50195 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52251 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_part_begin with no data
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_header_field with data[50:69]
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_header_value with data[71:125]
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_header_field with data[127:139]
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_header_value with data[141:151]
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 13:22:49,531 - python_multipart.multipart - DEBUG - Calling on_headers_finished with no data
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_part_data with data[155:811]
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_part_end with no data
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_part_begin with no data
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_header_field with data[863:882]
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_header_value with data[884:912]
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_headers_finished with no data
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_part_data with data[916:935]
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_part_end with no data
+2025-07-30 13:22:49,532 - python_multipart.multipart - DEBUG - Calling on_end with no data
+INFO:     127.0.0.1:52253 - "POST /upload HTTP/1.1" 422 Unprocessable Content
+2025-07-30 13:22:49,547 - __main__ - INFO - Chat request - session: e2e-test-1753896169, correlation_id: 1eeeb45e-2027-4951-9ec8-f3a13f5adb3e
+2025-07-30 13:22:49,547 - __main__ - ERROR - Chat error - session: e2e-test-1753896169, error: name 'document_analysis_pod' is not defined, correlation_id: 1eeeb45e-2027-4951-9ec8-f3a13f5adb3e
+INFO:     127.0.0.1:52255 - "POST /chat HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 185, in chat
+    analysis_result = await document_analysis_pod.analyze_documents(
+                            ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'document_analysis_pod' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 228, in chat
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    ...<5 lines>...
+        ).dict()
+    )
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 190, in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 47, in __init__
+    self.body = self.render(content)
+                ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 193, in render
+    return json.dumps(
+           ~~~~~~~~~~^
+        content,
+        ^^^^^^^^
+    ...<3 lines>...
+        separators=(",", ":"),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ).encode("utf-8")
+    ^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type datetime is not JSON serializable
+INFO:     127.0.0.1:52448 - "GET /health HTTP/1.1" 200 OK
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_part_begin with no data
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_header_field with data[50:69]
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_header_value with data[71:125]
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_header_field with data[127:139]
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_header_value with data[141:151]
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_header_end with no data
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_headers_finished with no data
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_part_data with data[155:811]
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_part_end with no data
+2025-07-30 13:23:23,935 - python_multipart.multipart - DEBUG - Calling on_end with no data
+2025-07-30 13:23:23,935 - __main__ - INFO - File upload request - session: e2e-test-1753896203, file: hermes_strategy.txt, correlation_id: 04fc3eb7-fc3e-4d0a-9077-6a4ad877d811
+2025-07-30 13:23:23,937 - __main__ - INFO - File uploaded successfully - session: e2e-test-1753896203, file_id: c522ce97-95c0-4b65-9469-c8740d994b6e, correlation_id: 04fc3eb7-fc3e-4d0a-9077-6a4ad877d811
+INFO:     127.0.0.1:52450 - "POST /upload?session_id=e2e-test-1753896203 HTTP/1.1" 200 OK
+2025-07-30 13:23:23,948 - __main__ - INFO - Chat request - session: e2e-test-1753896203, correlation_id: d13d568c-d837-413a-b523-c7b0cc0c0c62
+2025-07-30 13:23:23,948 - __main__ - ERROR - Chat error - session: e2e-test-1753896203, error: name 'document_analysis_pod' is not defined, correlation_id: d13d568c-d837-413a-b523-c7b0cc0c0c62
+INFO:     127.0.0.1:52452 - "POST /chat HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 185, in chat
+    analysis_result = await document_analysis_pod.analyze_documents(
+                            ^^^^^^^^^^^^^^^^^^^^^
+NameError: name 'document_analysis_pod' is not defined
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/protocols/http/h11_impl.py", line 403, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/uvicorn/middleware/proxy_headers.py", line 60, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/applications.py", line 1054, in __call__
+    await super().__call__(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/applications.py", line 113, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/cors.py", line 85, in __call__
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 716, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 736, in app
+    await route.handle(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 290, in handle
+    await self.app(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 78, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/routing.py", line 75, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 302, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<3 lines>...
+    )
+    ^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/fastapi/routing.py", line 213, in run_endpoint_function
+    return await dependant.call(**values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/main.py", line 228, in chat
+    return JSONResponse(
+        status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+    ...<5 lines>...
+        ).dict()
+    )
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 190, in __init__
+    super().__init__(content, status_code, headers, media_type, background)
+    ~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 47, in __init__
+    self.body = self.render(content)
+                ~~~~~~~~~~~^^^^^^^^^
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/starlette/responses.py", line 193, in render
+    return json.dumps(
+           ~~~~~~~~~~^
+        content,
+        ^^^^^^^^
+    ...<3 lines>...
+        separators=(",", ":"),
+        ^^^^^^^^^^^^^^^^^^^^^^
+    ).encode("utf-8")
+    ^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/__init__.py", line 238, in dumps
+    **kw).encode(obj)
+          ~~~~~~^^^^^
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 200, in encode
+    chunks = self.iterencode(o, _one_shot=True)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 261, in iterencode
+    return _iterencode(o, 0)
+  File "/opt/homebrew/Cellar/python@3.13/3.13.5/Frameworks/Python.framework/Versions/3.13/lib/python3.13/json/encoder.py", line 180, in default
+    raise TypeError(f'Object of type {o.__class__.__name__} '
+                    f'is not JSON serializable')
+TypeError: Object of type datetime is not JSON serializable

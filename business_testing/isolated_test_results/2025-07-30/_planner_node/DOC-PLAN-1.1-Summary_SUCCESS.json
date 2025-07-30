@@ -1,0 +1,33 @@
+{
+    "user_query": "Summarize the key points and action items.",
+    "template_instructions": "",
+    "doc_chunks": [
+        {
+            "page_content": "Project Hermes is a strategic initiative to modernize our client onboarding process.\nThe primary goal is to reduce onboarding time by 50% by the end of Q4.\nKey stakeholders include the Sales, Compliance, and Operations departments.\nThe project lead is Jane Doe.\nOne major risk is the integration with the legacy CRM system.\nThe next milestone is the completion of the technical discovery phase by July 30th.\nBudget allocated is $250,000.\nWe need a decision on the primary cloud vendor by next week.\nAction item for John Smith: Schedule a vendor comparison meeting.\nThe desired outcome is a seamless, digital-first onboarding experience for all new clients.",
+            "metadata": {
+                "source": "business_testing/isolated_test_files/hermes_strategy.txt",
+                "file_type": "Text File",
+                "file_name": "hermes_strategy.txt"
+            }
+        }
+    ],
+    "processing_status": "planning_complete",
+    "reasoning_steps": [
+        {
+            "step": "Planning Analysis",
+            "thought": "Now I need to understand what the user wants me to do with the document. The request is: 'Summarize the key points and action items.'. I have 1 document chunks to analyze. Let me plan the best approach.",
+            "timestamp": "2025-07-30T12:53:18.966423",
+            "details": {
+                "user_query": "Summarize the key points and action items.",
+                "chunk_count": 1,
+                "has_templates": false
+            }
+        }
+    ],
+    "current_step": "Planning Analysis",
+    "thoughts": "Now I need to understand what the user wants me to do with the document. The request is: 'Summarize the key points and action items.'. I have 1 document chunks to analyze. Let me plan the best approach.",
+    "planner_prompts": {
+        "initial_prompt": "Please provide a comprehensive analysis and summary of the following text content: {text}. Include key themes, main points, and significant details. Organize your analysis in a clear, structured manner that captures the essential information and context.",
+        "refine_prompt": "You have already created this analysis: {existing_answer}. Please refine and expand your analysis by incorporating relevant information from this additional text content: {text}. Maintain consistency with your previous analysis while integrating new insights, themes, and important details. Ensure the refined analysis remains comprehensive and well-structured."
+    }
+}

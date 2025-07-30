@@ -1,0 +1,12 @@
+{
+    "doc_chunks": [
+        {
+            "page_content": "Project Hermes is a strategic initiative to modernize our client onboarding process.\nThe primary goal is to reduce onboarding time by 50% by the end of Q4.\nKey stakeholders include the Sales, Compliance, and Operations departments.\nThe project lead is Jane Doe.\nOne major risk is the integration with the legacy CRM system.\nThe next milestone is the completion of the technical discovery phase by July 30th.\nBudget allocated is $250,000.\nWe need a decision on the primary cloud vendor by next week.\nAction item for John Smith: Schedule a vendor comparison meeting.\nThe desired outcome is a seamless, digital-first onboarding experience for all new clients.",
+            "metadata": {
+                "source": "business_testing/isolated_test_files/hermes_strategy.txt",
+                "file_type": "Text File",
+                "file_name": "hermes_strategy.txt"
+            }
+        }
+    ]
+}

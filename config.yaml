@@ -1,0 +1,45 @@
+# File Upload Settings
+upload:
+  max_file_size_mb: 10
+  allowed_extensions: ['.doc', '.docx', '.xlsx', '.csv', '.pdf', '.txt']
+  allowed_mime_types: 
+    - 'application/pdf'
+    - 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    - 'application/msword'
+    - 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    - 'text/csv'
+
+# AI Processing Settings
+ai:
+  similarity_threshold: 0.2
+  max_conversation_history: 10
+  chunk_size: 1500
+  chunk_overlap: 200
+  timeout_seconds: 30
+  max_retries: 3
+  rate_limit_delay_seconds: 2
+  
+# Session Management
+session:
+  cleanup_on_chat_end: true
+  auto_cleanup_hours: 24
+  
+# Export Settings
+export:
+  ai_generated_prefix: "AI generated content\n\n"
+  
+# API Settings
+api:
+  host: "0.0.0.0"
+  port: 8000
+  cors_origins: ["http://localhost:8501"]
+  
+# Mock Data Settings
+mock_data:
+  file_path: "mock_data.json"
+  keyword_match_threshold: 0.2
+
+# Logging
+logging:
+  level: "DEBUG"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

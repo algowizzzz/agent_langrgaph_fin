@@ -1,0 +1,100 @@
+{
+  "bmo_qa_pairs": [
+    {
+      "id": "bmo_001",
+      "keywords": ["holiday", "vacation", "time off", "pto", "personal time"],
+      "question": "What is BMO's holiday policy?",
+      "answer": "BMO provides competitive holiday benefits including statutory holidays, personal days, and vacation time. Full-time employees receive 15 vacation days in their first year, increasing with tenure. We also observe all statutory holidays and provide 3 personal days annually.",
+      "category": "HR",
+      "confidence": 0.95
+    },
+    {
+      "id": "bmo_002", 
+      "keywords": ["expense", "reimbursement", "receipt", "travel", "business expense"],
+      "question": "How do I submit expense reports?",
+      "answer": "Use the BMO Expense Management System (BEMS) to submit expense reports. Upload receipts, categorize expenses, and submit for approval. Travel expenses must be submitted within 30 days. For questions, contact the Finance team at finance@bmo.com.",
+      "category": "Finance",
+      "confidence": 0.98
+    },
+    {
+      "id": "bmo_003",
+      "keywords": ["password", "login", "access", "account", "it support", "technical"],
+      "question": "How do I reset my password?",
+      "answer": "To reset your BMO password: 1) Go to the BMO login page, 2) Click 'Forgot Password', 3) Enter your employee ID and email, 4) Check your email for reset instructions. For technical issues, contact IT Support at ext. 4357 or itsupport@bmo.com.",
+      "category": "IT",
+      "confidence": 0.97
+    },
+    {
+      "id": "bmo_004",
+      "keywords": ["benefits", "insurance", "health", "dental", "medical", "coverage"],
+      "question": "What health benefits does BMO provide?",
+      "answer": "BMO offers comprehensive health benefits including medical, dental, and vision coverage. We also provide life insurance, disability insurance, and employee assistance programs. Benefits enrollment occurs during your first 30 days and annual open enrollment in November.",
+      "category": "HR",
+      "confidence": 0.96
+    },
+    {
+      "id": "bmo_005",
+      "keywords": ["training", "development", "learning", "course", "certification"],
+      "question": "What training opportunities are available?",
+      "answer": "BMO provides extensive learning opportunities through BMO University, external certifications, conference attendance, and tuition reimbursement programs. All employees have access to LinkedIn Learning and internal training modules. Speak with your manager about professional development goals.",
+      "category": "Learning",
+      "confidence": 0.94
+    },
+    {
+      "id": "bmo_006",
+      "keywords": ["performance", "review", "evaluation", "feedback", "goals"],
+      "question": "When are performance reviews conducted?",
+      "answer": "BMO conducts annual performance reviews typically in Q1 (January-March). Mid-year check-ins occur in July. Performance discussions should be ongoing throughout the year. Use the Performance Management System to track goals and receive feedback from your manager.",
+      "category": "HR",
+      "confidence": 0.93
+    },
+    {
+      "id": "bmo_007",
+      "keywords": ["remote", "work from home", "hybrid", "office", "location"],
+      "question": "What is BMO's remote work policy?",
+      "answer": "BMO supports flexible work arrangements including hybrid and remote options depending on role requirements. Most positions offer 2-3 days remote per week. Remote work agreements must be approved by your manager and HR. Office collaboration days are typically Tuesday-Thursday.",
+      "category": "HR",
+      "confidence": 0.91
+    },
+    {
+      "id": "bmo_008",
+      "keywords": ["diversity", "inclusion", "equity", "dei", "culture"],
+      "question": "What are BMO's diversity and inclusion initiatives?",
+      "answer": "BMO is committed to fostering an inclusive culture through our Zero Barriers to Inclusion strategy. We have employee resource groups, unconscious bias training, diverse hiring practices, and regular DEI education. Our goal is to create equitable opportunities for all employees.",
+      "category": "Culture",
+      "confidence": 0.89
+    },
+    {
+      "id": "bmo_009",
+      "keywords": ["ethics", "compliance", "code of conduct", "reporting", "whistleblower"],
+      "question": "How do I report ethical concerns?",
+      "answer": "BMO maintains strict ethical standards. Report concerns through: 1) Your manager or HR, 2) BMO Ethics Hotline: 1-800-555-0199, 3) Online portal at ethics.bmo.com, 4) Email ethics@bmo.com. All reports are confidential and protected against retaliation.",
+      "category": "Compliance",
+      "confidence": 0.99
+    },
+    {
+      "id": "bmo_010",
+      "keywords": ["parking", "transportation", "transit", "commute", "office location"],
+      "question": "What are the parking and transportation options?",
+      "answer": "BMO offices provide parking passes for employees (limited availability). We also offer transit subsidies, bike storage, and car-sharing programs. Check with your local office administrator for location-specific transportation benefits and parking availability.",
+      "category": "Facilities",
+      "confidence": 0.88
+    }
+  ],
+  "general_responses": [
+    {
+      "keywords": ["help", "support", "assistance"],
+      "response": "I'm here to help with BMO-related questions. I can provide information about HR policies, IT support, benefits, training, and more. What specific information are you looking for?"
+    },
+    {
+      "keywords": ["thank", "thanks", "appreciate"],
+      "response": "You're welcome! I'm happy to help with any other BMO-related questions you might have."
+    }
+  ],
+  "metadata": {
+    "last_updated": "2025-01-15",
+    "version": "1.0",
+    "source": "BMO Employee Handbook & Internal Documentation",
+    "total_pairs": 10
+  }
+}

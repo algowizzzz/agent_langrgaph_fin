@@ -1,0 +1,7 @@
+# Simplified for Python 3.13 compatibility
+fastapi
+uvicorn
+streamlit
+requests
+PyYAML
+python-dotenv
