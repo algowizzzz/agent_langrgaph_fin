@@ -97,17 +97,21 @@ st.markdown("""
         max-width: 75%;
     }
     
-    /* Simple reasoning styling */
+    /* Simple reasoning styling with better formatting */
     .reasoning-content {
         background-color: var(--bubble-light-gray);
-        padding: 10px 14px;
+        padding: 12px 16px;
         border-radius: 8px;
-        margin: 8px 20% 8px 0;
         color: var(--text-gray);
-        line-height: 1.4;
-        font-size: 12px;
+        line-height: 1.6;
+        font-size: 13px;
         font-family: "SF Mono", Monaco, "Courier New", monospace;
-        max-width: 75%;
+        white-space: pre-line;  /* Preserve line breaks */
+    }
+    
+    /* Better spacing for steps */
+    .reasoning-content br {
+        margin-bottom: 4px;
     }
     
     /* Simple buttons */
@@ -421,15 +425,33 @@ async def process_user_message(user_input):
         # Clear thinking indicator
         thinking_placeholder.empty()
         
-        # Add reasoning FIRST (if available)
+        # Add reasoning FIRST (if available) - with proper line breaks
         if result.get('reasoning_log'):
-            reasoning_content = "Steps:\n"
+            reasoning_content = "Reasoning Steps:\n\n"
             for i, step in enumerate(result['reasoning_log'], 1):
                 if isinstance(step, dict) and 'tool_name' in step:
                     tool_params = step.get('tool_params', {})
-                    # Format parameters nicely
-                    params_str = ", ".join([f"{k}: {str(v)[:50]}..." if len(str(v)) > 50 else f"{k}: {v}" for k, v in tool_params.items()])
-                    reasoning_content += f"{i}. {step['tool_name']}({params_str})\n"
+                    
+                    # Main step
+                    reasoning_content += f"Step {i}: {step['tool_name']}\n"
+                    
+                    # Sub-steps with parameters
+                    if tool_params:
+                        reasoning_content += "Parameters:\n"
+                        for key, value in tool_params.items():
+                            # Format value nicely
+                            if isinstance(value, str) and len(value) > 100:
+                                formatted_value = value[:100] + "..."
+                            elif isinstance(value, dict):
+                                formatted_value = f"{{{len(value)} items}}"
+                            elif isinstance(value, list):
+                                formatted_value = f"[{len(value)} items]"
+                            else:
+                                formatted_value = str(value)
+                            
+                            reasoning_content += f"  • {key}: {formatted_value}\n"
+                    
+                    reasoning_content += "\n"  # Extra line between steps
             
             reasoning_msg = {
                 'role': 'reasoning',
@@ -594,11 +616,18 @@ def render_chat_messages():
                         unsafe_allow_html=True
                     )
                 elif message['role'] == 'reasoning':
-                    # Clean collapsible reasoning
+                    # Clean collapsible reasoning with proper formatting
                     with st.expander("🔍 How I solved this", expanded=False):
+                        # Format the reasoning content with proper line breaks
+                        formatted_content = message["content"]
+                        
+                        # Replace newlines with HTML breaks for proper display
+                        formatted_content = formatted_content.replace('\n\n', '<br><br>')  # Double breaks for paragraphs
+                        formatted_content = formatted_content.replace('\n', '<br>')        # Single breaks for lines
+                        
                         st.markdown(f"""
                         <div class="reasoning-content">
-                            {message["content"].replace('\n', '<br>')}
+                            {formatted_content}
                         </div>
                         """, unsafe_allow_html=True)
                         
