@@ -11,6 +11,12 @@ from datetime import datetime
 from pathlib import Path
 import uuid
 import tempfile
+from dotenv import load_dotenv
+
+# Load environment variables first
+load_dotenv()  # Try current directory first
+if not os.getenv('ANTHROPIC_API_KEY'):
+    load_dotenv('../.env')  # Fallback to parent directory
 
 # Add the current directory to Python path for imports
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
