@@ -425,8 +425,8 @@ async def process_user_message(user_input):
         elif st.session_state.active_document:
             active_doc = st.session_state.active_document
         
-        # Process through orchestrator with context
-        result = await orchestrator.run(user_input, st.session_state.current_chat_id or 'default', active_document=active_doc)
+        # Process through orchestrator
+        result = await orchestrator.run(user_input, st.session_state.current_chat_id or 'default')
         
         # Clear thinking indicator
         thinking_placeholder.empty()
