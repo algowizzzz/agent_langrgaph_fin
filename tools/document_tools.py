@@ -8,6 +8,22 @@ import os
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
 
+# PDF processing support
+try:
+    import PyPDF2
+    HAS_PDF_SUPPORT = True
+except ImportError:
+    HAS_PDF_SUPPORT = False
+    logging.warning("PyPDF2 not available. PDF processing disabled.")
+
+# DOCX processing support  
+try:
+    import docx
+    HAS_DOCX_SUPPORT = True
+except ImportError:
+    HAS_DOCX_SUPPORT = False
+    logging.warning("python-docx not available. DOCX processing disabled.")
+
 # Assumes config is available or use defaults
 class MockConfig:
     class AI:
@@ -24,14 +40,103 @@ class DocumentProcessor:
         self.recursive_splitter = RecursiveCharacterTextSplitter(chunk_size=config.AI.chunk_size, chunk_overlap=config.AI.chunk_overlap)
 
     async def process_document(self, file_path: str) -> Dict:
+        """Process document with proper file type detection."""
         try:
-            content = Path(file_path).read_text()
-            docs = self.markdown_splitter.split_text(content)
+            file_path = Path(file_path)
+            file_ext = file_path.suffix.lower()
+            
+            # Extract content based on file type
+            if file_ext == '.pdf':
+                content, file_type = await self._extract_pdf_text(file_path)
+            elif file_ext in ['.docx', '.doc']:
+                content, file_type = await self._extract_docx_text(file_path)
+            elif file_ext in ['.txt', '.md']:
+                content, file_type = await self._extract_text_file(file_path)
+            elif file_ext == '.csv':
+                content, file_type = await self._extract_csv_text(file_path)
+            else:
+                # Fallback to text reading
+                content, file_type = await self._extract_text_file(file_path)
+            
+            # Process with appropriate splitter
+            if file_type == "PDF":
+                # PDF content already has page headers, use markdown splitter
+                docs = self.markdown_splitter.split_text(content)
+            else:
+                # Use recursive splitter for other types
+                docs = self.recursive_splitter.split_text(content)
+                
+            # Add metadata
             for doc in docs:
-                doc.metadata["source"] = file_path
-            return {"success": True, "documents": docs, "file_type": "TEXT"}
+                doc.metadata["source"] = str(file_path)
+                doc.metadata["file_type"] = file_type
+                doc.metadata["file_name"] = file_path.name
+                
+            return {"success": True, "documents": docs, "file_type": file_type}
+            
         except Exception as e:
             return {"success": False, "error": str(e)}
+    
+    async def _extract_pdf_text(self, file_path: Path) -> tuple[str, str]:
+        """Extract text from PDF with page structure."""
+        if not HAS_PDF_SUPPORT:
+            raise Exception("PyPDF2 not available for PDF processing")
+            
+        text_content = []
+        
+        with open(file_path, 'rb') as file:
+            pdf_reader = PyPDF2.PdfReader(file)
+            total_pages = len(pdf_reader.pages)
+            
+            for page_num, page in enumerate(pdf_reader.pages):
+                try:
+                    page_text = page.extract_text()
+                    if page_text.strip():
+                        # Format with page headers for structure detection
+                        formatted_page = f"\n\n## Page {page_num + 1}\n\n{page_text}"
+                        text_content.append(formatted_page)
+                except Exception as e:
+                    # Skip problematic pages
+                    continue
+        
+        return "\n".join(text_content), "PDF"
+    
+    async def _extract_docx_text(self, file_path: Path) -> tuple[str, str]:
+        """Extract text from DOCX file."""
+        if not HAS_DOCX_SUPPORT:
+            # Fallback to text reading
+            return file_path.read_text(encoding='utf-8'), "TEXT"
+            
+        try:
+            import docx
+            doc = docx.Document(file_path)
+            content = []
+            
+            for paragraph in doc.paragraphs:
+                if paragraph.text.strip():
+                    content.append(paragraph.text)
+                    
+            return "\n".join(content), "DOCX"
+        except Exception:
+            # Fallback to text reading
+            return file_path.read_text(encoding='utf-8'), "TEXT"
+    
+    async def _extract_text_file(self, file_path: Path) -> tuple[str, str]:
+        """Extract text from plain text file."""
+        return file_path.read_text(encoding='utf-8'), "TEXT"
+    
+    async def _extract_csv_text(self, file_path: Path) -> tuple[str, str]:
+        """Extract text representation from CSV file."""
+        try:
+            import pandas as pd
+            df = pd.read_csv(file_path)
+            # Convert to readable text format
+            content = f"# CSV Data: {file_path.name}\n\n"
+            content += df.to_string(index=False)
+            return content, "CSV"
+        except Exception:
+            # Fallback to text reading
+            return file_path.read_text(encoding='utf-8'), "TEXT"
 
 class PersistentDocumentStore:
     """Thread-safe persistent document store using file system."""

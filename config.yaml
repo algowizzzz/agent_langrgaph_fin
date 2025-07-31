@@ -18,6 +18,8 @@ ai:
   timeout_seconds: 30
   max_retries: 3
   rate_limit_delay_seconds: 2
+  batch_size: 25
+  enable_batch_processing: true
   
 # Session Management
 session:

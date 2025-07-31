@@ -1,0 +1,65 @@
+{
+  "test_timestamp": "2025-07-30T20:00:50.017395",
+  "test_results": {
+    "isolated_test_files/hermes_strategy.txt": {
+      "success": true,
+      "total_chunks": 1,
+      "header_chunks": 0,
+      "avg_chunk_size": 656.0,
+      "has_context_headers": false,
+      "sample_metadata": {
+        "source": "isolated_test_files/hermes_strategy.txt",
+        "file_type": "Text File",
+        "file_name": "hermes_strategy.txt"
+      },
+      "first_chunk_preview": "Project Hermes is a strategic initiative to modernize our client onboarding process.\nThe primary goal is to reduce onboarding time by 50% by the end o..."
+    },
+    "isolated_test_files/car24_test.pdf": {
+      "success": true,
+      "total_chunks": 64,
+      "header_chunks": 64,
+      "avg_chunk_size": 1164.0,
+      "has_context_headers": true,
+      "sample_metadata": {
+        "source": "isolated_test_files/car24_test.pdf",
+        "file_type": "PDF",
+        "file_name": "car24_test.pdf",
+        "Header 2": "Page 1"
+      },
+      "first_chunk_preview": "## Page 1  \nBanks/BHC/T&L   Overview of risk -based capital requirements\nOctober 2023   Chapter 1 - Page 1\nGuideline  \nSubject:  Capital Adequacy Requ..."
+    },
+    "full_pipeline": {
+      "success": false,
+      "error": "'DocumentAnalysisPod' object has no attribute 'invoke'"
+    }
+  },
+  "enhanced_features": {
+    "supported_formats": [
+      ".pdf",
+      ".doc",
+      ".docx",
+      ".xlsx",
+      ".csv",
+      ".txt"
+    ],
+    "chunk_size": 1500,
+    "chunk_overlap": 200,
+    "timeout_seconds": 30,
+    "max_file_size_mb": 10,
+    "context_aware_chunking": true,
+    "chunking_methods": [
+      "MarkdownHeaderTextSplitter",
+      "RecursiveCharacterTextSplitter"
+    ],
+    "supported_headers": [
+      "#",
+      "##",
+      "###",
+      "####",
+      "#####",
+      "######"
+    ],
+    "structure_detection": true
+  },
+  "overall_success": true
+}

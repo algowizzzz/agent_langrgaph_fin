@@ -2,25 +2,44 @@
   "topics": {
     "risk_factors": [
       "conv_18a81393",
-      "conv_90006982"
+      "conv_90006982",
+      "conv_c930d148",
+      "conv_4ddbef9d",
+      "conv_3e33ca6c"
     ],
     "regulatory": [
       "conv_18a81393",
-      "conv_90006982"
+      "conv_90006982",
+      "conv_c930d148"
     ],
     "compliance": [
       "conv_18a81393",
-      "conv_90006982"
+      "conv_90006982",
+      "conv_c930d148"
     ],
     "wrong_way_risk": [
       "conv_18a81393"
     ],
     "capital": [
       "conv_18a81393",
-      "conv_90006982"
+      "conv_90006982",
+      "conv_c930d148",
+      "conv_fef5c195"
     ],
     "audit": [
       "conv_90006982"
+    ],
+    "governance": [
+      "conv_c930d148"
+    ],
+    "document_analysis": [
+      "conv_fef5c195",
+      "conv_4ddbef9d",
+      "conv_3e33ca6c"
+    ],
+    "financial": [
+      "conv_4ddbef9d",
+      "conv_3e33ca6c"
     ]
   },
   "conversations": {
@@ -45,6 +64,43 @@
         "audit"
       ],
       "created_at": "2025-07-31T16:49:01.946129"
+    },
+    "conv_c930d148": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, governance",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "governance"
+      ],
+      "created_at": "2025-07-31T16:59:06.063896"
+    },
+    "conv_fef5c195": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: capital, document_analysis",
+      "topics": [
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-07-31T17:00:04.503255"
+    },
+    "conv_4ddbef9d": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, document_analysis, financial",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "financial"
+      ],
+      "created_at": "2025-07-31T17:41:35.681220"
+    },
+    "conv_3e33ca6c": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "financial"
+      ],
+      "created_at": "2025-07-31T17:42:11.167185"
     }
   }
 }

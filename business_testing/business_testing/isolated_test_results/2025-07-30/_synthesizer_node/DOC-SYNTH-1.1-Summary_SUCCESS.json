@@ -1,0 +1,19 @@
+{
+    "user_query": "Summarize the key points and action items.",
+    "final_analysis": "",
+    "processing_status": "synthesizing",
+    "reasoning_steps": [
+        {
+            "step": "Finalizing Results",
+            "thought": "The core analysis is complete. I will now format this into a clean, structured report for the user.",
+            "timestamp": "2025-07-30T19:59:51.941384",
+            "details": {
+                "has_results": false,
+                "result_length": 0
+            }
+        }
+    ],
+    "current_step": "Finalizing Results",
+    "thoughts": "The core analysis is complete. I will now format this into a clean, structured report for the user.",
+    "error": "No analysis results to synthesize"
+}

@@ -1,0 +1,43 @@
+2025-07-30 15:12:30,567 - INFO - Using Anthropic LLM: claude-3-5-sonnet-20241022
+2025-07-30 15:12:30,567 - INFO - LLM initialized: ChatAnthropic
+2025-07-30 15:12:30,569 - INFO - Q&A Pod graph compiled successfully
+2025-07-30 15:12:31,163 - INFO - Using Anthropic LLM for Document Analysis: claude-3-5-sonnet-20241022
+2025-07-30 15:12:31,171 - INFO - Document Analysis Pod graph compiled successfully
+2025-07-30 15:12:31,171 - INFO - --- Running Isolated Test for: _generate_general_answer ---
+2025-07-30 15:12:31,172 - INFO - 🤔 Agent Reasoning - General Answer Generation: Using the general-purpose Large Language Model to answer the user's question.
+2025-07-30 15:12:35,788 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-30 15:12:35,799 - INFO - ✅ Result for '_generate_general_answer' (QNA-1.1-VaR) saved to business_testing/isolated_test_results/2025-07-30/_generate_general_answer/QNA-1.1-VaR_SUCCESS.json
+2025-07-30 15:12:35,800 - INFO - --- Finished Isolated Test for: _generate_general_answer ---
+
+2025-07-30 15:12:35,800 - INFO - --- Running Isolated Test for: _load_documents ---
+2025-07-30 15:12:35,800 - ERROR - Test DOC-LOAD-1.1-TXT failed for _load_documents
+Traceback (most recent call last):
+  File "/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/business_testing/isolated_test_runner.py", line 81, in test_doc_analysis_pod_nodes
+    raise Exception(f"Document processing failed: {processing_result.error}")
+Exception: Document processing failed: File does not exist
+2025-07-30 15:12:35,801 - INFO - ✅ Result for '_load_documents' (DOC-LOAD-1.1-TXT) saved to business_testing/isolated_test_results/2025-07-30/_load_documents/DOC-LOAD-1.1-TXT_FAILURE.json
+2025-07-30 15:12:35,801 - INFO - --- Finished Isolated Test for: _load_documents ---
+
+2025-07-30 15:12:35,801 - INFO - --- Running Isolated Test for: _planner_node ---
+2025-07-30 15:12:35,801 - INFO - Planning document analysis approach
+2025-07-30 15:12:35,801 - INFO - 🤔 Agent Reasoning - Planning Analysis: The user's request is: 'Summarize the key points and action items.'. I have processed the document(s) into 0 chunk(s), totaling 0 characters.
+2025-07-30 15:12:38,314 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-30 15:12:41,376 - INFO - HTTP Request: POST https://api.anthropic.com/v1/messages "HTTP/1.1 200 OK"
+2025-07-30 15:12:41,377 - INFO - Document analysis planning completed successfully
+2025-07-30 15:12:41,378 - INFO - ✅ Result for '_planner_node' (DOC-PLAN-1.1-Summary) saved to business_testing/isolated_test_results/2025-07-30/_planner_node/DOC-PLAN-1.1-Summary_SUCCESS.json
+2025-07-30 15:12:41,378 - INFO - --- Finished Isolated Test for: _planner_node ---
+
+2025-07-30 15:12:41,378 - INFO - --- Running Isolated Test for: _executor_node ---
+2025-07-30 15:12:41,378 - INFO - Executing document analysis
+2025-07-30 15:12:41,378 - INFO - 🤔 Agent Reasoning - Analyzing Documents: I will now analyse the 0 text chunk(s) in a single optimized batch call.
+2025-07-30 15:12:41,379 - INFO - ✅ Result for '_executor_node' (DOC-EXEC-1.1-Summary) saved to business_testing/isolated_test_results/2025-07-30/_executor_node/DOC-EXEC-1.1-Summary_SUCCESS.json
+2025-07-30 15:12:41,379 - INFO - --- Finished Isolated Test for: _executor_node ---
+
+2025-07-30 15:12:41,379 - INFO - --- Running Isolated Test for: _synthesizer_node ---
+2025-07-30 15:12:41,379 - INFO - Synthesizing final results
+2025-07-30 15:12:41,379 - INFO - 🤔 Agent Reasoning - Finalizing Results: The core analysis is complete. I will now format this into a clean, structured report for the user.
+2025-07-30 15:12:41,379 - INFO - ✅ Result for '_synthesizer_node' (DOC-SYNTH-1.1-Summary) saved to business_testing/isolated_test_results/2025-07-30/_synthesizer_node/DOC-SYNTH-1.1-Summary_SUCCESS.json
+2025-07-30 15:12:41,379 - INFO - --- Finished Isolated Test for: _synthesizer_node ---
+
+Starting Isolated Test Runner...
+All isolated tests completed.

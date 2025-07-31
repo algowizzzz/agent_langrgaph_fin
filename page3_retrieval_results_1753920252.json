@@ -1,0 +1,49 @@
+{
+  "test_timestamp": "2025-07-30T20:04:12.529167",
+  "document": "car24_chpt1_0.pdf",
+  "query": "Summarize information on page 3 with references",
+  "total_chunks": 64,
+  "total_pages": 26,
+  "page3_chunks_found": 2,
+  "context_aware_success": true,
+  "page3_content_length": 2676,
+  "page3_chunks": [
+    {
+      "chunk_id": 4,
+      "page_reference": "Page 3",
+      "size": 1450,
+      "metadata": {
+        "source": "car24_chpt1_0.pdf",
+        "file_type": "PDF",
+        "file_name": "car24_chpt1_0.pdf",
+        "Header 2": "Page 3"
+      },
+      "content_preview": "## Page 3  \nBanks/BHC/T&L   Overview of risk -based capital requirements\nOctober 2023   Chapter 1 -  Page 3\nTable of Contents  \nChapter 1 \u2013 Overview of Risk -based Capital Requirements  ................."
+    },
+    {
+      "chunk_id": 5,
+      "page_reference": "Page 3",
+      "size": 1222,
+      "metadata": {
+        "source": "car24_chpt1_0.pdf",
+        "file_type": "PDF",
+        "file_name": "car24_chpt1_0.pdf",
+        "Header 2": "Page 3"
+      },
+      "content_preview": "1.5.2.  Adjusted Capital Requirement  ............................................................... 11\nCalculation of OSFI Minimum Capital Requirements  ........................................ 11\n1..."
+    }
+  ],
+  "all_pages_sample": [
+    "Page 1",
+    "Page 10",
+    "Page 11",
+    "Page 12",
+    "Page 13",
+    "Page 14",
+    "Page 15",
+    "Page 16",
+    "Page 17",
+    "Page 18"
+  ],
+  "summary_with_references": "\n**DOCUMENT**: car24_chpt1_0.pdf\n**PAGE**: 3\n**CHUNKS FOUND**: 2\n**TOTAL CONTENT**: 2676 characters\n\n**CONTENT SUMMARY**:\n## Page 3  \nBanks/BHC/T&L   Overview of risk -based capital requirements\nOctober 2023   Chapter 1 -  Page 3\nTable of Contents  \nChapter 1 \u2013 Overview of Risk -based Capital Requirements  ................................................ 4\nScope of Application  ............................................................................................. 4\nRegulatory Capital  ................................................................................................. 4\nTotal Risk weighted Assets  ................................................................................... 5\n1.3.1.  Credit Risk  ............................................................................................... 5\n1.3.2.  Market Risk  ..........................................................................\n\n**REFERENCES**:\n\n- Chunk 1: car24_chpt1_0.pdf, Page 3\n  Size: 1450 chars, Metadata: ['source', 'file_type', 'file_name', 'Header 2']\n- Chunk 2: car24_chpt1_0.pdf, Page 3\n  Size: 1222 chars, Metadata: ['source', 'file_type', 'file_name', 'Header 2']\n\n**CONTEXT-AWARE RETRIEVAL STATUS**: \u2705 SUCCESS\n- Successfully identified Page 3 content using header metadata\n- Found 2 relevant chunks with precise page references\n- Header metadata working: Header 2 key present in all chunks\n- Source attribution: Available for each chunk\n\n**BENEFITS FOR BMO DOCUMENTATION ANALYSIS**:\n\u2705 Precise page-level citations for regulatory compliance\n\u2705 Audit-ready references with exact page numbers\n\u2705 Context-aware retrieval for large documents\n\u2705 Professional document analysis with source attribution\n"
+}

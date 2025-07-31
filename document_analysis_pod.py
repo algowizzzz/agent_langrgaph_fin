@@ -409,12 +409,24 @@ Your response must be in this exact format:
             doc_chunks = state.get("doc_chunks", [])
             planner_prompts = state.get("planner_prompts", {})
             
-            # Add reasoning step
+            # Add reasoning step with batch processing info
+            total_chunks = len(doc_chunks)
+            use_batch_processing = (
+                config.ai.enable_batch_processing and 
+                total_chunks > config.ai.batch_size
+            )
+            
+            if use_batch_processing:
+                num_batches = (total_chunks + config.ai.batch_size - 1) // config.ai.batch_size
+                reasoning_msg = f"I will now analyse the {total_chunks} text chunk(s) using batch processing ({num_batches} batches of ~{config.ai.batch_size} chunks each) for optimal performance."
+            else:
+                reasoning_msg = f"I will now analyse the {total_chunks} text chunk(s) in a single optimized batch call."
+            
             self._add_reasoning_step(
                 state, 
                 "Analyzing Documents", 
-                f"I will now analyse the {len(doc_chunks)} text chunk(s) comprehensively, iteratively updating the analysis to build a comprehensive answer.",
-                {"chunk_count": len(doc_chunks), "total_chars": sum(len(chunk.page_content) for chunk in doc_chunks)}
+                reasoning_msg,
+                {"chunk_count": total_chunks, "total_chars": sum(len(chunk.page_content) for chunk in doc_chunks), "batch_processing": use_batch_processing}
             )
             
             if not doc_chunks:
@@ -458,36 +470,88 @@ Your response must be in this exact format:
             return state
     
     async def _run_real_refine_chain(self, docs: List[Document], initial_prompt: PromptTemplate, refine_prompt: PromptTemplate) -> str:
-        """Real implementation of refine chain using actual LLM."""
+        """Real implementation of refine chain using actual LLM with batch processing optimization."""
         try:
             if not docs:
                 return "No documents provided for analysis."
             
-            # Process first document
-            first_doc = docs[0]
-            initial_analysis = await self._call_llm_with_retry(
-                initial_prompt.format(text=first_doc.page_content)
+            # Determine processing strategy based on chunk count and configuration
+            total_chunks = len(docs)
+            use_batch_processing = (
+                config.ai.enable_batch_processing and 
+                total_chunks > config.ai.batch_size
             )
             
-            current_analysis = initial_analysis
-            
-            # Process remaining documents
-            for doc in docs[1:]:
-                # Add rate-limiting delay
-                await asyncio.sleep(config.ai.rate_limit_delay_seconds)
-                
-                refined_analysis = await self._call_llm_with_retry(
-                    refine_prompt.format(
-                        existing_answer=current_analysis,
-                        text=doc.page_content
-                    )
-                )
-                current_analysis = refined_analysis
-            
-            return current_analysis
+            if use_batch_processing:
+                logger.info(f"Using batch processing for {total_chunks} chunks (batch_size: {config.ai.batch_size})")
+                return await self._run_batch_refine_chain(docs, initial_prompt, refine_prompt)
+            else:
+                logger.info(f"Using single batch processing for {total_chunks} chunks")
+                return await self._run_single_batch_refine_chain(docs, initial_prompt, refine_prompt)
             
         except Exception as e:
             logger.error(f"Error in real refine chain: {str(e)}")
+            return f"Analysis completed with {len(docs)} document chunks. Error occurred during processing: {str(e)}"
+    
+    async def _run_single_batch_refine_chain(self, docs: List[Document], initial_prompt: PromptTemplate, refine_prompt: PromptTemplate) -> str:
+        """Process all chunks in a single LLM call (≤25 chunks)."""
+        try:
+            # Combine all chunks into one call
+            combined_text = "\n\n---CHUNK SEPARATOR---\n\n".join(
+                doc.page_content for doc in docs
+            )
+            
+            # Single LLM call with all content
+            result = await self._call_llm_with_retry(
+                initial_prompt.format(text=combined_text)
+            )
+            
+            logger.info(f"Single batch processing completed: {len(docs)} chunks in 1 LLM call")
+            return result
+            
+        except Exception as e:
+            logger.error(f"Error in single batch refine chain: {str(e)}")
+            return f"Analysis completed with {len(docs)} document chunks. Error occurred during processing: {str(e)}"
+    
+    async def _run_batch_refine_chain(self, docs: List[Document], initial_prompt: PromptTemplate, refine_prompt: PromptTemplate) -> str:
+        """Optimized batch processing refine chain for large documents (>25 chunks)."""
+        try:
+            batch_size = config.ai.batch_size
+            
+            # Create batches
+            batches = [docs[i:i + batch_size] for i in range(0, len(docs), batch_size)]
+            logger.info(f"Created {len(batches)} batches of ~{batch_size} chunks each")
+            
+            # Process first batch
+            first_batch_text = "\n\n---CHUNK SEPARATOR---\n\n".join(
+                doc.page_content for doc in batches[0]
+            )
+            current_analysis = await self._call_llm_with_retry(
+                initial_prompt.format(text=first_batch_text)
+            )
+            logger.info(f"Processed batch 1/{len(batches)} ({len(batches[0])} chunks)")
+            
+            # Process remaining batches with refinement
+            for batch_idx, batch in enumerate(batches[1:], 2):
+                # Add rate-limiting delay
+                await asyncio.sleep(config.ai.rate_limit_delay_seconds)
+                
+                batch_text = "\n\n---CHUNK SEPARATOR---\n\n".join(
+                    doc.page_content for doc in batch
+                )
+                current_analysis = await self._call_llm_with_retry(
+                    refine_prompt.format(
+                        existing_answer=current_analysis,
+                        text=batch_text
+                    )
+                )
+                logger.info(f"Processed batch {batch_idx}/{len(batches)} ({len(batch)} chunks)")
+            
+            logger.info(f"Batch processing completed: {len(docs)} chunks in {len(batches)} LLM calls")
+            return current_analysis
+            
+        except Exception as e:
+            logger.error(f"Error in batch refine chain: {str(e)}")
             return f"Analysis completed with {len(docs)} document chunks. Error occurred during processing: {str(e)}"
     
     async def _run_mock_refine_chain(self, docs: List[Document], initial_prompt: PromptTemplate, refine_prompt: PromptTemplate) -> str:

@@ -1,0 +1,84 @@
+{
+  "id": "conv_3e33ca6c",
+  "messages": [
+    {
+      "role": "user",
+      "content": "summarise the attached document ",
+      "timestamp": "2025-07-31T17:00:23.137911",
+      "session_id": "b7e85d40"
+    },
+    {
+      "role": "assistant",
+      "content": "{'status': 'success', 'top_words': {'processing': 11, 'implementation': 10, 'performance': 5, 'error': 5, 'accuracy': 5, 'refine': 4, 'chunk': 4, 'document': 3, 'scale': 3, 'mode': 3}, 'top_bigrams': {'refine mode': 3, 'large scale': 2, 'implementation options': 2, 'router engine': 2, 'custom chunk': 2, 'chunk processing': 2, 'higher accuracy': 2, 'async processing': 2, 'immediate implementation': 2, 'long term': 2}, 'top_trigrams': {'custom chunk processing': 2, 'll provide updated': 1, 'provide updated cohesive': 1, 'updated cohesive summary': 1, 'cohesive summary integrates': 1, 'summary integrates both': 1, 'integrates both analyses': 1, 'both analyses updated': 1, 'analyses updated summary': 1, 'updated summary document': 1}, 'total_unique_words': 148, 'total_unique_bigrams': 225, 'total_unique_trigrams': 234}",
+      "timestamp": "2025-07-31T17:01:39.409866",
+      "session_id": "b7e85d40"
+    },
+    {
+      "role": "user",
+      "content": "sumamrise this document ",
+      "timestamp": "2025-07-31T17:34:09.702831",
+      "session_id": "e44061a2"
+    },
+    {
+      "role": "assistant",
+      "content": "{'status': 'success', 'top_words': {'risk': 8, 'financial': 6, 'finance': 4, 'management': 3, 'decisions': 3, 'document': 2, 'text': 2, 'overview': 2, 'relationship': 2, 'three': 2}, 'top_bigrams': {'financial decisions': 3, 'finance risk': 2, 'three main': 2, 'risk management': 2, 'here professional': 1, 'professional summary': 1, 'summary document': 1, 'document text': 1, 'text provides': 1, 'provides foundational': 1}, 'top_trigrams': {'here professional summary': 1, 'professional summary document': 1, 'summary document text': 1, 'document text provides': 1, 'text provides foundational': 1, 'provides foundational overview': 1, 'foundational overview finance': 1, 'overview finance risk': 1, 'finance risk along': 1, 'risk along interconnected': 1}, 'total_unique_words': 89, 'total_unique_bigrams': 111, 'total_unique_trigrams': 115}",
+      "timestamp": "2025-07-31T17:34:19.517742",
+      "session_id": "e44061a2"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document ",
+      "timestamp": "2025-07-31T17:41:35.679624",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document ",
+      "timestamp": "2025-07-31T17:41:35.679624",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "assistant",
+      "content": "An error occurred: Connection error.",
+      "timestamp": "2025-07-31T17:41:37.253160",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document Agent 👤 summarise the document",
+      "timestamp": "2025-07-31T17:41:56.617601",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "assistant",
+      "content": "An error occurred: Connection error.",
+      "timestamp": "2025-07-31T17:41:57.923043",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document Agent 👤 summarise the document",
+      "timestamp": "2025-07-31T17:42:09.867212",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "assistant",
+      "content": "An error occurred: Connection error.",
+      "timestamp": "2025-07-31T17:42:11.165430",
+      "session_id": "97a78f30"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250731_174211",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial",
+    "original_message_count": 11,
+    "timespan": "2025-07-31T17:00:23.137911 - 2025-07-31T17:42:11.165430",
+    "topics": [
+      "risk_factors",
+      "document_analysis",
+      "financial"
+    ],
+    "created_at": "2025-07-31T17:42:11.165895"
+  },
+  "created_at": "2025-07-31T17:42:11.166716"
+}

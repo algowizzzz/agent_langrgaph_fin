@@ -1,0 +1,4 @@
+# Persistent Test Document
+## Regulatory Content
+This document contains regulatory information for testing persistence.
+We discuss compliance requirements and regulatory standards.

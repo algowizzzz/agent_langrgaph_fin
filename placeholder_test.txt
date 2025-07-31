@@ -1,0 +1,4 @@
+# Test Document
+## Regulatory Section
+This section discusses regulatory compliance and requirements.
+The regulatory landscape is evolving rapidly.
