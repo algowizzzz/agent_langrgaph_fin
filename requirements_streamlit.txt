@@ -1,0 +1,29 @@
+# Streamlit UI Requirements for Document Intelligence Agent
+
+# Core Streamlit
+streamlit>=1.28.0
+
+# Existing agent requirements
+python-dotenv
+langchain-anthropic
+langchain
+langchain-core
+
+# Document Processing
+PyPDF2
+python-docx
+pandas
+openpyxl
+
+# Enhanced tools requirements
+numpy
+matplotlib
+seaborn
+wordcloud
+textstat
+textblob
+
+# Additional UI enhancements
+plotly>=5.0.0  # For interactive charts
+streamlit-chat>=0.1.1  # Enhanced chat components (optional)
+streamlit-option-menu>=0.3.0  # Better navigation (optional)
