@@ -266,8 +266,34 @@ class ConversationMemory:
             }
         }
 
-# Global memory instance
-conversation_memory = ConversationMemory()
+# Global memory instance - lazy loaded to avoid slow imports
+_conversation_memory = None
+
+def get_conversation_memory():
+    """Get the global conversation memory instance, creating it if needed."""
+    global _conversation_memory
+    if _conversation_memory is None:
+        _conversation_memory = ConversationMemory()
+    return _conversation_memory
+
+# Module-level access that uses lazy loading
+class _MemoryProxy:
+    def __getattr__(self, name):
+        return getattr(get_conversation_memory(), name)
+    
+    async def add_message(self, *args, **kwargs):
+        return await get_conversation_memory().add_message(*args, **kwargs)
+    
+    async def get_context(self, *args, **kwargs):
+        return await get_conversation_memory().get_context(*args, **kwargs)
+        
+    async def search_long_term(self, *args, **kwargs):
+        return await get_conversation_memory().search_long_term(*args, **kwargs)
+        
+    async def get_memory_stats(self, *args, **kwargs):
+        return await get_conversation_memory().get_memory_stats(*args, **kwargs)
+
+conversation_memory = _MemoryProxy()
 
 # Tool functions for orchestrator
 async def add_conversation_message(role: str, content: str, session_id: str = None) -> Dict[str, Any]:

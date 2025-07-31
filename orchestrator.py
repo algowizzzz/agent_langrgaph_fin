@@ -188,12 +188,35 @@ Example - TARGETED SEARCH:
         return prompt
 
     def _parse_llm_response(self, response_text: str) -> Dict:
-        """Parses the LLM's JSON response."""
+        """Parses the LLM's JSON response, handling extra text after JSON."""
         try:
+            # Try parsing the full response first
             return json.loads(response_text)
         except json.JSONDecodeError:
-            logger.error("Failed to decode LLM response into JSON.")
-            return {"error": "Invalid JSON response from LLM."}
+            # If that fails, try to extract just the JSON part
+            try:
+                # Look for JSON object between { and }
+                start = response_text.find('{')
+                if start == -1:
+                    raise ValueError("No JSON object found")
+                
+                # Find the matching closing brace
+                brace_count = 0
+                end = start
+                for i, char in enumerate(response_text[start:], start):
+                    if char == '{':
+                        brace_count += 1
+                    elif char == '}':
+                        brace_count -= 1
+                        if brace_count == 0:
+                            end = i + 1
+                            break
+                
+                json_part = response_text[start:end]
+                return json.loads(json_part)
+            except (json.JSONDecodeError, ValueError):
+                logger.error("Failed to decode LLM response into JSON.")
+                return {"error": "Invalid JSON response from LLM."}
     
     def _is_placeholder(self, value: str) -> bool:
         """Detects if a string value is a placeholder for previous step output."""
@@ -303,13 +326,18 @@ Final Response:"""
         # Fallback for single-step results
         return self._select_best_final_answer(user_query, step_results, last_result)
 
-    async def run(self, user_query: str, session_id: str, uploaded_files: Dict = None):
+    async def run(self, user_query: str, session_id: str, active_document: str = None):
         """Main execution loop (OODA)."""
         print(f"\n--- 🚀 Orchestrator Starting for Session {session_id} ---")
         self.reasoning_log = [] # Reset for each run
         
         # 1. Orient - Build the prompt
         current_state_prompt = f"Current State:\n- Loaded Docs: {list(document_chunk_store.keys())}\n- User Query: '{user_query}'"
+        
+        # Add active document context if provided
+        if active_document:
+            current_state_prompt += f"\n- ACTIVE DOCUMENT: '{active_document}' (PRIORITIZE this document for analysis)"
+        
         prompt = f"{self.system_prompt}{current_state_prompt}"
         
         print("\n--- 🤔 Asking LLM for a plan ---")
@@ -347,20 +375,25 @@ Final Response:"""
                         for key, value in tool_params.items():
                             if isinstance(value, str) and self._is_placeholder(value):
                                 # Smart reference based on placeholder content
-                                if "search" in value.lower() and "search_uploaded_docs" in step_results:
+                                value_lower = value.lower()
+                                if ("search" in value_lower or "chunk" in value_lower) and "search_uploaded_docs" in step_results:
+                                    print(f"    📎 Smart replacement: {value} → search_uploaded_docs output")
                                     tool_params[key] = step_results["search_uploaded_docs"]
-                                elif "synthesis" in value.lower() and "synthesize_content" in step_results:
+                                elif ("synthesis" in value_lower or "summary" in value_lower) and "synthesize_content" in step_results:
+                                    print(f"    📎 Smart replacement: {value} → synthesize_content output")
                                     tool_params[key] = step_results["synthesize_content"]
                                 else:
                                     # Fallback to previous step result
+                                    print(f"    📎 Fallback replacement: {value} → previous step result")
                                     tool_params[key] = step_result
                     elif isinstance(tool_params, list):
                         # Handle list parameters with placeholders
                         for idx, value in enumerate(tool_params):
                             if isinstance(value, str) and self._is_placeholder(value):
-                                if "search" in value.lower() and "search_uploaded_docs" in step_results:
+                                value_lower = value.lower()
+                                if ("search" in value_lower or "chunk" in value_lower) and "search_uploaded_docs" in step_results:
                                     tool_params[idx] = step_results["search_uploaded_docs"]
-                                elif "synthesis" in value.lower() and "synthesize_content" in step_results:
+                                elif ("synthesis" in value_lower or "summary" in value_lower) and "synthesize_content" in step_results:
                                     tool_params[idx] = step_results["synthesize_content"]
                                 else:
                                     tool_params[idx] = step_result

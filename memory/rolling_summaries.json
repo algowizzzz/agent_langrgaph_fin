@@ -1,34 +1,6 @@
 {
   "summaries": [
     {
-      "summary_id": "sum_20250731_164759",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
-      "original_message_count": 11,
-      "timespan": "2025-07-31T16:47:59.255807 - 2025-07-31T16:47:59.256994",
-      "topics": [
-        "risk_factors",
-        "regulatory",
-        "compliance",
-        "wrong_way_risk",
-        "capital"
-      ],
-      "created_at": "2025-07-31T16:47:59.257051"
-    },
-    {
-      "summary_id": "sum_20250731_164901",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, audit",
-      "original_message_count": 11,
-      "timespan": "2025-07-31T16:47:59.256496 - 2025-07-31T16:49:01.942613",
-      "topics": [
-        "risk_factors",
-        "regulatory",
-        "compliance",
-        "capital",
-        "audit"
-      ],
-      "created_at": "2025-07-31T16:49:01.943538"
-    },
-    {
       "summary_id": "sum_20250731_165906",
       "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, governance",
       "original_message_count": 11,
@@ -76,6 +48,80 @@
         "financial"
       ],
       "created_at": "2025-07-31T17:42:11.165895"
+    },
+    {
+      "summary_id": "sum_20250731_180302",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T17:41:37.253160 - 2025-07-31T18:03:02.067841",
+      "topics": [
+        "document_analysis"
+      ],
+      "created_at": "2025-07-31T18:03:02.068411"
+    },
+    {
+      "summary_id": "sum_20250731_181306",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T17:54:16.369990 - 2025-07-31T18:13:06.210669",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "financial"
+      ],
+      "created_at": "2025-07-31T18:13:06.211035"
+    },
+    {
+      "summary_id": "sum_20250731_183634",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, document_analysis, financial",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T18:03:07.272340 - 2025-07-31T18:36:34.784138",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "financial"
+      ],
+      "created_at": "2025-07-31T18:36:34.784442"
+    },
+    {
+      "summary_id": "sum_20250731_184255",
+      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, document_analysis, financial",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T18:14:26.099390 - 2025-07-31T18:42:55.932582",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "financial"
+      ],
+      "created_at": "2025-07-31T18:42:55.932833"
+    },
+    {
+      "summary_id": "sum_20250731_185135",
+      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, financial",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T18:36:49.377174 - 2025-07-31T18:51:35.044637",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "financial"
+      ],
+      "created_at": "2025-07-31T18:51:35.045004"
+    },
+    {
+      "summary_id": "sum_20250731_191942",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T18:43:37.137275 - 2025-07-31T19:19:42.806046",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-07-31T19:19:42.806445"
     }
   ]
 }

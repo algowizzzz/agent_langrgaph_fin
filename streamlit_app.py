@@ -426,7 +426,7 @@ async def process_user_message(user_input):
             active_doc = st.session_state.active_document
         
         # Process through orchestrator
-        result = await orchestrator.run(user_input, st.session_state.current_chat_id or 'default')
+        result = await orchestrator.run(user_input, st.session_state.current_chat_id or 'default', active_document=active_doc)
         
         # Clear thinking indicator
         thinking_placeholder.empty()
@@ -522,11 +522,11 @@ def render_sidebar():
         st.markdown("<br>", unsafe_allow_html=True)
         
         # Document Upload Section - compact
-        st.markdown('<div class="sidebar-header">📄 Upload</div>', unsafe_allow_html=True)
+        st.markdown('<div class="sidebar-header">📄 Upload Document</div>', unsafe_allow_html=True)
         uploaded_file = st.file_uploader(
-            "",  # No label for compact design
+            "Upload a document for analysis",
             type=['pdf', 'docx', 'txt', 'csv'],
-            help="PDF, DOCX, TXT, CSV",
+            help="Supported formats: PDF, DOCX, TXT, CSV",
             label_visibility="collapsed"
         )
         
@@ -565,8 +565,18 @@ def render_sidebar():
         # Chat History - compact
         st.markdown('<div class="sidebar-header">💬 History</div>', unsafe_allow_html=True)
         
-        # Load chat history
-        asyncio.run(load_chat_history())
+        # Load chat history (non-blocking)
+        try:
+            if 'chat_history_loaded' not in st.session_state:
+                st.session_state.chat_history_loaded = False
+            
+            if not st.session_state.chat_history_loaded:
+                with st.spinner("Loading chat history..."):
+                    asyncio.run(load_chat_history())
+                    st.session_state.chat_history_loaded = True
+        except Exception as e:
+            st.error(f"Error loading chat history: {e}")
+            st.session_state.chat_history_loaded = True  # Don't keep trying
         
         if st.session_state.chat_history:
             for chat_id, chat_data in sorted(
@@ -674,7 +684,7 @@ def main():
     
     with col1:
         user_input = st.text_input(
-            "",
+            "Chat with your document",
             placeholder="Ask about your documents...",
             key="chat_input",
             label_visibility="collapsed"

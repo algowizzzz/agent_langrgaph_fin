@@ -1,0 +1,82 @@
+{
+  "id": "conv_9fc6a607",
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "An error occurred: Connection error.",
+      "timestamp": "2025-07-31T17:41:37.253160",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document Agent 👤 summarise the document",
+      "timestamp": "2025-07-31T17:41:56.617601",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "assistant",
+      "content": "An error occurred: Connection error.",
+      "timestamp": "2025-07-31T17:41:57.923043",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document Agent 👤 summarise the document",
+      "timestamp": "2025-07-31T17:42:09.867212",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "assistant",
+      "content": "An error occurred: Connection error.",
+      "timestamp": "2025-07-31T17:42:11.165430",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "assistant",
+      "content": "An error occurred: Connection error.",
+      "timestamp": "2025-07-31T17:42:11.165430",
+      "session_id": "97a78f30"
+    },
+    {
+      "role": "user",
+      "content": "summarise the attahced document",
+      "timestamp": "2025-07-31T17:54:16.369990",
+      "session_id": "70cb490e"
+    },
+    {
+      "role": "assistant",
+      "content": "Error: Orchestrator.run() got an unexpected keyword argument 'active_document'",
+      "timestamp": "2025-07-31T17:54:16.374839",
+      "session_id": "70cb490e"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document",
+      "timestamp": "2025-07-31T17:57:10.069102",
+      "session_id": "f2fe4946"
+    },
+    {
+      "role": "assistant",
+      "content": "Error: Orchestrator.run() got an unexpected keyword argument 'active_document'",
+      "timestamp": "2025-07-31T17:57:10.072074",
+      "session_id": "f2fe4946"
+    },
+    {
+      "role": "user",
+      "content": "summarise this document",
+      "timestamp": "2025-07-31T18:03:02.067841",
+      "session_id": "fb75ff20"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250731_180302",
+    "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis",
+    "original_message_count": 11,
+    "timespan": "2025-07-31T17:41:37.253160 - 2025-07-31T18:03:02.067841",
+    "topics": [
+      "document_analysis"
+    ],
+    "created_at": "2025-07-31T18:03:02.068411"
+  },
+  "created_at": "2025-07-31T18:03:02.069993"
+}
