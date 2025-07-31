@@ -72,16 +72,51 @@ async def synthesize_content(chunks: List[Dict], method: str, length: str, tone:
 
     # --- Method 2: Refine ---
     elif method == 'refine':
-        initial_chunk = chunks[0]["page_content"]
-        refine_chunks = [chunk["page_content"] for chunk in chunks[1:]]
+        if not chunks:
+            return "Cannot perform refine synthesis: No chunks provided."
         
+        # Optimized batching: Process multiple chunks per LLM call
+        BATCH_SIZE = 15  # Process 15 chunks at once - optimal for context window efficiency
+        
+        # Start with the first chunk as the base
+        initial_chunk = chunks[0]["page_content"]
         initial_prompt = f"User Query: {user_query}\n\nPlease provide an initial {length} analysis of the following text in a {tone} tone:\n\n{initial_chunk}"
         response = await llm.ainvoke(initial_prompt)
         existing_answer = response.content if hasattr(response, 'content') else str(response)
         
-        for i, chunk_text in enumerate(refine_chunks):
-            logger.info(f"Refining with chunk {i+2}/{len(chunks)}")
-            refine_prompt = f"User Query: {user_query}\n\nYou have an existing analysis:\n<existing_analysis>\n{existing_answer}\n</existing_analysis>\n\nPlease refine this analysis with the new information below to create a cohesive {length} response in a {tone} tone:\n\n<new_information>\n{chunk_text}\n</new_information>"
+        # Process remaining chunks in batches
+        remaining_chunks = chunks[1:]
+        
+        for batch_start in range(0, len(remaining_chunks), BATCH_SIZE):
+            batch_end = min(batch_start + BATCH_SIZE, len(remaining_chunks))
+            batch_chunks = remaining_chunks[batch_start:batch_end]
+            
+            # Combine multiple chunks into one batch
+            batch_content = "\n\n--- Document Section ---\n".join([chunk["page_content"] for chunk in batch_chunks])
+            
+            batch_num = (batch_start // BATCH_SIZE) + 1
+            total_batches = (len(remaining_chunks) + BATCH_SIZE - 1) // BATCH_SIZE
+            logger.info(f"Processing batch {batch_num}/{total_batches} ({len(batch_chunks)} chunks)")
+            
+            refine_prompt = f"""User Query: {user_query}
+
+You have an existing analysis:
+<existing_analysis>
+{existing_answer}
+</existing_analysis>
+
+Please refine this analysis with the new information below. Process ALL the document sections provided and create a cohesive {length} response in a {tone} tone:
+
+<new_information>
+{batch_content}
+</new_information>
+
+Instructions:
+- Integrate insights from ALL document sections above
+- Maintain consistency with the existing analysis
+- Ensure comprehensive coverage of the new information
+- Create a unified, well-structured response"""
+
             response = await llm.ainvoke(refine_prompt)
             existing_answer = response.content if hasattr(response, 'content') else str(response)
             
