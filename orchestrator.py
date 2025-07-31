@@ -217,13 +217,24 @@ Example - TARGETED SEARCH:
         
         return indicator_count >= 2 or is_wrapped
 
-    async def run(self, user_query: str, session_id: str, uploaded_files: Dict = None):
+    async def run(self, user_query: str, session_id: str, uploaded_files: Dict = None, active_document: str = None):
         """Main execution loop (OODA)."""
         print(f"\n--- 🚀 Orchestrator Starting for Session {session_id} ---")
         self.reasoning_log = [] # Reset for each run
         
-        # 1. Orient - Build the prompt
-        current_state_prompt = f"Current State:\n- Loaded Docs: {list(document_chunk_store.keys())}\n- User Query: '{user_query}'"
+        # 1. Orient - Build the prompt with active document context
+        loaded_docs = list(document_chunk_store.keys())
+        
+        current_state_prompt = f"Current State:\n- Loaded Docs: {loaded_docs}\n- User Query: '{user_query}'"
+        
+        # Add active document context for better awareness
+        if active_document:
+            if active_document in loaded_docs:
+                current_state_prompt += f"\n- ACTIVE DOCUMENT (just uploaded): '{active_document}'"
+                current_state_prompt += f"\n\nIMPORTANT: When user asks about 'the document', 'attached document', or 'this document', they are referring to: '{active_document}'"
+            else:
+                current_state_prompt += f"\n- WARNING: Active document '{active_document}' not found in loaded docs"
+        
         prompt = f"{self.system_prompt}{current_state_prompt}"
         
         print("\n--- 🤔 Asking LLM for a plan ---")

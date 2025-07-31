@@ -178,6 +178,10 @@ if 'chat_history' not in st.session_state:
     st.session_state.chat_history = {}
 if 'uploaded_documents' not in st.session_state:
     st.session_state.uploaded_documents = []
+if 'active_document' not in st.session_state:
+    st.session_state.active_document = None
+if 'chat_documents' not in st.session_state:
+    st.session_state.chat_documents = {}  # Maps chat_id to active document
 
 async def initialize_orchestrator():
     """Initialize the orchestrator asynchronously."""
@@ -228,6 +232,12 @@ def switch_to_chat(chat_id):
     """Switch to an existing chat."""
     st.session_state.current_chat_id = chat_id
     st.session_state.messages = st.session_state.chat_history[chat_id]['messages'].copy()
+    
+    # Restore active document for this chat
+    if chat_id in st.session_state.chat_documents:
+        st.session_state.active_document = st.session_state.chat_documents[chat_id]
+    else:
+        st.session_state.active_document = None
 
 async def process_uploaded_file(uploaded_file):
     """Process uploaded file through the document system."""
@@ -252,6 +262,12 @@ async def process_uploaded_file(uploaded_file):
                     'uploaded_at': datetime.now().isoformat()
                 }
                 st.session_state.uploaded_documents.append(doc_info)
+                
+                # Set as active document for current chat
+                st.session_state.active_document = result.get('doc_name')
+                if st.session_state.current_chat_id:
+                    st.session_state.chat_documents[st.session_state.current_chat_id] = result.get('doc_name')
+                
                 return True, f"✅ Successfully uploaded '{uploaded_file.name}' ({result.get('chunks_created')} chunks created)"
             else:
                 return False, f"❌ Failed to upload '{uploaded_file.name}': {result.get('message', 'Unknown error')}"
@@ -295,8 +311,15 @@ async def process_user_message(user_input):
         # Get orchestrator
         orchestrator = await initialize_orchestrator()
         
-        # Process through orchestrator
-        result = await orchestrator.run(user_input, st.session_state.current_chat_id or 'default')
+        # Get active document for this chat
+        active_doc = None
+        if st.session_state.current_chat_id and st.session_state.current_chat_id in st.session_state.chat_documents:
+            active_doc = st.session_state.chat_documents[st.session_state.current_chat_id]
+        elif st.session_state.active_document:
+            active_doc = st.session_state.active_document
+        
+        # Process through orchestrator with context
+        result = await orchestrator.run(user_input, st.session_state.current_chat_id or 'default', active_document=active_doc)
         
         # Clear thinking indicator
         thinking_placeholder.empty()
@@ -381,8 +404,24 @@ def render_sidebar():
         # Show uploaded documents
         if st.session_state.uploaded_documents:
             st.markdown("### 📚 Uploaded Documents")
+            
+            # Get active document for current chat
+            active_doc = None
+            if st.session_state.current_chat_id and st.session_state.current_chat_id in st.session_state.chat_documents:
+                active_doc = st.session_state.chat_documents[st.session_state.current_chat_id]
+            elif st.session_state.active_document:
+                active_doc = st.session_state.active_document
+            
             for doc in st.session_state.uploaded_documents[-5:]:  # Show last 5
-                st.markdown(f"• **{doc['name']}** ({doc['chunks_created']} chunks)")
+                if doc['doc_name'] == active_doc:
+                    st.markdown(f"🎯 **{doc['name']}** ({doc['chunks_created']} chunks) *- ACTIVE*")
+                else:
+                    st.markdown(f"• **{doc['name']}** ({doc['chunks_created']} chunks)")
+            
+            # Show active document info
+            if active_doc:
+                st.markdown(f"**Current Focus:** `{active_doc}`")
+                st.markdown("*Queries about 'the document' will use this file*")
         
         st.markdown("---")
         
