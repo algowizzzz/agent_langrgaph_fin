@@ -1,0 +1,86 @@
+{
+  "id": "conv_90006982",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Search the entire document for regulatory mentions.",
+      "timestamp": "2025-07-31T16:47:59.256496",
+      "session_id": "enhanced_business_test"
+    },
+    {
+      "role": "assistant",
+      "content": "The regulatory landscape section discusses compliance with Basel III requirements.",
+      "timestamp": "2025-07-31T16:47:59.256607",
+      "session_id": "enhanced_business_test"
+    },
+    {
+      "role": "user",
+      "content": "Analyze compliance requirements and governance structures.",
+      "timestamp": "2025-07-31T16:47:59.256712",
+      "session_id": "enhanced_business_test"
+    },
+    {
+      "role": "assistant",
+      "content": "Governance oversight includes internal review board and audit processes.",
+      "timestamp": "2025-07-31T16:47:59.256867",
+      "session_id": "enhanced_business_test"
+    },
+    {
+      "role": "user",
+      "content": "What are the capital adequacy requirements?",
+      "timestamp": "2025-07-31T16:47:59.256994",
+      "session_id": "enhanced_business_test"
+    },
+    {
+      "role": "user",
+      "content": "What are the capital adequacy requirements?",
+      "timestamp": "2025-07-31T16:47:59.256994",
+      "session_id": "enhanced_business_test"
+    },
+    {
+      "role": "assistant",
+      "content": "Capital requirements include minimum ratios and buffer requirements for financial institutions.",
+      "timestamp": "2025-07-31T16:47:59.257504",
+      "session_id": "enhanced_business_test"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the Risk Factors section only.",
+      "timestamp": "2025-07-31T16:48:28.423602",
+      "session_id": "integration_test_1"
+    },
+    {
+      "role": "assistant",
+      "content": "{'status': 'success', 'top_words': {'document': 2, 'couldn': 1, 'find': 1, 'risk': 1, 'factors': 1}, 'top_bigrams': {'couldn find': 1, 'find risk': 1, 'risk factors': 1, 'factors section': 1, 'section document': 1}, 'top_trigrams': {'couldn find risk': 1, 'find risk factors': 1, 'risk factors section': 1, 'factors section document': 1, 'section document like': 1}, 'total_unique_words': 12, 'total_unique_bigrams': 12, 'total_unique_trigrams': 11}",
+      "timestamp": "2025-07-31T16:48:34.000810",
+      "session_id": "integration_test_1"
+    },
+    {
+      "role": "user",
+      "content": "Search the entire document for regulatory mentions.",
+      "timestamp": "2025-07-31T16:48:34.001149",
+      "session_id": "integration_test_2"
+    },
+    {
+      "role": "assistant",
+      "content": "I'll integrate the new information with the existing analysis to provide a comprehensive review of regulatory mentions.\n\nUpdated Regulatory Analysis:\n\nDirect Regulatory References:\n1. \"The regulatory landscape is evolving\" (from original text)\n2. \"compliance with... all relevant regulations\" (from Section 3)\n\nGovernance Framework:\nThe document establishes concrete oversight mechanisms through:\n- Internal review board implementation\n- Formal compliance monitoring processes\n- Integration of regulatory compliance with ethical frameworks\n\nKey Observations:\n1. The text demonstrates a two-tiered approach to regulation:\n   - Acknowledgment of external regulatory environment\n   - Implementation of internal governance structures\n2. Regulatory compliance is positioned as a core component alongside ethical considerations\n3. The establishment of an internal review board suggests proactive regulatory management\n\nInstitutional Controls:\n1. Internal Review Board\n   - Designated oversight authority\n   - Project-level review process\n   - Dual focus on ethics and regulatory compliance\n\nContext:\nThe regulatory references appear within a structured governance framework, indicating a systematic approach to compliance and oversight. The document has evolved from general acknowledgment to specific implementation measures.\n\nRecommendations:\n1. Consider expanding detail on:\n   - Specific regulations being monitored\n   - Review board composition and authority\n   - Compliance verification processes\n2. Document may benefit from:\n   - Regular updates to reflect regulatory changes\n   - Clear delineation of compliance responsibilities\n   - Integration with existing corporate governance structures\n\nThis refined analysis reveals a more robust regulatory approach than initially identified, with concrete governance mechanisms supporting compliance objectives.",
+      "timestamp": "2025-07-31T16:49:01.942613",
+      "session_id": "integration_test_2"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250731_164901",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, audit",
+    "original_message_count": 11,
+    "timespan": "2025-07-31T16:47:59.256496 - 2025-07-31T16:49:01.942613",
+    "topics": [
+      "risk_factors",
+      "regulatory",
+      "compliance",
+      "capital",
+      "audit"
+    ],
+    "created_at": "2025-07-31T16:49:01.943538"
+  },
+  "created_at": "2025-07-31T16:49:01.944842"
+}

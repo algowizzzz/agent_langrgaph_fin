@@ -1,0 +1,50 @@
+{
+  "topics": {
+    "risk_factors": [
+      "conv_18a81393",
+      "conv_90006982"
+    ],
+    "regulatory": [
+      "conv_18a81393",
+      "conv_90006982"
+    ],
+    "compliance": [
+      "conv_18a81393",
+      "conv_90006982"
+    ],
+    "wrong_way_risk": [
+      "conv_18a81393"
+    ],
+    "capital": [
+      "conv_18a81393",
+      "conv_90006982"
+    ],
+    "audit": [
+      "conv_90006982"
+    ]
+  },
+  "conversations": {
+    "conv_18a81393": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-07-31T16:47:59.257355"
+    },
+    "conv_90006982": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, audit",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "audit"
+      ],
+      "created_at": "2025-07-31T16:49:01.946129"
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "summaries": [
+    {
+      "summary_id": "sum_20250731_164759",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T16:47:59.255807 - 2025-07-31T16:47:59.256994",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-07-31T16:47:59.257051"
+    },
+    {
+      "summary_id": "sum_20250731_164901",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, audit",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T16:47:59.256496 - 2025-07-31T16:49:01.942613",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "audit"
+      ],
+      "created_at": "2025-07-31T16:49:01.943538"
+    }
+  ]
+}

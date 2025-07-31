@@ -1,0 +1,31 @@
+# Enhanced Document Intelligence Agent Requirements
+
+# Core Requirements (already installed)
+python-dotenv
+langchain-anthropic
+langchain
+langchain-core
+
+# Document Processing
+PyPDF2
+python-docx
+pandas
+openpyxl
+
+# NEW: Code Execution & Data Analysis
+numpy
+matplotlib
+seaborn
+
+# NEW: Text Analytics
+textstat
+textblob
+nltk
+
+# NEW: Visualization
+wordcloud
+plotly  # Alternative/additional plotting library
+
+# Optional Performance Enhancements
+scipy  # For advanced statistics
+scikit-learn  # For ML-based text analysis
