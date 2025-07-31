@@ -240,6 +240,68 @@ Example - TARGETED SEARCH:
             return step_results['synthesize_content']
         
         return last_result
+    
+    async def _create_intelligent_final_response(self, user_query: str, step_results: dict, last_result) -> str:
+        """
+        Final intelligence synthesis - combines all relevant tool outputs into a comprehensive response.
+        This acts as an 'exit node' that creates the most helpful response possible.
+        """
+        
+        # If we have multiple analysis outputs, combine them intelligently
+        if len(step_results) > 1:
+            # Build a comprehensive response using LLM to synthesize all outputs
+            synthesis_prompt = f"""
+User Query: "{user_query}"
+
+I have gathered the following information using multiple analysis tools:
+
+"""
+            
+            # Include relevant outputs
+            if 'synthesize_content' in step_results:
+                synthesis_prompt += f"📄 DOCUMENT SUMMARY:\n{step_results['synthesize_content']}\n\n"
+            
+            if 'extract_key_phrases' in step_results:
+                key_phrases = step_results['extract_key_phrases']
+                if isinstance(key_phrases, dict) and 'top_words' in key_phrases:
+                    top_words = ', '.join([f"{word} ({count})" for word, count in list(key_phrases['top_words'].items())[:8]])
+                    synthesis_prompt += f"🔑 KEY TOPICS: {top_words}\n\n"
+                elif isinstance(key_phrases, str):
+                    synthesis_prompt += f"🔑 KEY INSIGHTS:\n{key_phrases}\n\n"
+            
+            if 'discover_document_structure' in step_results:
+                structure = step_results['discover_document_structure']
+                if isinstance(structure, dict) and 'headers' in structure:
+                    headers = ', '.join(structure['headers'][:5])  # First 5 headers
+                    synthesis_prompt += f"📋 DOCUMENT STRUCTURE: {headers}\n\n"
+            
+            if 'search_uploaded_docs' in step_results:
+                search_results = step_results['search_uploaded_docs']
+                if isinstance(search_results, list) and len(search_results) > 0:
+                    synthesis_prompt += f"📊 FOUND {len(search_results)} relevant sections\n\n"
+            
+            synthesis_prompt += f"""
+Please create a comprehensive, well-structured response that directly answers the user's query by intelligently combining the above information. 
+
+Requirements:
+- Start with a direct answer to their question
+- Include the most relevant details from the analysis
+- Be concise but thorough
+- Use a professional, helpful tone
+- Structure the response logically
+
+Final Response:"""
+            
+            try:
+                response = await self.llm.ainvoke(synthesis_prompt)
+                return response.content if hasattr(response, 'content') else str(response)
+            except Exception as e:
+                logger.error(f"Failed to create intelligent final response: {e}")
+                # Fallback to smart selection
+                return self._select_best_final_answer(user_query, step_results, last_result)
+        
+        # Fallback for single-step results
+        return self._select_best_final_answer(user_query, step_results, last_result)
 
     async def run(self, user_query: str, session_id: str, uploaded_files: Dict = None):
         """Main execution loop (OODA)."""
@@ -320,8 +382,8 @@ Example - TARGETED SEARCH:
                     # Store string representation for logging, but keep actual result for next step
                     self.reasoning_log.append({"tool_name": tool_name, "tool_params": tool_params, "tool_output": str(step_result)})
 
-                # Smart final answer selection based on the query type and available results
-                final_answer = self._select_best_final_answer(user_query, step_results, step_result)
+                # Final intelligence synthesis - combine all relevant outputs into a comprehensive response
+                final_answer = await self._create_intelligent_final_response(user_query, step_results, step_result)
                 return {"status": "success", "final_answer": final_answer, "reasoning_log": self.reasoning_log}
             else:
                 return {"status": "error", "final_answer": "Could not generate a valid plan.", "reasoning_log": self.reasoning_log}
