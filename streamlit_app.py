@@ -27,21 +27,18 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Meta-inspired clean design - Blue and White theme
+# Simple clean design - White background + Black text + Light grey bubbles
 st.markdown("""
 <style>
-    /* Meta-style color palette */
+    /* Simple color palette */
     :root {
-        --meta-blue: #1877F2;
-        --meta-blue-light: #42A4FF;
-        --meta-blue-dark: #166FE5;
-        --meta-gray: #65676B;
-        --meta-gray-light: #8A8D91;
-        --meta-gray-bg: #F0F2F5;
-        --meta-white: #FFFFFF;
-        --meta-border: #DAE0E6;
-        --meta-text: #1C1E21;
-        --meta-text-secondary: #65676B;
+        --primary-blue: #1877F2;
+        --text-black: #000000;
+        --text-gray: #555555;
+        --background-white: #FFFFFF;
+        --bubble-light-gray: #F5F5F5;
+        --border-gray: #DDDDDD;
+        --input-bg: #FFFFFF;
     }
     
     /* Hide Streamlit defaults */
@@ -55,14 +52,14 @@ st.markdown("""
     
     /* Overall app styling */
     .stApp {
-        background-color: var(--meta-gray-bg);
+        background-color: var(--background-white);
     }
     
     /* Compact sidebar */
     .css-1d391kg {
         width: 280px !important;
-        background-color: var(--meta-white);
-        border-right: 1px solid var(--meta-border);
+        background-color: var(--background-white);
+        border-right: 1px solid var(--border-gray);
     }
     
     /* Sidebar content sizing */
@@ -70,98 +67,83 @@ st.markdown("""
         margin-bottom: 0.5rem;
     }
     
-    /* Reduced font sizes globally */
+    /* Simple font styling */
     html, body, [class*="css"] {
-        font-size: 13px;
-        font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        font-size: 14px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+        color: var(--text-black);
     }
     
-    /* Chat messages - Meta style */
+    /* Clean chat messages */
     .user-message {
-        background-color: var(--meta-blue);
+        background-color: var(--primary-blue);
         color: white;
-        padding: 8px 12px;
-        border-radius: 16px;
-        margin: 4px 0 4px 20%;
-        font-size: 13px;
+        padding: 10px 14px;
+        border-radius: 18px;
+        margin: 8px 0 8px 20%;
+        font-size: 14px;
         line-height: 1.4;
         max-width: 70%;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.1);
     }
     
     .assistant-message {
-        background-color: var(--meta-white);
-        color: var(--meta-text);
-        border: 1px solid var(--meta-border);
+        background-color: var(--bubble-light-gray);
+        color: var(--text-black);
         padding: 12px 16px;
-        border-radius: 16px;
-        margin: 4px 20% 4px 0;
-        font-size: 13px;
+        border-radius: 18px;
+        margin: 8px 20% 8px 0;
+        font-size: 14px;
         line-height: 1.5;
         max-width: 75%;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
     
-    /* Collapsible reasoning */
-    .reasoning-container {
-        background-color: var(--meta-gray-bg);
-        border: 1px solid var(--meta-border);
+    /* Simple reasoning styling */
+    .reasoning-content {
+        background-color: var(--bubble-light-gray);
+        padding: 10px 14px;
         border-radius: 8px;
         margin: 8px 20% 8px 0;
-        font-size: 11px;
+        color: var(--text-gray);
+        line-height: 1.4;
+        font-size: 12px;
+        font-family: "SF Mono", Monaco, "Courier New", monospace;
         max-width: 75%;
     }
     
-    .reasoning-header {
-        padding: 6px 12px;
-        background-color: var(--meta-blue-light);
-        color: white;
-        border-radius: 7px 7px 0 0;
-        cursor: pointer;
-        font-weight: 500;
-        font-size: 11px;
-    }
-    
-    .reasoning-content {
-        padding: 8px 12px;
-        color: var(--meta-text-secondary);
-        line-height: 1.3;
-        font-size: 11px;
-        font-family: "SF Mono", Monaco, "Cascadia Code", monospace;
-    }
-    
-    /* Compact buttons */
+    /* Simple buttons */
     .stButton > button {
-        border-radius: 6px;
-        border: 1px solid var(--meta-border);
-        background-color: var(--meta-blue);
+        border-radius: 8px;
+        border: 1px solid var(--border-gray);
+        background-color: var(--primary-blue);
         color: white;
         font-weight: 500;
-        font-size: 12px;
-        padding: 6px 12px;
-        height: 32px;
-        transition: all 0.2s ease;
+        font-size: 14px;
+        padding: 8px 16px;
+        height: 40px;
     }
     
     .stButton > button:hover {
-        background-color: var(--meta-blue-dark);
-        transform: none;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        background-color: #0d5bc9;
     }
     
-    /* Compact text input */
+    /* Fixed text input - WHITE background with BLACK text */
     .stTextInput > div > div > input {
-        border-radius: 20px;
-        border: 1px solid var(--meta-border);
-        padding: 8px 16px;
-        font-size: 13px;
-        height: 36px;
-        background-color: var(--meta-gray-bg);
+        border-radius: 24px;
+        border: 2px solid var(--border-gray);
+        padding: 10px 16px;
+        font-size: 14px;
+        height: 44px;
+        background-color: var(--input-bg) !important;
+        color: var(--text-black) !important;
+    }
+    
+    .stTextInput > div > div > input::placeholder {
+        color: var(--text-gray) !important;
     }
     
     .stTextInput > div > div > input:focus {
-        border-color: var(--meta-blue);
-        box-shadow: 0 0 0 1px var(--meta-blue);
+        border-color: var(--primary-blue);
+        outline: none;
     }
     
     /* Compact file uploader */
@@ -171,8 +153,8 @@ st.markdown("""
     
     /* Sidebar headers */
     .sidebar-header {
-        color: var(--meta-text);
-        font-size: 14px;
+        color: var(--text-black);
+        font-size: 15px;
         font-weight: 600;
         margin-bottom: 8px;
         padding: 0 4px;
@@ -180,43 +162,41 @@ st.markdown("""
     
     /* Document list */
     .doc-item {
-        background-color: var(--meta-white);
-        border: 1px solid var(--meta-border);
-        border-radius: 6px;
-        padding: 6px 8px;
-        margin: 3px 0;
-        font-size: 11px;
-        color: var(--meta-text-secondary);
+        background-color: var(--bubble-light-gray);
+        border: 1px solid var(--border-gray);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin: 4px 0;
+        font-size: 12px;
+        color: var(--text-black);
     }
     
     .doc-item.active {
-        background-color: rgba(24, 119, 242, 0.1);
-        border-color: var(--meta-blue);
-        color: var(--meta-blue);
+        background-color: var(--primary-blue);
+        border-color: var(--primary-blue);
+        color: white;
     }
     
     /* Chat history items */
     .chat-item {
-        background-color: var(--meta-white);
-        border: 1px solid var(--meta-border);
-        border-radius: 6px;
-        padding: 6px 8px;
-        margin: 3px 0;
-        font-size: 11px;
-        color: var(--meta-text-secondary);
+        background-color: var(--bubble-light-gray);
+        border: 1px solid var(--border-gray);
+        border-radius: 8px;
+        padding: 8px 10px;
+        margin: 4px 0;
+        font-size: 12px;
+        color: var(--text-black);
         cursor: pointer;
-        transition: all 0.2s ease;
     }
     
     .chat-item:hover {
-        background-color: var(--meta-gray-bg);
-        border-color: var(--meta-blue-light);
+        background-color: #EEEEEE;
     }
     
     .chat-item.active {
-        background-color: rgba(24, 119, 242, 0.1);
-        border-color: var(--meta-blue);
-        color: var(--meta-blue);
+        background-color: var(--primary-blue);
+        border-color: var(--primary-blue);
+        color: white;
     }
     
     /* Compact spacing */
@@ -226,45 +206,45 @@ st.markdown("""
     
     /* Status indicators */
     .status-thinking {
-        color: var(--meta-blue);
-        font-size: 11px;
+        color: var(--primary-blue);
+        font-size: 12px;
     }
     
     .status-success {
-        color: #42B883;
-        font-size: 11px;
+        color: #28A745;
+        font-size: 12px;
     }
     
     .status-error {
-        color: #E74C3C;
-        font-size: 11px;
+        color: #DC3545;
+        font-size: 12px;
     }
     
     /* Welcome message */
     .welcome-container {
         text-align: center;
         padding: 2rem 1rem;
-        color: var(--meta-text-secondary);
-        background-color: var(--meta-white);
+        color: var(--text-gray);
+        background-color: var(--background-white);
         border-radius: 12px;
         margin: 1rem 0;
-        border: 1px solid var(--meta-border);
+        border: 1px solid var(--border-gray);
     }
     
     .welcome-container h3 {
-        color: var(--meta-text);
-        font-size: 18px;
+        color: var(--text-black);
+        font-size: 20px;
         margin-bottom: 0.5rem;
     }
     
     .welcome-container p {
-        font-size: 13px;
+        font-size: 14px;
         line-height: 1.4;
         margin-bottom: 0.5rem;
     }
     
     .welcome-container ul {
-        font-size: 12px;
+        font-size: 13px;
         text-align: left;
         display: inline-block;
         margin: 0.5rem 0;
@@ -441,14 +421,14 @@ async def process_user_message(user_input):
         # Clear thinking indicator
         thinking_placeholder.empty()
         
-        # Show reasoning if available - format for collapsible display
+        # Add reasoning FIRST (if available)
         if result.get('reasoning_log'):
-            reasoning_content = "Reasoning Steps:\n"
+            reasoning_content = "Steps:\n"
             for i, step in enumerate(result['reasoning_log'], 1):
                 if isinstance(step, dict) and 'tool_name' in step:
                     tool_params = step.get('tool_params', {})
                     # Format parameters nicely
-                    params_str = ", ".join([f"{k}: {v}" for k, v in tool_params.items()])
+                    params_str = ", ".join([f"{k}: {str(v)[:50]}..." if len(str(v)) > 50 else f"{k}: {v}" for k, v in tool_params.items()])
                     reasoning_content += f"{i}. {step['tool_name']}({params_str})\n"
             
             reasoning_msg = {
@@ -458,8 +438,16 @@ async def process_user_message(user_input):
             }
             st.session_state.messages.append(reasoning_msg)
         
-        # Add assistant response
+        # Add assistant response SECOND (clean separation)
         response_content = result.get('final_answer', 'No response generated')
+        
+        # Clean up the response - remove any extra status info
+        if isinstance(response_content, dict):
+            if 'error' in response_content:
+                response_content = f"Sorry, there was an error: {response_content['error']}"
+            else:
+                response_content = str(response_content)
+        
         assistant_msg = {
             'role': 'assistant',
             'content': response_content,
@@ -606,30 +594,28 @@ def render_chat_messages():
                         unsafe_allow_html=True
                     )
                 elif message['role'] == 'reasoning':
-                    # Collapsible reasoning section with improved implementation
-                    reasoning_id = f"reasoning_{i}"
-                    
-                    # Use Streamlit's expander for better functionality
-                    with st.expander("🧠 Agent Reasoning", expanded=False):
+                    # Clean collapsible reasoning
+                    with st.expander("🔍 How I solved this", expanded=False):
                         st.markdown(f"""
                         <div class="reasoning-content">
                             {message["content"].replace('\n', '<br>')}
                         </div>
                         """, unsafe_allow_html=True)
+                        
                 elif message['role'] == 'assistant':
-                    status_icon = "✅" if message.get('status') == 'success' else "❌" if message.get('status') == 'error' else "🤖"
-                    
-                    # Format the response content better
+                    # Clean assistant response - no extra labels
                     content = message["content"]
+                    
+                    # Clean up any unwanted formatting
                     if isinstance(content, str):
-                        # Convert markdown-style formatting to HTML
-                        content = content.replace('**', '<strong>').replace('**', '</strong>')
-                        content = content.replace('\n\n', '</p><p>')
+                        # Remove any "Agent:" prefixes that might be in content
+                        content = content.replace('Agent:', '').strip()
+                        # Simple line break formatting
+                        content = content.replace('\n\n', '<br><br>')
                         content = content.replace('\n', '<br>')
-                        content = f'<p>{content}</p>'
                     
                     st.markdown(
-                        f'<div class="assistant-message">{status_icon} <strong>Agent:</strong><br>{content}</div>',
+                        f'<div class="assistant-message">{content}</div>',
                         unsafe_allow_html=True
                     )
 
