@@ -236,7 +236,9 @@ Example - TARGETED SEARCH:
             
             if "plan" in parsed_response:
                 plan = parsed_response["plan"]
-                step_result = None
+                step_results = {}  # Store results by step type for smart reference
+                step_result = None  # Keep for backward compatibility
+                
                 for i, step in enumerate(plan):
                     # Handle multiple possible formats
                     if "tool_call" in step:
@@ -254,17 +256,28 @@ Example - TARGETED SEARCH:
                     else:
                         continue  # Skip steps without tool calls (e.g., "thought" only)
                     
-                    # Handle placeholder values for previous step outputs
+                    # Smart placeholder replacement
                     if isinstance(tool_params, dict):
                         for key, value in tool_params.items():
-                            # Handle various placeholder formats the LLM might use
                             if isinstance(value, str) and self._is_placeholder(value):
-                                tool_params[key] = step_result
+                                # Smart reference based on placeholder content
+                                if "search" in value.lower() and "search_uploaded_docs" in step_results:
+                                    tool_params[key] = step_results["search_uploaded_docs"]
+                                elif "synthesis" in value.lower() and "synthesize_content" in step_results:
+                                    tool_params[key] = step_results["synthesize_content"]
+                                else:
+                                    # Fallback to previous step result
+                                    tool_params[key] = step_result
                     elif isinstance(tool_params, list):
                         # Handle list parameters with placeholders
-                        for i, value in enumerate(tool_params):
+                        for idx, value in enumerate(tool_params):
                             if isinstance(value, str) and self._is_placeholder(value):
-                                tool_params[i] = step_result
+                                if "search" in value.lower() and "search_uploaded_docs" in step_results:
+                                    tool_params[idx] = step_results["search_uploaded_docs"]
+                                elif "synthesis" in value.lower() and "synthesize_content" in step_results:
+                                    tool_params[idx] = step_results["synthesize_content"]
+                                else:
+                                    tool_params[idx] = step_result
                     
                     print(f"  Executing Step {i+1}: {tool_name}({tool_params})")
                     
@@ -276,6 +289,10 @@ Example - TARGETED SEARCH:
                         tool_params["user_query"] = user_query
                         
                     step_result = await tool_function(**tool_params)
+                    
+                    # Store results by tool name for smart reference
+                    step_results[tool_name] = step_result
+                    
                     # Store string representation for logging, but keep actual result for next step
                     self.reasoning_log.append({"tool_name": tool_name, "tool_params": tool_params, "tool_output": str(step_result)})
 
