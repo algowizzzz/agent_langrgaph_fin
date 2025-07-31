@@ -216,6 +216,30 @@ Example - TARGETED SEARCH:
                     'PLACEHOLDER' in value.upper()
         
         return indicator_count >= 2 or is_wrapped
+    
+    def _select_best_final_answer(self, user_query: str, step_results: dict, last_result) -> str:
+        """Select the most appropriate final answer based on query type and available results."""
+        query_lower = user_query.lower()
+        
+        # For summarization queries, prefer synthesis output over analysis metrics
+        if any(word in query_lower for word in ['summarize', 'summarise', 'summary', 'overview']):
+            if 'synthesize_content' in step_results:
+                return step_results['synthesize_content']
+        
+        # For search queries, prefer search results
+        elif any(word in query_lower for word in ['find', 'search', 'mention', 'look for']):
+            if 'search_uploaded_docs' in step_results:
+                return step_results['search_uploaded_docs']
+        
+        # For analysis queries, use the last analytical result  
+        elif any(word in query_lower for word in ['analyze', 'analyse', 'metrics', 'statistics']):
+            return last_result
+            
+        # For general queries, prefer synthesis if available, otherwise use last result
+        if 'synthesize_content' in step_results:
+            return step_results['synthesize_content']
+        
+        return last_result
 
     async def run(self, user_query: str, session_id: str, uploaded_files: Dict = None):
         """Main execution loop (OODA)."""
@@ -296,7 +320,8 @@ Example - TARGETED SEARCH:
                     # Store string representation for logging, but keep actual result for next step
                     self.reasoning_log.append({"tool_name": tool_name, "tool_params": tool_params, "tool_output": str(step_result)})
 
-                final_answer = step_result
+                # Smart final answer selection based on the query type and available results
+                final_answer = self._select_best_final_answer(user_query, step_results, step_result)
                 return {"status": "success", "final_answer": final_answer, "reasoning_log": self.reasoning_log}
             else:
                 return {"status": "error", "final_answer": "Could not generate a valid plan.", "reasoning_log": self.reasoning_log}
