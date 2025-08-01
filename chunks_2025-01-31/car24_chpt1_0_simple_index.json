@@ -1,0 +1,27 @@
+{
+  "document_name": "car24_chpt1_0_simple",
+  "total_chunks": 2,
+  "created_at": "2025-08-01T18:06:13.105431",
+  "section_map": {
+    "Annex 1": {
+      "chunk_id": 0,
+      "title": "Domestic Systemic Importance and Capital Targets",
+      "word_count": 10,
+      "section": "Annex 1",
+      "subsection": null,
+      "sub_subsection": null
+    },
+    "Annex 2": {
+      "chunk_id": 1,
+      "title": "Supervisory Target Capital Requirements",
+      "word_count": 1793,
+      "section": "Annex 2",
+      "subsection": null,
+      "sub_subsection": null
+    }
+  },
+  "quick_lookup": {
+    "Annex 1": 0,
+    "Annex 2": 1
+  }
+}
