@@ -1,64 +1,6 @@
 {
   "summaries": [
     {
-      "summary_id": "sum_20250731_174211",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial",
-      "original_message_count": 11,
-      "timespan": "2025-07-31T17:00:23.137911 - 2025-07-31T17:42:11.165430",
-      "topics": [
-        "risk_factors",
-        "document_analysis",
-        "financial"
-      ],
-      "created_at": "2025-07-31T17:42:11.165895"
-    },
-    {
-      "summary_id": "sum_20250731_180302",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis",
-      "original_message_count": 11,
-      "timespan": "2025-07-31T17:41:37.253160 - 2025-07-31T18:03:02.067841",
-      "topics": [
-        "document_analysis"
-      ],
-      "created_at": "2025-07-31T18:03:02.068411"
-    },
-    {
-      "summary_id": "sum_20250731_181306",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial",
-      "original_message_count": 11,
-      "timespan": "2025-07-31T17:54:16.369990 - 2025-07-31T18:13:06.210669",
-      "topics": [
-        "risk_factors",
-        "document_analysis",
-        "financial"
-      ],
-      "created_at": "2025-07-31T18:13:06.211035"
-    },
-    {
-      "summary_id": "sum_20250731_183634",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, document_analysis, financial",
-      "original_message_count": 11,
-      "timespan": "2025-07-31T18:03:07.272340 - 2025-07-31T18:36:34.784138",
-      "topics": [
-        "risk_factors",
-        "document_analysis",
-        "financial"
-      ],
-      "created_at": "2025-07-31T18:36:34.784442"
-    },
-    {
-      "summary_id": "sum_20250731_184255",
-      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, document_analysis, financial",
-      "original_message_count": 11,
-      "timespan": "2025-07-31T18:14:26.099390 - 2025-07-31T18:42:55.932582",
-      "topics": [
-        "risk_factors",
-        "document_analysis",
-        "financial"
-      ],
-      "created_at": "2025-07-31T18:42:55.932833"
-    },
-    {
       "summary_id": "sum_20250731_185135",
       "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, financial",
       "original_message_count": 11,
@@ -125,6 +67,73 @@
         "financial"
       ],
       "created_at": "2025-07-31T19:54:59.262880"
+    },
+    {
+      "summary_id": "sum_20250731_203822",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, search_queries, financial",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T19:31:08.409308 - 2025-07-31T20:38:22.248569",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-07-31T20:38:22.250152"
+    },
+    {
+      "summary_id": "sum_20250731_204034",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T19:55:08.195725 - 2025-07-31T20:40:34.670351",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-07-31T20:40:34.670765"
+    },
+    {
+      "summary_id": "sum_20250731_204347",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T20:38:40.293707 - 2025-07-31T20:43:47.989884",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-07-31T20:43:47.990510"
+    },
+    {
+      "summary_id": "sum_20250731_204705",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, document_analysis, search_queries, financial",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T20:40:48.988734 - 2025-07-31T20:47:05.226611",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-07-31T20:47:05.227931"
+    },
+    {
+      "summary_id": "sum_20250731_205415",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial, reporting",
+      "original_message_count": 11,
+      "timespan": "2025-07-31T20:43:57.905089 - 2025-07-31T20:54:15.772021",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "financial",
+        "reporting"
+      ],
+      "created_at": "2025-07-31T20:54:15.772722"
     }
   ]
 }

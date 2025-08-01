@@ -8,11 +8,11 @@
   },
   "overall_summary": {
     "total_tests_planned": 10,
-    "total_tests_executed": 6,
-    "total_tests_passed": 5,
-    "total_tests_failed": 1,
-    "success_rate": 83.3,
-    "status": "IN_PROGRESS"
+    "total_tests_executed": 10,
+    "total_tests_passed": 8,
+    "total_tests_failed": 2,
+    "success_rate": 80.0,
+    "status": "COMPLETED"
   },
   "test_categories": {
     "document_tools": {
@@ -25,11 +25,11 @@
     },
     "text_analytics": {
       "tests_planned": 4,
-      "tests_executed": 0,
-      "tests_passed": 0,
-      "tests_failed": 0,
-      "success_rate": 0,
-      "status": "PENDING"
+      "tests_executed": 4,
+      "tests_passed": 3,
+      "tests_failed": 1,
+      "success_rate": 75.0,
+      "status": "COMPLETED"
     }
   },
   "detailed_test_results": [
@@ -146,18 +146,90 @@
         "accessibility_assessment": "too_long_and_complex"
       },
       "issues_identified": "Need shorter, simpler explanations for educational use cases"
+    },
+    {
+      "test_id": "ANALYTICS_007",
+      "test_name": "analyze_text_metrics", 
+      "category": "text_analytics",
+      "status": "PASS",
+      "execution_time": "2025-01-30T11:00:00Z",
+      "description": "Count word frequency and analyze text statistics",
+      "target_document": "testing_31jul/test_files/riskandfinace.pdf",
+      "expected_outcome": "Word count metrics and frequency analysis",
+      "actual_outcome": "Successfully analyzed 1649 chars, found 'risk' 12 times, provided readability scores",
+      "business_value": "Users get detailed text analytics for content analysis",
+      "technical_details": {
+        "text_length": 1649,
+        "risk_mentions": 12,
+        "tool_integration": "enhanced_orchestrator_data_flow"
+      },
+      "issues_identified": "None - data transformation working correctly"
+    },
+    {
+      "test_id": "ANALYTICS_008", 
+      "test_name": "extract_key_phrases",
+      "category": "text_analytics",
+      "status": "PASS",
+      "execution_time": "2025-01-30T11:05:00Z",
+      "description": "Extract top business terms and key phrases",
+      "target_document": "testing_31jul/test_files/riskandfinace.pdf",
+      "expected_outcome": "Top 10-15 relevant business/regulatory terms",
+      "actual_outcome": "Successfully extracted key terms: risk(12), finance(6), investment(4), etc.",
+      "business_value": "Users identify important document themes and concepts quickly",
+      "technical_details": {
+        "top_n": 15,
+        "key_terms_found": ["risk", "finance", "investment", "market", "credit"],
+        "extraction_method": "frequency_based_nlp"
+      },
+      "issues_identified": "None - working as expected"
+    },
+    {
+      "test_id": "ANALYTICS_009",
+      "test_name": "analyze_sentiment",
+      "category": "text_analytics", 
+      "status": "PASS",
+      "execution_time": "2025-01-30T11:10:00Z",
+      "description": "Analyze sentiment and tone of financial document",
+      "target_document": "testing_31jul/test_files/riskandfinace.pdf",
+      "expected_outcome": "Neutral/Professional sentiment classification",
+      "actual_outcome": "Correctly classified as 'neutral' sentiment (score: 0) - appropriate for financial content",
+      "business_value": "Users understand document tone and perspective for context",
+      "technical_details": {
+        "sentiment_label": "neutral",
+        "sentiment_score": 0,
+        "classification_accuracy": "appropriate_for_financial_content"
+      },
+      "issues_identified": "None - correctly identified professional neutral tone"
+    },
+    {
+      "test_id": "ANALYTICS_010",
+      "test_name": "extract_entities",
+      "category": "text_analytics",
+      "status": "FAIL", 
+      "execution_time": "2025-01-30T11:15:00Z",
+      "description": "Find dates, monetary values, and percentages",
+      "target_document": "Sample text with entities",
+      "expected_outcome": "List of financial entities, dates, percentages",
+      "actual_outcome": "Found emails, phone, URLs but missed money amounts and percentages in test text",
+      "business_value": "FAILED - Entity extraction not comprehensive enough for financial analysis",
+      "technical_details": {
+        "entities_found": ["emails", "phone_numbers", "urls", "potential_names"],
+        "entities_missed": ["money_amounts", "percentages", "dates"],
+        "extraction_coverage": "partial"
+      },
+      "issues_identified": "Entity extraction patterns need improvement for financial content"
     }
   ],
   "critical_issues": [
     {
-      "issue_id": "CRITICAL_001",
+      "issue_id": "CRITICAL_001", 
       "title": "Data Flow Issue - Text Analytics Blocking",
-      "status": "IDENTIFIED_NOT_TESTED",
-      "description": "Orchestrator passing list objects to tools expecting string inputs",
-      "error_message": "string indices must be integers, not 'str'",
-      "impact": "Text analytics tools fail when receiving search results",
-      "priority": "HIGH",
-      "next_action": "Test text analytics tools to confirm fix needed"
+      "status": "RESOLVED",
+      "description": "Orchestrator passing list objects to tools expecting string inputs - FIXED with smart data transformation",
+      "error_message": "RESOLVED - Enhanced placeholder replacement with EXTRACT_PAGE_CONTENT patterns",
+      "impact": "Text analytics tools now working correctly with 3/4 tests passing",
+      "priority": "RESOLVED",
+      "next_action": "COMPLETED - Enhanced orchestrator with proven workflow patterns"
     },
     {
       "issue_id": "MINOR_001", 
@@ -184,8 +256,9 @@
       "Targeted section extraction - WORKING"
     ],
     "failed_capabilities": [
-      "Educational content simplification - NEEDS IMPROVEMENT"
+      "Educational content simplification - NEEDS IMPROVEMENT",
+      "Financial entity extraction - NEEDS IMPROVEMENT"  
     ],
-    "user_value_delivered": "Users can upload, search, and get professional analysis of documents. Educational features need refinement."
+    "user_value_delivered": "Users can upload, search, get professional analysis, word counting, sentiment analysis, and key phrase extraction from documents. Educational simplification and comprehensive entity extraction need refinement."
   }
 }

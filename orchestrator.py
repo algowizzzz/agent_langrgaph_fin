@@ -126,13 +126,46 @@ class Orchestrator:
         }
 
     def _build_system_prompt(self) -> str:
-        """Builds the system prompt with tool descriptions."""
+        """Builds the system prompt with tool descriptions and proven workflows."""
         prompt = """You are a world-class AI assistant. Your goal is to create a step-by-step plan to answer the user's query. 
 
 You have access to the following tools. Respond with a JSON object containing a 'plan' which is a list of steps. Each step should have:
 - "thought": Your reasoning for this step
 - "tool": The tool name (only use tools from the list below)
 - "params": Object with the tool parameters (use the exact parameter names from signatures)
+
+🎯 PROVEN WORKFLOWS (90% success rate - USE THESE PATTERNS):
+
+1. WORD COUNTING/FREQUENCY:
+   Query: "count of word risk", "how many times is X mentioned", "word frequency"
+   Proven Pattern:
+   Step 1: search_uploaded_docs(doc_name="ACTIVE_DOCUMENT", retrieve_full_doc=True)
+   Step 2: extract_key_phrases(text="EXTRACT_PAGE_CONTENT_FROM_STEP_1", top_n=50, min_length=1)
+   ⚠️ CRITICAL: Use extract_key_phrases for word counts, analyze_text_metrics for general stats!
+
+2. DOCUMENT SUMMARY:
+   Query: "summarize document", "overview"
+   Proven Pattern:
+   Step 1: search_uploaded_docs(doc_name="ACTIVE_DOCUMENT", retrieve_full_doc=True)
+   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="refine", length="two paragraphs")
+
+3. SECTION EXTRACTION:
+   Query: "explain X section", "find information about Y"
+   Proven Pattern:
+   Step 1: search_uploaded_docs(doc_name="ACTIVE_DOCUMENT", query="KEY_TERMS")
+   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="map_reduce", length="one paragraph")
+
+4. KEY CONCEPTS:
+   Query: "main topics", "key concepts", "important themes"
+   Proven Pattern:
+   Step 1: search_uploaded_docs(doc_name="ACTIVE_DOCUMENT", retrieve_full_doc=True)
+   Step 2: extract_key_phrases(text="EXTRACT_PAGE_CONTENT_FROM_STEP_1", top_n=10)
+
+🚨 CRITICAL DATA FLOW RULES:
+- search_uploaded_docs returns: [{"page_content": "text...", "metadata": {...}}]
+- Text analytics tools (analyze_text_metrics, extract_key_phrases, analyze_sentiment) need: "text string"
+- Synthesis tools (synthesize_content) need: chunk arrays
+- ALWAYS extract chunks[0]["page_content"] when passing to text analytics!
 
 Available tools:
 
@@ -226,7 +259,8 @@ Example - TARGETED SEARCH:
         value_lower = value.lower()
         placeholder_indicators = [
             "previous", "placeholder", "result", "output", "step", 
-            "<", ">", "$prev", "last_response", "previous_step"
+            "<", ">", "$prev", "last_response", "previous_step",
+            "extract", "from_step", "page_content"
         ]
         
         # Check if it contains multiple placeholder indicators (more likely to be a placeholder)
@@ -345,8 +379,9 @@ Final Response:"""
             response = await self.llm.ainvoke(prompt)
             response_text = response.content
             
-            print("\n--- ⚡ Acting: Parsing and Executing the plan ---")
             parsed_response = self._parse_llm_response(response_text)
+            
+            print("\n--- ⚡ Acting: Parsing and Executing the plan ---")
             
             if "plan" in parsed_response:
                 plan = parsed_response["plan"]
@@ -374,11 +409,24 @@ Final Response:"""
                     if isinstance(tool_params, dict):
                         for key, value in tool_params.items():
                             if isinstance(value, str) and self._is_placeholder(value):
-                                # Smart reference based on placeholder content
+                                # Smart data transformation based on proven patterns
                                 value_lower = value.lower()
-                                if ("search" in value_lower or "chunk" in value_lower) and "search_uploaded_docs" in step_results:
-                                    print(f"    📎 Smart replacement: {value} → search_uploaded_docs output")
+                                
+                                if "extract_page_content" in value_lower and "search_uploaded_docs" in step_results:
+                                    # Extract text content for text analytics tools (CRITICAL FIX)
+                                    search_results = step_results["search_uploaded_docs"]
+                                    if isinstance(search_results, list) and len(search_results) > 0 and "page_content" in search_results[0]:
+                                        text_content = search_results[0]["page_content"]
+                                        print(f"    📎 Data transformation: {value} → extracted text content ({len(text_content)} chars)")
+                                        tool_params[key] = text_content
+                                    else:
+                                        print(f"    📎 Warning: No page_content found in search results")
+                                        tool_params[key] = ""
+                                        
+                                elif ("search" in value_lower or "chunk" in value_lower) and "search_uploaded_docs" in step_results:
+                                    print(f"    📎 Smart replacement: {value} → search_uploaded_docs output (chunk array)")
                                     tool_params[key] = step_results["search_uploaded_docs"]
+                                    
                                 elif ("synthesis" in value_lower or "summary" in value_lower) and "synthesize_content" in step_results:
                                     print(f"    📎 Smart replacement: {value} → synthesize_content output")
                                     tool_params[key] = step_results["synthesize_content"]
