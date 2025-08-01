@@ -1,0 +1,92 @@
+{
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 6,
+    "failed_tests": 2,
+    "success_rate": 75.0
+  },
+  "test_results": [
+    {
+      "test_name": "Backend Health Check",
+      "success": true,
+      "message": "Backend is responsive",
+      "details": null,
+      "timestamp": 1754076458.663181
+    },
+    {
+      "test_name": "TXT Upload",
+      "success": true,
+      "message": "Successfully uploaded with 2 chunks",
+      "details": {
+        "status": "success",
+        "filename": "3c88b7dc-0b87-4d9c-a2e4-ab4f11d7236d_test_document.txt",
+        "chunks_created": 2,
+        "file_size": "2.3 KB",
+        "file_type": "TXT",
+        "processing_time_ms": 4,
+        "error_message": null
+      },
+      "timestamp": 1754076458.792892
+    },
+    {
+      "test_name": "CSV Upload",
+      "success": true,
+      "message": "Successfully uploaded with 3 chunks",
+      "details": {
+        "status": "success",
+        "filename": "03ffa571-8e91-4caf-b04b-d57e09d4e41b_sample_data.csv",
+        "chunks_created": 3,
+        "file_size": "0.9 KB",
+        "file_type": "CSV",
+        "processing_time_ms": 286,
+        "error_message": null
+      },
+      "timestamp": 1754076459.0829551
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": true,
+      "message": "Generated summary (1198 chars) in 28852ms",
+      "details": {
+        "answer_preview": "Here's a summary of the document:\n\nThe document describes an AI Document Agent system, a sophisticated document processing solution that combines artificial intelligence with robust security and compl...",
+        "reasoning_steps": 2
+      },
+      "timestamp": 1754076488.512435
+    },
+    {
+      "test_name": "Word Count Query",
+      "success": false,
+      "message": "No word count found in response",
+      "details": null,
+      "timestamp": 1754076500.4296162
+    },
+    {
+      "test_name": "Key Topics Extraction",
+      "success": true,
+      "message": "Extracted topics (1051 chars)",
+      "details": {
+        "topics_preview": "Here are the main topics extracted from the document:\n\n1. Technical Architecture & Infrastructure\n- FastAPI/Python backend\n- Next.js/TypeScript frontend\n- OpenAI GPT integration\n- LangChain document h...",
+        "reasoning_steps": 3
+      },
+      "timestamp": 1754076523.2503748
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": true,
+      "message": "Generated summary (948 chars) in 24996ms",
+      "details": {
+        "answer_preview": "Here is a summary of the document:\n\nThe document analyzes employee data for 20 staff members across four departments (Finance, Marketing, IT, and HR). The analysis focuses on key metrics including sal...",
+        "reasoning_steps": 3
+      },
+      "timestamp": 1754076548.2500741
+    },
+    {
+      "test_name": "CSV Data Query",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754076548.252684
+    }
+  ],
+  "session_id": "test_session_1754076458"
+}

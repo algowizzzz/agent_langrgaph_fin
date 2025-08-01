@@ -32,36 +32,20 @@ async def synthesize_content(chunks: List[Dict], method: str, length: str, tone:
     Processes a list of text chunks to generate a coherent output using a specified method with a live LLM.
     The user_query is now passed to provide context to the synthesis process.
     """
-    logger.info(f"Synthesizing {len(chunks)} chunks using method '{method}' for query: '{user_query}'.")
-
+    # Input validation - handle common data type issues
+    if isinstance(chunks, str):
+        logger.warning(f"Received string instead of chunks list: {chunks}")
+        return f"Error: Expected document chunks, but received placeholder text '{chunks}'. This indicates a data flow issue in the processing pipeline."
+    
+    if not isinstance(chunks, list):
+        logger.error(f"Invalid input type for synthesize_content: expected list, got {type(chunks)}")
+        return f"Error: synthesize_content requires a list of document chunks, but received {type(chunks).__name__}."
+    
     if not chunks:
-        # Provide helpful response based on the query type
-        if user_query and 'section' in user_query.lower():
-            # Extract section name more robustly
-            query_lower = user_query.lower()
-            if "'" in user_query:
-                section_name = user_query.split("'")[1]
-            elif '"' in user_query:
-                section_name = user_query.split('"')[1] 
-            else:
-                # Extract section name from patterns like "Risk Factors section"
-                import re
-                # Try different patterns to extract section name
-                patterns = [
-                    r'summarize\s+the\s+([^\'\"]+?)\s+section',  # "Summarize the Risk Factors section"
-                    r'(?:the\s+)?([A-Za-z\s]+?)\s+section',      # "Risk Factors section"
-                ]
-                section_name = "requested section"
-                for pattern in patterns:
-                    match = re.search(pattern, query_lower)
-                    if match:
-                        section_name = match.group(1).strip().title()
-                        break
-            return f"I couldn't find a '{section_name}' section in this document. Would you like me to search the entire document for related content instead?"
-        elif user_query and any(word in user_query.lower() for word in ['search', 'find', 'mention']):
-            return "I didn't find any matches for your search terms in this document. The content may not contain the specific terms you're looking for, or they might be phrased differently."
-        else:
-            return "I couldn't find relevant content to synthesize. This might mean the requested information isn't present in the document or needs different search terms."
+        logger.warning("Received empty chunks list for synthesis")
+        return "No content available to synthesize. Please ensure document chunks are provided."
+    
+    logger.info(f"Synthesizing {len(chunks)} chunks using method '{method}' for query: '{user_query}'.")
 
     # --- Method 1: Simple LLM Call ---
     if method == 'simple_llm_call':

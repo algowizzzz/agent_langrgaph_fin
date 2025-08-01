@@ -1,0 +1,21 @@
+Employee_ID,Name,Department,Salary,Risk_Level,Performance_Score,Years_Experience
+1001,John Smith,Finance,65000,Low,85,5
+1002,Sarah Johnson,Marketing,58000,Medium,92,3
+1003,Michael Brown,IT,72000,Low,88,7
+1004,Emily Davis,HR,55000,High,78,2
+1005,David Wilson,Finance,68000,Medium,90,6
+1006,Lisa Miller,Marketing,62000,Low,86,4
+1007,Robert Jones,IT,75000,High,83,8
+1008,Jennifer Garcia,HR,57000,Medium,89,3
+1009,Christopher Lee,Finance,70000,Low,94,9
+1010,Amanda Martinez,Marketing,59000,High,81,2
+1011,Matthew Anderson,IT,73000,Medium,87,6
+1012,Jessica Taylor,HR,56000,Low,91,4
+1013,Daniel Thomas,Finance,67000,High,82,5
+1014,Ashley White,Marketing,61000,Medium,88,3
+1015,Andrew Harris,IT,74000,Low,85,7
+1016,Stephanie Clark,HR,58000,High,90,4
+1017,Ryan Lewis,Finance,69000,Medium,86,8
+1018,Michelle Robinson,Marketing,60000,Low,93,5
+1019,Kevin Walker,IT,76000,High,84,9
+1020,Nicole Hall,HR,57000,Medium,87,3

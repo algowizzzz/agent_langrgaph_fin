@@ -40,3 +40,31 @@ class UploadResponse(BaseModel):
 class SessionCleanupResponse(BaseModel):
     status: str = "success"
     message: str = "Session cleaned up"
+
+# Frontend API Models
+class FrontendChatRequest(BaseModel):
+    query: str
+    session_id: str
+    active_document: Optional[str] = None
+
+class ReasoningStep(BaseModel):
+    tool_name: str
+    tool_params: Dict
+    tool_output: str
+
+class FrontendChatResponse(BaseModel):
+    status: str = "success"
+    final_answer: str
+    reasoning_log: List[ReasoningStep] = []
+    processing_time_ms: int
+    session_id: str
+    error_message: Optional[str] = None
+
+class FrontendUploadResponse(BaseModel):
+    status: str = "success"
+    filename: str
+    chunks_created: int
+    file_size: str
+    file_type: str
+    processing_time_ms: int
+    error_message: Optional[str] = None

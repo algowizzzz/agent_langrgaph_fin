@@ -1,0 +1,69 @@
+AI Document Agent Test Document
+
+This is a comprehensive test document for the AI Document Agent system. The document contains various types of content to test different capabilities.
+
+EXECUTIVE SUMMARY
+
+The AI Document Agent represents a significant advancement in document processing technology. This system leverages artificial intelligence to analyze, extract, and synthesize information from various document types including PDF, DOCX, CSV, and TXT files.
+
+KEY FEATURES
+
+1. Document Upload and Processing
+   - Supports multiple file formats
+   - Intelligent chunking for large documents
+   - Metadata extraction and preservation
+
+2. Natural Language Querying
+   - Advanced query processing
+   - Context-aware responses
+   - Multi-step reasoning capabilities
+
+3. Content Analysis
+   - Text summarization
+   - Key phrase extraction
+   - Sentiment analysis
+   - Topic modeling
+
+TECHNICAL SPECIFICATIONS
+
+The system is built using the following technologies:
+- Backend: FastAPI with Python
+- Frontend: Next.js with TypeScript
+- AI Processing: OpenAI GPT models
+- Document Processing: LangChain
+- Database: JSON-based document store
+
+RISK FACTORS
+
+Several risk factors should be considered when implementing this system:
+
+1. Data Privacy Risk: Ensure all uploaded documents comply with privacy regulations
+2. Security Risk: Implement proper authentication and authorization
+3. Performance Risk: Monitor system performance under high loads
+4. Accuracy Risk: Validate AI responses for critical business decisions
+
+The word "risk" appears multiple times in this document to test word counting functionality.
+
+FINANCIAL INFORMATION
+
+The project has the following financial metrics:
+- Development Cost: $50,000
+- Annual Operating Cost: $12,000
+- Expected ROI: 300%
+- Break-even Period: 18 months
+
+COMPLIANCE REQUIREMENTS
+
+This system must comply with:
+- GDPR for European users
+- SOX requirements for financial data
+- HIPAA for healthcare documents
+- ISO 27001 for information security
+
+CONCLUSION
+
+The AI Document Agent provides a robust solution for intelligent document processing. The system offers excellent performance with an 80% success rate in production testing. Regular monitoring and maintenance are recommended to ensure optimal performance.
+
+For questions about this document, contact the development team at support@aidocumentagent.com.
+
+Total word count: approximately 350 words.

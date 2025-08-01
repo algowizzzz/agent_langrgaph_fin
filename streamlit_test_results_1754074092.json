@@ -1,0 +1,86 @@
+{
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 4,
+    "failed_tests": 4,
+    "success_rate": 50.0
+  },
+  "test_results": [
+    {
+      "test_name": "Backend Health Check",
+      "success": true,
+      "message": "Backend is responsive",
+      "details": null,
+      "timestamp": 1754074061.859078
+    },
+    {
+      "test_name": "TXT Upload",
+      "success": true,
+      "message": "Successfully uploaded with 2 chunks",
+      "details": {
+        "status": "success",
+        "filename": "test_document.txt",
+        "chunks_created": 2,
+        "file_size": "2.3 KB",
+        "file_type": "TXT",
+        "processing_time_ms": 4,
+        "error_message": null
+      },
+      "timestamp": 1754074062.020777
+    },
+    {
+      "test_name": "CSV Upload",
+      "success": true,
+      "message": "Successfully uploaded with 3 chunks",
+      "details": {
+        "status": "success",
+        "filename": "sample_data.csv",
+        "chunks_created": 3,
+        "file_size": "0.9 KB",
+        "file_type": "CSV",
+        "processing_time_ms": 337,
+        "error_message": null
+      },
+      "timestamp": 1754074062.3620522
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": false,
+      "message": "Chat failed: None",
+      "details": null,
+      "timestamp": 1754074069.5222442
+    },
+    {
+      "test_name": "Word Count Query",
+      "success": true,
+      "message": "Successfully counted words: I apologize, but I notice that while there appears to be a query about counting the word \"risk\" in a...",
+      "details": {
+        "full_answer": "I apologize, but I notice that while there appears to be a query about counting the word \"risk\" in a document, I don't actually see the document content in the provided information. While there's mention of \"1 relevant section\" being found, the actual text content is missing, making it impossible to provide an accurate count.\n\nTo properly answer this query, I would need:\n1. The actual document text to analyze\n2. Or the specific count that was found by the analysis tools\n\nWould you be able to provide the document content or the specific count so I can give you an accurate answer?",
+        "reasoning_steps": 2
+      },
+      "timestamp": 1754074078.8493419
+    },
+    {
+      "test_name": "Key Topics Extraction",
+      "success": false,
+      "message": "Query failed: None",
+      "details": null,
+      "timestamp": 1754074085.5000849
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": false,
+      "message": "Chat failed: None",
+      "details": null,
+      "timestamp": 1754074092.6706629
+    },
+    {
+      "test_name": "CSV Data Query",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754074092.6727722
+    }
+  ],
+  "session_id": "test_session_1754074061"
+}

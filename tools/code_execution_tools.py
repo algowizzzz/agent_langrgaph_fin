@@ -90,9 +90,53 @@ async def process_table_data(table_data: List[Dict], operation: str, **kwargs) -
     Returns:
         Processed data results
     """
+    # Input validation
+    if isinstance(table_data, str):
+        return {
+            "status": "error",
+            "error": f"Invalid input: expected table data (list), got placeholder string '{table_data}'",
+            "operation": operation
+        }
+    
+    if not isinstance(table_data, list):
+        return {
+            "status": "error", 
+            "error": f"Invalid input type: expected list, got {type(table_data).__name__}",
+            "operation": operation
+        }
+    
     try:
-        # Convert to DataFrame
-        df = pd.DataFrame(table_data)
+        # Check if this is document chunks instead of actual table data
+        if isinstance(table_data, list) and len(table_data) > 0 and isinstance(table_data[0], dict):
+            if 'page_content' in table_data[0] and 'metadata' in table_data[0]:
+                # This is document chunks, not table data - extract CSV data from content
+                csv_text = ""
+                for chunk in table_data:
+                    content = chunk.get('page_content', '')
+                    # Skip header chunks
+                    if not content.startswith('#'):
+                        csv_text += content + "\n"
+                
+                # Parse CSV text into DataFrame
+                from io import StringIO
+                try:
+                    df = pd.read_csv(StringIO(csv_text.strip()), sep=r'\s+', engine='python')
+                except:
+                    # Fallback: treat as simple text analysis
+                    return {
+                        "status": "success", 
+                        "operation": operation,
+                        "data": {
+                            "message": "CSV data processed from document chunks",
+                            "content_summary": f"Found {len(table_data)} chunks with CSV content",
+                            "sample_content": csv_text[:500] + "..." if len(csv_text) > 500 else csv_text
+                        }
+                    }
+            else:
+                # Regular table data
+                df = pd.DataFrame(table_data)
+        else:
+            df = pd.DataFrame(table_data)
         
         result = {"status": "success", "operation": operation}
         
@@ -100,7 +144,7 @@ async def process_table_data(table_data: List[Dict], operation: str, **kwargs) -
             result["data"] = {
                 "shape": df.shape,
                 "columns": df.columns.tolist(),
-                "dtypes": df.dtypes.to_dict(),
+                "dtypes": {col: str(dtype) for col, dtype in df.dtypes.to_dict().items()},
                 "numeric_summary": df.describe().to_dict() if len(df.select_dtypes(include=[np.number]).columns) > 0 else {}
             }
             

@@ -1,0 +1,82 @@
+{
+  "id": "conv_fc35ce8d",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello, test message 2",
+      "timestamp": "2025-08-01T16:31:01.845134",
+      "session_id": "memory_debug"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! I see this appears to be a test message. I'll respond in kind - I'm here and ready to help! Let me know if you have any actual questions or topics you'd like to discuss.",
+      "timestamp": "2025-08-01T16:31:11.268269",
+      "session_id": "memory_debug"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the employee data in this CSV.",
+      "timestamp": "2025-08-01T16:32:15.556091",
+      "session_id": "single_test_session_cab1b6d6-44c9-43ad-9d9f-dc6051c4d84e"
+    },
+    {
+      "role": "assistant",
+      "content": "I apologize, but I notice that there appears to be an error in accessing or processing the CSV file data that was meant to be analyzed. Without access to the actual employee data, I cannot provide a meaningful summary.\n\nTo properly summarize employee data, I would need information such as:\n- Number of employees\n- Key demographic information\n- Job titles/departments\n- Relevant metrics or statistics\n- Any notable patterns or trends\n\nWould you be able to share the employee CSV data directly? Once you do, I can provide a detailed summary of the information contained within it.",
+      "timestamp": "2025-08-01T16:32:29.060398",
+      "session_id": "single_test_session_cab1b6d6-44c9-43ad-9d9f-dc6051c4d84e"
+    },
+    {
+      "role": "user",
+      "content": "Based on your previous response, how many departments are there?",
+      "timestamp": "2025-08-01T16:32:29.068139",
+      "session_id": "single_test_session_cab1b6d6-44c9-43ad-9d9f-dc6051c4d84e"
+    },
+    {
+      "role": "user",
+      "content": "Based on your previous response, how many departments are there?",
+      "timestamp": "2025-08-01T16:32:29.068139",
+      "session_id": "single_test_session_cab1b6d6-44c9-43ad-9d9f-dc6051c4d84e"
+    },
+    {
+      "role": "assistant",
+      "content": "I apologize, but I don't have access to any previous response or conversation that would allow me to determine the number of departments being referenced. Without this context, I cannot provide an accurate answer about how many departments there are.\n\nTo help you get the information you're looking for, could you please:\n1. Share the previous response you're referring to, or\n2. Provide more context about which organization or system you're asking about\n\nOnce you provide this additional context, I'll be happy to give you a specific answer about the number of departments.",
+      "timestamp": "2025-08-01T16:32:41.059644",
+      "session_id": "single_test_session_cab1b6d6-44c9-43ad-9d9f-dc6051c4d84e"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the employee data in this CSV.",
+      "timestamp": "2025-08-01T16:36:15.980667",
+      "session_id": "single_test_session_fe05f235-053c-4a31-bac1-464268f41242"
+    },
+    {
+      "role": "assistant",
+      "content": "Here's a summary of the employee data from the CSV:\n\nThe dataset contains information for 22 employees across multiple departments with the following key characteristics:\n\nDepartmental Distribution:\n- Employees are spread across 4 departments: Finance, Marketing, IT, and HR\n\nSalary Information:\n- Average salary: $64,545\n- Salary range: $55,000 - $76,000\n- Most salaries fall between $58,250 (25th percentile) and $69,750 (75th percentile)\n\nPerformance Metrics:\n- Average performance score: 87 out of 100\n- Performance range: 78-94\n- Most employees score between 84-90\n\nExperience and Risk Profile:\n- Average years of experience: 5 years\n- Experience range: 2-9 years\n- Risk levels are categorized as Low, Medium, or High\n\nNotable Patterns:\n- IT department tends to have higher salaries and more experienced employees\n- HR department shows higher risk levels in the sample data\n- Performance scores are generally strong across all departments, with most employees scoring above 80\n\nThe data suggests a well-balanced workforce with varying levels of experience and competitive compensation structures across different departments.",
+      "timestamp": "2025-08-01T16:36:26.862375",
+      "session_id": "single_test_session_fe05f235-053c-4a31-bac1-464268f41242"
+    },
+    {
+      "role": "user",
+      "content": "Based on your previous response, how many departments are there?",
+      "timestamp": "2025-08-01T16:36:26.869996",
+      "session_id": "single_test_session_fe05f235-053c-4a31-bac1-464268f41242"
+    },
+    {
+      "role": "assistant",
+      "content": "None",
+      "timestamp": "2025-08-01T16:36:31.635784",
+      "session_id": "single_test_session_fe05f235-053c-4a31-bac1-464268f41242"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250801_163631",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis",
+    "original_message_count": 11,
+    "timespan": "2025-08-01T16:31:01.845134 - 2025-08-01T16:36:31.635784",
+    "topics": [
+      "document_analysis"
+    ],
+    "created_at": "2025-08-01T16:36:31.636292"
+  },
+  "created_at": "2025-08-01T16:36:31.637422"
+}

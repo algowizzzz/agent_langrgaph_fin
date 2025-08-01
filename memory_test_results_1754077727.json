@@ -1,0 +1,60 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "passed_tests": 2,
+    "failed_tests": 3,
+    "success_rate": 40.0,
+    "categories": {
+      "CSV": {
+        "passed": 1,
+        "total": 2
+      },
+      "TXT": {
+        "passed": 1,
+        "total": 2
+      },
+      "Cross-Document": {
+        "passed": 0,
+        "total": 1
+      }
+    }
+  },
+  "test_results": [
+    {
+      "test_name": "CSV Upload",
+      "success": true,
+      "message": "Uploaded f036d3bf-487c-485f-94a4-92970a7bb2cf_sample_data.csv (3 chunks)",
+      "details": null,
+      "timestamp": 1754077726.699392
+    },
+    {
+      "test_name": "TXT Upload",
+      "success": true,
+      "message": "Uploaded 54455d77-dc80-4239-8229-af146f02acc4_test_document.txt (2 chunks)",
+      "details": null,
+      "timestamp": 1754077726.704746
+    },
+    {
+      "test_name": "CSV Initial Summary",
+      "success": false,
+      "message": "Failed to get initial summary",
+      "details": null,
+      "timestamp": 1754077727.1812968
+    },
+    {
+      "test_name": "TXT Risk Analysis",
+      "success": false,
+      "message": "Failed to get risk analysis",
+      "details": null,
+      "timestamp": 1754077727.1832461
+    },
+    {
+      "test_name": "Cross-Document Memory",
+      "success": false,
+      "message": "Failed to get response",
+      "details": null,
+      "timestamp": 1754077727.1847758
+    }
+  ],
+  "session_id": "memory_test_1754077726"
+}

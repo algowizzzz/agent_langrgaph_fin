@@ -1,0 +1,32 @@
+{
+  "summary": {
+    "total_tests": 3,
+    "passed_tests": 1,
+    "failed_tests": 2,
+    "success_rate": 33.33333333333333
+  },
+  "test_results": [
+    {
+      "test_name": "Backend Health Check",
+      "success": true,
+      "message": "Backend is responsive",
+      "details": null,
+      "timestamp": 1754073966.3941178
+    },
+    {
+      "test_name": "TXT Upload",
+      "success": false,
+      "message": "HTTP error: 422",
+      "details": null,
+      "timestamp": 1754073966.396661
+    },
+    {
+      "test_name": "CSV Upload",
+      "success": false,
+      "message": "HTTP error: 422",
+      "details": null,
+      "timestamp": 1754073966.398945
+    }
+  ],
+  "session_id": "test_session_1754073966"
+}

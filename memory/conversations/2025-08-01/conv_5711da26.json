@@ -1,0 +1,85 @@
+{
+  "id": "conv_5711da26",
+  "messages": [
+    {
+      "role": "user",
+      "content": "In our conversation about risks, did you find any financial numbers?",
+      "timestamp": "2025-08-01T15:51:20.946942",
+      "session_id": "memory_test_1754077777"
+    },
+    {
+      "role": "assistant",
+      "content": "Yes, I found several financial figures in our conversation about risks. The key numbers discussed were:\n\n• Development cost: $50,000\n• Annual operating cost: $12,000\n• Expected ROI: 300%\n• Break-even timeline: 18 months\n\nThese financial metrics appear to have been part of a broader risk assessment discussion and provide important context for evaluating the financial aspects of the project.",
+      "timestamp": "2025-08-01T15:51:35.011435",
+      "session_id": "memory_test_1754077777"
+    },
+    {
+      "role": "user",
+      "content": "What did we discuss about employee data earlier in our conversation?",
+      "timestamp": "2025-08-01T15:51:35.017085",
+      "session_id": "memory_test_1754077777"
+    },
+    {
+      "role": "assistant",
+      "content": "[]",
+      "timestamp": "2025-08-01T15:51:40.406363",
+      "session_id": "memory_test_1754077777"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the employee data in this CSV.",
+      "timestamp": "2025-08-01T15:55:31.241374",
+      "session_id": "single_test_session_ec756245-145b-4a84-810e-5bb41a853d90"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the employee data in this CSV.",
+      "timestamp": "2025-08-01T15:55:31.241374",
+      "session_id": "single_test_session_ec756245-145b-4a84-810e-5bb41a853d90"
+    },
+    {
+      "role": "assistant",
+      "content": "Here's a comprehensive summary of the employee data:\n\nThe company's workforce is distributed across four key departments: Finance, Marketing, IT, and HR. Here are the main insights:\n\nSalary & Compensation:\n- Salary range: $55,000 - $76,000\n- IT leads with highest average salaries (~$74,000)\n- Finance follows with average salaries around $68,000\n- Marketing and HR positions generally offer lower compensation\n\nExperience & Performance:\n- Experience levels range from 2-9 years, evenly distributed\n- Strong performance scores across all departments (78-94)\n- Company average performance score exceeds 85\n\nDepartmental Structure:\n- Four main departments show balanced staffing\n- Clear departmental salary bands are established\n- Risk levels (Low, Medium, High) are distributed across all departments with no clear departmental correlation\n\nThe data indicates a mature organization with well-defined compensation structures and a robust performance evaluation system. The workforce appears diverse in terms of experience levels while maintaining consistently strong performance metrics across all departments.",
+      "timestamp": "2025-08-01T15:55:48.621979",
+      "session_id": "single_test_session_ec756245-145b-4a84-810e-5bb41a853d90"
+    },
+    {
+      "role": "user",
+      "content": "Based on your previous response, how many departments are there?",
+      "timestamp": "2025-08-01T15:55:48.628876",
+      "session_id": "single_test_session_ec756245-145b-4a84-810e-5bb41a853d90"
+    },
+    {
+      "role": "assistant",
+      "content": "{'status': 'error', 'error': 'DataFrame constructor not properly called!', 'traceback': 'Traceback (most recent call last):\\n  File \"/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/tools/code_execution_tools.py\", line 124, in process_table_data\\n    df = pd.DataFrame(table_data)\\n  File \"/Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/pandas/core/frame.py\", line 886, in __init__\\n    raise ValueError(\"DataFrame constructor not properly called!\")\\nValueError: DataFrame constructor not properly called!\\n'}",
+      "timestamp": "2025-08-01T15:55:54.165988",
+      "session_id": "single_test_session_ec756245-145b-4a84-810e-5bb41a853d90"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the employee data in this CSV.",
+      "timestamp": "2025-08-01T15:56:18.284353",
+      "session_id": "single_test_session_32f70930-7179-4073-b349-9cfdca9270bf"
+    },
+    {
+      "role": "assistant",
+      "content": "Here's a comprehensive summary of the employee data:\n\nThe company's workforce is distributed across four key departments: Finance, Marketing, IT, and HR. Here are the main insights:\n\nSalary & Experience:\n- Salary range: $55,000 - $76,000\n- IT leads with highest average salaries (~$74,000)\n- Finance follows at ~$68,000\n- Marketing and HR have lower compensation ranges\n- Experience levels span 2-9 years (median ~5 years)\n\nPerformance & Risk:\n- Strong performance scores across departments (78-94, averaging 87)\n- Risk levels are evenly distributed between Low, Medium, and High categories\n- No strong correlation between risk levels and performance\n- Slight positive relationship observed between experience and salary\n\nDepartmental Structure:\nThe workforce is balanced across Finance, Marketing, IT, and HR departments, each maintaining distinct salary ranges and performance metrics while contributing to a diverse organizational composition.\n\nThis data suggests a well-structured organization with clear departmental hierarchies and competitive compensation based on role and experience level.",
+      "timestamp": "2025-08-01T15:56:37.162591",
+      "session_id": "single_test_session_32f70930-7179-4073-b349-9cfdca9270bf"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250801_155637",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, search_queries, financial",
+    "original_message_count": 11,
+    "timespan": "2025-08-01T15:51:20.946942 - 2025-08-01T15:56:37.162591",
+    "topics": [
+      "risk_factors",
+      "document_analysis",
+      "search_queries",
+      "financial"
+    ],
+    "created_at": "2025-08-01T15:56:37.163260"
+  },
+  "created_at": "2025-08-01T15:56:37.164668"
+}

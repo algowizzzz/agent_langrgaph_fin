@@ -61,16 +61,24 @@ class DocumentProcessor:
             # Process with appropriate splitter
             if file_type == "PDF":
                 # PDF content already has page headers, use markdown splitter
-                docs = self.markdown_splitter.split_text(content)
+                text_chunks = self.markdown_splitter.split_text(content)
             else:
                 # Use recursive splitter for other types
-                docs = self.recursive_splitter.split_text(content)
+                text_chunks = self.recursive_splitter.split_text(content)
                 
-            # Add metadata
-            for doc in docs:
-                doc.metadata["source"] = str(file_path)
-                doc.metadata["file_type"] = file_type
-                doc.metadata["file_name"] = file_path.name
+            # Create Document objects with metadata
+            docs = []
+            for i, chunk in enumerate(text_chunks):
+                doc = Document(
+                    page_content=chunk,
+                    metadata={
+                        "source": str(file_path),
+                        "file_type": file_type,
+                        "file_name": file_path.name,
+                        "chunk_index": i
+                    }
+                )
+                docs.append(doc)
                 
             return {"success": True, "documents": docs, "file_type": file_type}
             

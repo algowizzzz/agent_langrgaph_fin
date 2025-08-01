@@ -185,7 +185,7 @@ class ConversationMemory:
         self._save_json(self.search_index_file, search_index)
     
     async def get_context(self, query: str = None) -> Dict[str, Any]:
-        """Get conversation context for the agent."""
+        """Get conversation context for the agent - includes last 10 messages automatically."""
         # Get short-term memory (recent messages)
         short_term = self._load_json(self.short_term_file)
         
@@ -193,16 +193,21 @@ class ConversationMemory:
         rolling_summaries = self._load_json(self.rolling_summaries_file)
         recent_summaries = rolling_summaries.get("summaries", [])[-3:]  # Last 3 summaries
         
+        # 🎯 NEW: Always include last 10 messages for conversation continuity
+        all_messages = short_term["messages"]
+        conversation_history = all_messages[-10:] if len(all_messages) > 10 else all_messages
+        
         # Search long-term memory if query provided
         relevant_history = []
         if query:
             relevant_history = await self.search_long_term(query)
         
         return {
-            "short_term": short_term["messages"],
+            "conversation_history": conversation_history,  # 🎯 NEW: Last 10 messages
+            "short_term": short_term["messages"],  # Keep for compatibility
             "recent_summaries": recent_summaries,
             "relevant_history": relevant_history,
-            "context_summary": f"Short-term: {len(short_term['messages'])} messages, Recent summaries: {len(recent_summaries)}, Relevant history: {len(relevant_history)}"
+            "context_summary": f"Conversation history: {len(conversation_history)} messages, Recent summaries: {len(recent_summaries)}, Relevant history: {len(relevant_history)}"
         }
     
     async def search_long_term(self, query: str, max_results: int = 5) -> List[Dict]:

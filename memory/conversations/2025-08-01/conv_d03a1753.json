@@ -1,0 +1,83 @@
+{
+  "id": "conv_d03a1753",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Based on your previous response, how many departments are there?",
+      "timestamp": "2025-08-01T16:28:58.039866",
+      "session_id": "single_test_session_de148bb8-00a8-4596-8fae-97e569251f92"
+    },
+    {
+      "role": "assistant",
+      "content": "I apologize, but I don't have access to any previous response or conversation that would allow me to determine the number of departments being referenced. Without this context, I cannot provide an accurate answer about how many departments there are.\n\nTo help you get the information you're looking for, could you please:\n1. Share the previous response you're referring to, or\n2. Provide more context about which organization or system you're asking about\n\nOnce you provide this additional context, I'll be happy to give you a specific answer about the number of departments.",
+      "timestamp": "2025-08-01T16:29:07.583807",
+      "session_id": "single_test_session_de148bb8-00a8-4596-8fae-97e569251f92"
+    },
+    {
+      "role": "user",
+      "content": "What are the departments based on your previous analysis?",
+      "timestamp": "2025-08-01T16:29:30.248294",
+      "session_id": "debug_followup_test"
+    },
+    {
+      "role": "assistant",
+      "content": "I apologize, but I don't see any actual department information in the provided context to analyze and respond to the query about departments. Without specific details about departments from previous analysis, I cannot provide an accurate answer about what departments exist.\n\nTo properly answer this question, I would need:\n- A list of identified departments\n- Any relevant details about these departments\n- Context from the previous analysis being referenced\n\nWould you be able to provide the specific department information from the previous analysis you're referring to?",
+      "timestamp": "2025-08-01T16:29:43.451465",
+      "session_id": "debug_followup_test"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the employee data in this CSV.",
+      "timestamp": "2025-08-01T16:30:19.210614",
+      "session_id": "single_test_session_0d665158-ecdf-4d12-b73a-5115b4de6d41"
+    },
+    {
+      "role": "user",
+      "content": "Summarize the employee data in this CSV.",
+      "timestamp": "2025-08-01T16:30:19.210614",
+      "session_id": "single_test_session_0d665158-ecdf-4d12-b73a-5115b4de6d41"
+    },
+    {
+      "role": "assistant",
+      "content": "I apologize, but I notice that there appears to be an error in accessing or processing the CSV file data that was meant to be analyzed. Without access to the actual employee data, I cannot provide a meaningful summary.\n\nTo properly help you summarize employee data, I would need:\n1. Access to the actual CSV file, or\n2. The employee data pasted directly into our conversation\n\nWould you please share the employee data you'd like me to analyze? Once you do, I can provide a comprehensive summary including key metrics, trends, and notable patterns in the data.",
+      "timestamp": "2025-08-01T16:30:32.447513",
+      "session_id": "single_test_session_0d665158-ecdf-4d12-b73a-5115b4de6d41"
+    },
+    {
+      "role": "user",
+      "content": "Based on your previous response, how many departments are there?",
+      "timestamp": "2025-08-01T16:30:32.457112",
+      "session_id": "single_test_session_0d665158-ecdf-4d12-b73a-5115b4de6d41"
+    },
+    {
+      "role": "assistant",
+      "content": "I apologize, but I don't have access to any previous response or conversation that would allow me to determine the number of departments being referenced. Without this context, I cannot provide an accurate answer about how many departments there are.\n\nTo help you get the information you're looking for, could you please:\n1. Share the previous response you're referring to, or\n2. Provide more context about which organization or system you're asking about\n\nOnce you provide this additional context, I'll be happy to give you a specific answer about the number of departments.",
+      "timestamp": "2025-08-01T16:30:44.219540",
+      "session_id": "single_test_session_0d665158-ecdf-4d12-b73a-5115b4de6d41"
+    },
+    {
+      "role": "user",
+      "content": "Hello, test message 1",
+      "timestamp": "2025-08-01T16:30:56.644597",
+      "session_id": "memory_debug"
+    },
+    {
+      "role": "assistant",
+      "content": "None",
+      "timestamp": "2025-08-01T16:31:00.500963",
+      "session_id": "memory_debug"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250801_163100",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, search_queries",
+    "original_message_count": 11,
+    "timespan": "2025-08-01T16:28:58.039866 - 2025-08-01T16:31:00.500963",
+    "topics": [
+      "document_analysis",
+      "search_queries"
+    ],
+    "created_at": "2025-08-01T16:31:00.501330"
+  },
+  "created_at": "2025-08-01T16:31:00.502174"
+}

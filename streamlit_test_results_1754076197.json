@@ -1,0 +1,92 @@
+{
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 6,
+    "failed_tests": 2,
+    "success_rate": 75.0
+  },
+  "test_results": [
+    {
+      "test_name": "Backend Health Check",
+      "success": true,
+      "message": "Backend is responsive",
+      "details": null,
+      "timestamp": 1754076129.503059
+    },
+    {
+      "test_name": "TXT Upload",
+      "success": true,
+      "message": "Successfully uploaded with 2 chunks",
+      "details": {
+        "status": "success",
+        "filename": "05ae6ee8-02e2-411c-a7b4-7750e0feeb4e_test_document.txt",
+        "chunks_created": 2,
+        "file_size": "2.3 KB",
+        "file_type": "TXT",
+        "processing_time_ms": 3,
+        "error_message": null
+      },
+      "timestamp": 1754076129.5102222
+    },
+    {
+      "test_name": "CSV Upload",
+      "success": true,
+      "message": "Successfully uploaded with 3 chunks",
+      "details": {
+        "status": "success",
+        "filename": "0617e5ed-6f69-4e30-9a12-88bc439b503d_sample_data.csv",
+        "chunks_created": 3,
+        "file_size": "0.9 KB",
+        "file_type": "CSV",
+        "processing_time_ms": 5,
+        "error_message": null
+      },
+      "timestamp": 1754076129.517798
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": true,
+      "message": "Generated summary (1159 chars) in 26739ms",
+      "details": {
+        "answer_preview": "Here's a concise summary of the document:\n\nThe document details a comprehensive AI Document Agent system designed for advanced document processing and analysis. The system combines sophisticated techn...",
+        "reasoning_steps": 2
+      },
+      "timestamp": 1754076156.2598112
+    },
+    {
+      "test_name": "Word Count Query",
+      "success": true,
+      "message": "Successfully counted words: Based on the provided analysis data, I cannot definitively determine how many times the word \"risk\" ...",
+      "details": {
+        "full_answer": "Based on the provided analysis data, I cannot definitively determine how many times the word \"risk\" appears in the document, as this specific word is not included in the key topics list or frequency counts shown.\n\nTo accurately count occurrences of the word \"risk,\" we would need:\n- A full text search of the document\n- Or a complete word frequency list that includes the word \"risk\"\n\nIf you'd like to know the exact count of the word \"risk,\" I recommend:\n1. Using a text search/find function on the document\n2. Or running a new analysis specifically looking for this term\n\nWould you like me to help you search for this specific term in the document?",
+        "reasoning_steps": 2
+      },
+      "timestamp": 1754076168.442295
+    },
+    {
+      "test_name": "Key Topics Extraction",
+      "success": true,
+      "message": "Extracted topics (953 chars)",
+      "details": {
+        "topics_preview": "Here are the main topics extracted from the document:\n\n1. AI Document Agent System Architecture\n- Technical stack (FastAPI/Python backend, Next.js/TypeScript frontend)\n- OpenAI GPT integration\n- Core ...",
+        "reasoning_steps": 3
+      },
+      "timestamp": 1754076190.565176
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": false,
+      "message": "Chat failed: None",
+      "details": null,
+      "timestamp": 1754076197.537738
+    },
+    {
+      "test_name": "CSV Data Query",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754076197.541038
+    }
+  ],
+  "session_id": "test_session_1754076129"
+}

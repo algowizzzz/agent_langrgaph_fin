@@ -127,7 +127,9 @@ class Orchestrator:
 
     def _build_system_prompt(self) -> str:
         """Builds the system prompt with tool descriptions and proven workflows."""
-        prompt = """You are a world-class AI assistant. Your goal is to create a step-by-step plan to answer the user's query. 
+        prompt = """You are a world-class AI assistant. Your goal is to create a step-by-step plan to answer the user's query.
+
+🔥 CRITICAL RULE: The CONVERSATION HISTORY is automatically provided above. For follow-up questions referencing "previous", "earlier", "based on", "mentioned", etc., READ the conversation history directly - NO need to call search_conversation_history.
 
 You have access to the following tools. Respond with a JSON object containing a 'plan' which is a list of steps. Each step should have:
 - "thought": Your reasoning for this step
@@ -256,23 +258,30 @@ Example - TARGETED SEARCH:
         if not isinstance(value, str):
             return False
         
-        value_lower = value.lower()
-        placeholder_indicators = [
-            "previous", "placeholder", "result", "output", "step", 
-            "<", ">", "$prev", "last_response", "previous_step",
-            "extract", "from_step", "page_content"
+        # Simplified and more reliable placeholder detection
+        value_upper = value.upper()
+        explicit_placeholders = [
+            "PREVIOUS_STEP_OUTPUT", "STEP_1_OUTPUT", "STEP_2_OUTPUT", "STEP_3_OUTPUT", 
+            "STEP_4_OUTPUT", "STEP_5_OUTPUT", "COMBINE_PREVIOUS_OUTPUTS",
+            "EXTRACT_PAGE_CONTENT_FROM_STEP_1", "CHUNKS_FROM_STEP_1", 
+            "SEARCH_RESULTS", "DOCUMENT_CHUNKS", "RESULTS_FROM_STEPS",
+            "COMBINED_RESULTS", "MERGE_OUTPUTS"
         ]
         
-        # Check if it contains multiple placeholder indicators (more likely to be a placeholder)
-        indicator_count = sum(1 for indicator in placeholder_indicators if indicator in value_lower)
-        
-        # Or if it's wrapped in brackets/symbols commonly used for placeholders
+        # Check for exact placeholder matches first
+        if any(placeholder in value_upper for placeholder in explicit_placeholders):
+            return True
+            
+        # Check for pattern-based placeholders
+        if value_upper.startswith("STEP_") and "OUTPUT" in value_upper:
+            return True
+            
+        # Check for wrapped placeholders
         is_wrapped = (value.startswith('<') and value.endswith('>')) or \
                     (value.startswith('[') and value.endswith(']')) or \
-                    value.startswith('$') or \
-                    'PLACEHOLDER' in value.upper()
+                    value.startswith('$')
         
-        return indicator_count >= 2 or is_wrapped
+        return is_wrapped
     
     def _select_best_final_answer(self, user_query: str, step_results: dict, last_result) -> str:
         """Select the most appropriate final answer based on query type and available results."""
@@ -335,7 +344,22 @@ I have gathered the following information using multiple analysis tools:
             if 'search_uploaded_docs' in step_results:
                 search_results = step_results['search_uploaded_docs']
                 if isinstance(search_results, list) and len(search_results) > 0:
-                    synthesis_prompt += f"📊 FOUND {len(search_results)} relevant sections\n\n"
+                    synthesis_prompt += f"📊 DOCUMENT CONTENT ({len(search_results)} sections):\n"
+                    for i, section in enumerate(search_results, 1):
+                        content = section.get('page_content', '')[:500]  # First 500 chars
+                        synthesis_prompt += f"Section {i}: {content}\n"
+                    synthesis_prompt += "\n"
+            
+            # Add support for process_table_data results
+            if 'process_table_data' in step_results:
+                table_results = step_results['process_table_data']
+                if isinstance(table_results, dict):
+                    synthesis_prompt += f"📈 TABLE ANALYSIS RESULTS:\n{str(table_results)}\n\n"
+            
+            # Add support for other analysis tools
+            if 'analyze_text_metrics' in step_results:
+                metrics = step_results['analyze_text_metrics']
+                synthesis_prompt += f"📊 TEXT METRICS:\n{str(metrics)}\n\n"
             
             synthesis_prompt += f"""
 Please create a comprehensive, well-structured response that directly answers the user's query by intelligently combining the above information. 
@@ -360,23 +384,51 @@ Final Response:"""
         # Fallback for single-step results
         return self._select_best_final_answer(user_query, step_results, last_result)
 
-    async def run(self, user_query: str, session_id: str, active_document: str = None):
-        """Main execution loop (OODA)."""
+    async def run(self, user_query: str, session_id: str, active_document: str = None, memory_context: Dict = None):
+        """Main execution loop (OODA) with memory integration."""
         print(f"\n--- 🚀 Orchestrator Starting for Session {session_id} ---")
         self.reasoning_log = [] # Reset for each run
         
-        # 1. Orient - Build the prompt
+        # 1. Orient - Build the prompt with memory context
         current_state_prompt = f"Current State:\n- Loaded Docs: {list(document_chunk_store.keys())}\n- User Query: '{user_query}'"
         
         # Add active document context if provided
         if active_document:
             current_state_prompt += f"\n- ACTIVE DOCUMENT: '{active_document}' (PRIORITIZE this document for analysis)"
         
-        prompt = f"{self.system_prompt}{current_state_prompt}"
+        # Format conversation history clearly (LAST 3 MESSAGES)
+        conversation_section = ""
+        if memory_context and memory_context.get('conversation_history'):
+            conversation_history = memory_context['conversation_history'][-3:]  # Last 3 messages
+            if conversation_history:
+                conversation_section = "\n\n" + "="*60 + "\n📋 PREVIOUS CONVERSATION (Last 3 messages):\n" + "="*60 + "\n"
+                for i, msg in enumerate(conversation_history, 1):
+                    role = msg.get('role', 'unknown')
+                    content = msg.get('content', '')
+                    timestamp = msg.get('timestamp', '')[:16] if msg.get('timestamp') else ''
+                    
+                    if role.lower() == 'user':
+                        conversation_section += f"\n🔹 USER QUERY {i}: {content}\n"
+                    elif role.lower() == 'assistant':
+                        # Truncate assistant responses to keep manageable
+                        truncated_content = content[:300] + "..." if len(content) > 300 else content
+                        conversation_section += f"\n🤖 ASSISTANT RESPONSE {i}: {truncated_content}\n"
+                
+                conversation_section += "\n" + "="*60 + "\n"
+        
+        # Combine system prompt + current state + conversation history + current query
+        formatted_prompt = f"""{self.system_prompt}
+
+{current_state_prompt}{conversation_section}
+
+🎯 CURRENT USER QUERY: "{user_query}"
+
+Please create a plan to answer the current query, using conversation history when relevant."""
         
         print("\n--- 🤔 Asking LLM for a plan ---")
+        print(f"📝 Prompt includes conversation history: {len(memory_context.get('conversation_history', [])) if memory_context else 0} messages")
         try:
-            response = await self.llm.ainvoke(prompt)
+            response = await self.llm.ainvoke(formatted_prompt)
             response_text = response.content
             
             parsed_response = self._parse_llm_response(response_text)
@@ -405,35 +457,52 @@ Final Response:"""
                     else:
                         continue  # Skip steps without tool calls (e.g., "thought" only)
                     
-                    # Smart placeholder replacement
+                    # Smart placeholder replacement - simplified and more reliable
                     if isinstance(tool_params, dict):
                         for key, value in tool_params.items():
                             if isinstance(value, str) and self._is_placeholder(value):
-                                # Smart data transformation based on proven patterns
-                                value_lower = value.lower()
+                                replacement_data = None
                                 
-                                if "extract_page_content" in value_lower and "search_uploaded_docs" in step_results:
-                                    # Extract text content for text analytics tools (CRITICAL FIX)
-                                    search_results = step_results["search_uploaded_docs"]
-                                    if isinstance(search_results, list) and len(search_results) > 0 and "page_content" in search_results[0]:
-                                        text_content = search_results[0]["page_content"]
-                                        print(f"    📎 Data transformation: {value} → extracted text content ({len(text_content)} chars)")
-                                        tool_params[key] = text_content
-                                    else:
-                                        print(f"    📎 Warning: No page_content found in search results")
-                                        tool_params[key] = ""
-                                        
-                                elif ("search" in value_lower or "chunk" in value_lower) and "search_uploaded_docs" in step_results:
-                                    print(f"    📎 Smart replacement: {value} → search_uploaded_docs output (chunk array)")
-                                    tool_params[key] = step_results["search_uploaded_docs"]
+                                # Tool-specific replacement rules (most important first)
+                                if tool_name == "synthesize_content" and key == "chunks":
+                                    # synthesize_content should use the most recent relevant data
+                                    if "process_table_data" in step_results:
+                                        replacement_data = step_results["process_table_data"]
+                                        print(f"    📎 Tool-specific fix: {value} → table processing results for synthesis")
+                                    elif "search_uploaded_docs" in step_results:
+                                        replacement_data = step_results["search_uploaded_docs"]
+                                        print(f"    📎 Tool-specific fix: {value} → document chunks for synthesis")
                                     
-                                elif ("synthesis" in value_lower or "summary" in value_lower) and "synthesize_content" in step_results:
-                                    print(f"    📎 Smart replacement: {value} → synthesize_content output")
-                                    tool_params[key] = step_results["synthesize_content"]
-                                else:
-                                    # Fallback to previous step result
-                                    print(f"    📎 Fallback replacement: {value} → previous step result")
-                                    tool_params[key] = step_result
+                                elif tool_name in ["analyze_text_metrics", "extract_key_phrases", "analyze_sentiment"] and key == "text":
+                                    # Text analytics tools need plain text from first chunk
+                                    if "search_uploaded_docs" in step_results:
+                                        search_results = step_results["search_uploaded_docs"]
+                                        if isinstance(search_results, list) and len(search_results) > 0:
+                                            first_chunk = search_results[0]
+                                            if isinstance(first_chunk, dict) and "page_content" in first_chunk:
+                                                replacement_data = first_chunk["page_content"]
+                                                print(f"    📎 Text extraction: {value} → page content for text analysis")
+                                
+                                # Content-based replacement rules
+                                if replacement_data is None:
+                                    value_upper = value.upper()
+                                    if "CHUNK" in value_upper or "SEARCH" in value_upper:
+                                        # For chunk/search references, prefer document search results
+                                        if "search_uploaded_docs" in step_results:
+                                            replacement_data = step_results["search_uploaded_docs"]
+                                            print(f"    📎 Content-based: {value} → document chunks")
+                                    elif "SYNTHESIS" in value_upper or "SUMMARY" in value_upper:
+                                        # For synthesis references, use synthesis output
+                                        if "synthesize_content" in step_results:
+                                            replacement_data = step_results["synthesize_content"]
+                                            print(f"    📎 Content-based: {value} → synthesis output")
+                                
+                                # Fallback to most recent result
+                                if replacement_data is None:
+                                    replacement_data = step_result
+                                    print(f"    📎 Fallback: {value} → previous step result")
+                                
+                                tool_params[key] = replacement_data
                     elif isinstance(tool_params, list):
                         # Handle list parameters with placeholders
                         for idx, value in enumerate(tool_params):
@@ -441,6 +510,8 @@ Final Response:"""
                                 value_lower = value.lower()
                                 if ("search" in value_lower or "chunk" in value_lower) and "search_uploaded_docs" in step_results:
                                     tool_params[idx] = step_results["search_uploaded_docs"]
+                                elif ("table" in value_lower or "process" in value_lower) and "process_table_data" in step_results:
+                                    tool_params[idx] = step_results["process_table_data"]
                                 elif ("synthesis" in value_lower or "summary" in value_lower) and "synthesize_content" in step_results:
                                     tool_params[idx] = step_results["synthesize_content"]
                                 else:

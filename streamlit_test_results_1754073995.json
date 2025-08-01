@@ -1,0 +1,83 @@
+{
+  "summary": {
+    "total_tests": 8,
+    "passed_tests": 3,
+    "failed_tests": 5,
+    "success_rate": 37.5
+  },
+  "test_results": [
+    {
+      "test_name": "Backend Health Check",
+      "success": true,
+      "message": "Backend is responsive",
+      "details": null,
+      "timestamp": 1754073995.145386
+    },
+    {
+      "test_name": "TXT Upload",
+      "success": true,
+      "message": "Successfully uploaded with 2 chunks",
+      "details": {
+        "status": "success",
+        "filename": "test_document.txt",
+        "chunks_created": 2,
+        "file_size": "2.3 KB",
+        "file_type": "TXT",
+        "processing_time_ms": 5,
+        "error_message": null
+      },
+      "timestamp": 1754073995.307717
+    },
+    {
+      "test_name": "CSV Upload",
+      "success": true,
+      "message": "Successfully uploaded with 3 chunks",
+      "details": {
+        "status": "success",
+        "filename": "sample_data.csv",
+        "chunks_created": 3,
+        "file_size": "0.9 KB",
+        "file_type": "CSV",
+        "processing_time_ms": 346,
+        "error_message": null
+      },
+      "timestamp": 1754073995.657461
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754073995.659651
+    },
+    {
+      "test_name": "Word Count Query",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754073995.6616619
+    },
+    {
+      "test_name": "Key Topics Extraction",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754073995.6635551
+    },
+    {
+      "test_name": "Chat Summarization",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754073995.6652942
+    },
+    {
+      "test_name": "CSV Data Query",
+      "success": false,
+      "message": "HTTP error: 404",
+      "details": null,
+      "timestamp": 1754073995.6669729
+    }
+  ],
+  "session_id": "test_session_1754073995"
+}

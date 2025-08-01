@@ -1,0 +1,129 @@
+2025-08-01 15:25:21,587 - matplotlib - DEBUG - matplotlib data path: /Users/saadahmed/Desktop/Apps/AWS_Extra/Agent/venv/lib/python3.13/site-packages/matplotlib/mpl-data
+2025-08-01 15:25:21,591 - matplotlib - DEBUG - CONFIGDIR=/Users/saadahmed/.matplotlib
+2025-08-01 15:25:21,592 - matplotlib - DEBUG - interactive is False
+2025-08-01 15:25:21,592 - matplotlib - DEBUG - platform is darwin
+2025-08-01 15:25:21,634 - matplotlib - DEBUG - CACHEDIR=/Users/saadahmed/.matplotlib
+2025-08-01 15:25:21,636 - matplotlib.font_manager - DEBUG - Using fontManager instance from /Users/saadahmed/.matplotlib/fontlist-v390.json
+2025-08-01 15:25:21,813 - asyncio - DEBUG - Using selector: KqueueSelector
+2025-08-01 15:25:21,813 - __main__ - INFO - Starting individual tool testing with verbose logging
+2025-08-01 15:25:21,813 - __main__ - INFO - === Examining Document Store ===
+2025-08-01 15:25:21,814 - __main__ - INFO - Documents in store: ['persist_test.txt', 'e2e_test_document.txt', 'test_lamaindex', 'riskandfinace.pdf', 'tmpbyslc_ok.pdf', 'tmpdr1bkiab.pdf', 'test-document.txt', '4fd048f0-8cc3-424b-903e-76da5b7d07be_test-document.txt', '7b8dd658-1f1c-4a49-aef8-f9ed07d18990_test-document.txt', 'bd7f0a4e-5cb0-417e-bf0a-99aa6a2216e1_test-document.txt', 'a2243a48-e0b5-44e8-b65e-94900bee3e21_test-document.txt', 'bd0bc6d4-f1d8-4d82-b5f3-ad330f6695e9_test-document.txt', 'af112d8a-b14d-474e-a733-3e1c57269e05_test-document.txt', '1cd16304-4aec-4f29-92d5-e0c8e5b88dad_test-document.txt', '78f95d8c-46c3-4b06-88b0-18f27ac34b27_test-document.txt', '6f2241da-4233-4c65-8949-1f2911d10a65_test-document.txt', 'de3e2e08-f2ca-4a26-bec6-39dcf2112167_test-document.txt', 'edc761b0-db0f-4b7e-8ef7-35ad89e2e9b5_test-document.txt', '99fd8457-70a7-4417-9f35-0b080c717fe7_test-document.txt', '702ae8fe-0f5f-47ab-ac96-d517214f7384_test-document.txt', '3382d9be-4f71-4b68-af69-9bed32019cfb_test-document.txt', 'be626782-c7ca-44d2-8f6d-cd8f3f40a287_test-document.txt', 'eb203d5d-97e0-4ff1-b7a9-70de29bf2a1a_test-document.txt', 'e4a28631-fcae-4bbc-9a3e-39f028e5fe73_test-document.txt', '2d81faaf-604f-48dc-b0b9-4ff275a2ab8e_test-document.txt', '048ba78c-96a8-4224-a653-a634b5690308_test-document.txt', 'b4bfaa0f-7598-4adc-846c-2cb7a3631571_test-document.txt', '131e751f-b393-4190-a42c-250bb8333ef6_test-document.txt', '6f53aa7f-8026-41e8-9408-a0ae73be507c_test-document.txt', '4679a7d1-5264-46d1-a9ae-54ab4313ba88_test-document.txt', 'ff7fe6f7-9f7b-4f04-9e03-df8b2466f721_test-document.txt', 'c8c6f426-89e6-4ec0-aa43-ef590ae2a063_test-document.txt', 'a4ede6cd-56d7-4b66-b87c-636d743687e5_test-document.txt', '519d052e-459b-4fef-8ca9-fe70437054e7_test-document.txt', 'ed612a01-1ee6-4d01-af60-f6299c565b5c_test-document.txt', 'c50767f7-448d-49a0-b48c-40cbdca4c0f3_test-document.txt', '8c172d11-f048-4326-ae5e-51554e52df4e_test-document.txt', '38ebc68f-898c-454c-9886-ca1a581f9c20_test-document.txt', 'fd4c12fc-3f72-4807-b04b-c8d52270c568_test-document.txt', 'd4445e21-723f-4147-b376-1da294245b94_test-document.txt', '9c9a7bf8-32b8-4048-b7cb-ca1ded0681e3_test-document.txt', 'a264827c-2a21-4157-a802-2cf4eb9029c3_test-document.txt', '5b96e0d9-6ca2-42a0-9793-eba261a697fb_test-document.txt', '76bf121e-04e9-4025-be1b-1ce517a8109f_test-document.txt', 'bccd81d3-6148-4fb7-97ef-520fff15e65e_test-document.txt', 'c5ac0101-1dde-4fcd-87fc-073c23b5a25e_test-document.txt', 'd14b8fc1-0efb-4c00-be81-cfc5b594dbfb_test-document.txt', 'c1fd781c-7c14-4442-bb5b-e9b63e3f37cb_test_business_data.csv', 'ec0c8c32-cd60-4183-860b-99f16b29f7bc_test_business_data.csv', '9cb7a5c4-2bf4-4261-9e09-faa8710d4e4c_test_business_data.csv', '66ef3504-e1c4-47be-9b6c-d596cf81308d_test_business_data.csv', '5a47c23c-5b57-414f-8192-6e2ee266306f_test_business_data.csv', '690d2b68-95fd-442d-87aa-f8e8f0a60ef8_test-document.txt', '8a756c33-1024-435b-826e-419c198e4030_test-document.txt', 'a015fd2b-3e10-4c61-9e81-c166374b8e02_test-document.txt', '2c15d38b-2a13-4fff-b218-4896fdf986da_test_business_data.csv', '628a1a52-5fed-401f-9587-da0406026e31_bmo_quarterly_review.docx', 'a6fc66fd-e534-4b3e-8528-184b453ff981_test-document.txt', '1311fb23-2c3b-4e28-a06a-33bf949599aa_test-document.txt', '71003ffb-957a-437a-a4e0-8ffdf5ef784a_test_business_data.csv', 'dc03e586-82c2-48bd-ab3d-01030d414aa2_bmo_quarterly_review.docx', '4fa6a850-049b-437c-b093-637b7ef4bac7_test-document.txt', '258d3ad6-d5a7-4b15-ae27-bfffb672ead3_bmo_quarterly_review.docx', 'dd9a0262-1548-4e2d-9a21-e72b6f8622fe_test_business_data.csv', '75c80c52-5033-44ac-9637-558cbf117712_test-document.txt', '3bc9c8ea-a8c2-4045-8064-532faefdee50_test-document.txt', 'b630ff35-f689-45ff-b1b0-013e996aca71_test-document.txt', 'b237d7d1-f161-4860-b228-dec9f8b422b4_test_business_data.csv', '51f47378-edbe-4130-9b8d-167d8726f904_test_business_data.csv', '547db662-9ef1-4a20-aacf-1b16d12ed13c_test_business_data.csv', '1354c1f4-ac6c-407c-9e4b-1753fb696cb1_test-document.txt', '18559c18-9b3a-4184-9ad9-25b61327657d_test-document.txt', 'da89533a-92a4-4e22-9e92-45fee34e7bb5_test-document.txt', 'e66e6241-eeb7-4859-a1ed-c0f81a369759_test_business_data.csv', '7ff75643-5c63-49ab-9e11-c2e62d3445da_test-document.txt', 'a2f57747-7b94-4420-807e-069bbe9ed2f3_test-document.txt', '541ba867-8acb-4d44-b4b6-f3c49d865451_test-document.txt', 'aa045322-a40b-4155-a8ed-902c002e568d_test-document.txt', '7dc1a0cc-37d9-4d86-b977-026110e07d09_test-document.txt', '0210d7f6-964f-440e-853a-be1f2d3bda9c_test-document.txt', '87d80b62-e28e-40f2-a5e4-c18e8b448b59_test-document.txt', 'a9e3d0b2-37e3-40fb-b645-f7498b833cfc_test-document.txt', 'fcd8eb12-7ebc-41c6-acaf-6da929ad28b6_test-document.txt', 'ad02a2cc-59ad-4280-87c0-8dc28ccacb0c_test-document.txt', '16ec973e-527b-4b7b-8f80-66686b422aad_test-document.txt', '7e44a792-b43e-4a97-8da5-a30311e4d46c_test-document.txt', '0e378fef-48f7-4ccd-a7e2-da2aaaa35837_test-document.txt', '1e70562f-f6ed-4914-9141-ea3ef6a0ad0c_test-document.txt', 'bd356890-dbbe-412e-b433-8bc5ba563ba2_test-document.txt', 'e97dafde-4670-4ec1-b9a6-87018c29df1b_test_document.txt', '0f743eaf-f73d-45c0-a225-1efc41e5e3cf_sample_data.csv', 'fd8acb10-e010-41dc-87d2-4e888784f10d_test_document.txt', '05cdd587-b4da-47ea-8493-098fe735f011_sample_data.csv', 'fd5051c0-d643-4594-9323-b414aa9e3e27_test_document.txt', 'c5ace5df-a07e-4148-9ca9-3d265e37302e_test_document.txt', 'e67af61c-2f5c-41f0-b2f5-800c31fe423d_test_document.txt', 'f2b564a1-d975-4ea8-a0ad-0320df308302_sample_data.csv', 'e64fba6c-6433-42b4-829a-38e31313bdee_sample_data.csv', '61446d7b-26a5-4d89-adbb-5ce0bffc82ee_sample_data.csv', 'b62e7a2a-fd0a-4194-81c3-140105f9f347_sample_data.csv', '05ae6ee8-02e2-411c-a7b4-7750e0feeb4e_test_document.txt', '0617e5ed-6f69-4e30-9a12-88bc439b503d_sample_data.csv']
+2025-08-01 15:25:21,814 - __main__ - INFO - CSV documents found: ['c1fd781c-7c14-4442-bb5b-e9b63e3f37cb_test_business_data.csv', 'ec0c8c32-cd60-4183-860b-99f16b29f7bc_test_business_data.csv', '9cb7a5c4-2bf4-4261-9e09-faa8710d4e4c_test_business_data.csv', '66ef3504-e1c4-47be-9b6c-d596cf81308d_test_business_data.csv', '5a47c23c-5b57-414f-8192-6e2ee266306f_test_business_data.csv', '2c15d38b-2a13-4fff-b218-4896fdf986da_test_business_data.csv', '71003ffb-957a-437a-a4e0-8ffdf5ef784a_test_business_data.csv', 'dd9a0262-1548-4e2d-9a21-e72b6f8622fe_test_business_data.csv', 'b237d7d1-f161-4860-b228-dec9f8b422b4_test_business_data.csv', '51f47378-edbe-4130-9b8d-167d8726f904_test_business_data.csv', '547db662-9ef1-4a20-aacf-1b16d12ed13c_test_business_data.csv', 'e66e6241-eeb7-4859-a1ed-c0f81a369759_test_business_data.csv', '0f743eaf-f73d-45c0-a225-1efc41e5e3cf_sample_data.csv', '05cdd587-b4da-47ea-8493-098fe735f011_sample_data.csv', 'f2b564a1-d975-4ea8-a0ad-0320df308302_sample_data.csv', 'e64fba6c-6433-42b4-829a-38e31313bdee_sample_data.csv', '61446d7b-26a5-4d89-adbb-5ce0bffc82ee_sample_data.csv', 'b62e7a2a-fd0a-4194-81c3-140105f9f347_sample_data.csv', '0617e5ed-6f69-4e30-9a12-88bc439b503d_sample_data.csv']
+2025-08-01 15:25:21,814 - __main__ - INFO - Latest CSV (0617e5ed-6f69-4e30-9a12-88bc439b503d_sample_data.csv) has 3 chunks
+2025-08-01 15:25:21,814 - __main__ - INFO - Chunk 0:
+2025-08-01 15:25:21,814 - __main__ - INFO -   Type: <class 'dict'>
+2025-08-01 15:25:21,814 - __main__ - INFO -   Keys: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,814 - __main__ - INFO -   Content preview: # CSV Data: 0617e5ed-6f69-4e30-9a12-88bc439b503d_sample_data.csv...
+2025-08-01 15:25:21,814 - __main__ - INFO -   Content type: <class 'str'>
+2025-08-01 15:25:21,814 - __main__ - INFO - Chunk 1:
+2025-08-01 15:25:21,814 - __main__ - INFO -   Type: <class 'dict'>
+2025-08-01 15:25:21,814 - __main__ - INFO -   Keys: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,814 - __main__ - INFO -   Content preview: Employee_ID              Name Department  Salary Risk_Level  Performance_Score  Years_Experience
+   ...
+2025-08-01 15:25:21,814 - __main__ - INFO -   Content type: <class 'str'>
+2025-08-01 15:25:21,815 - __main__ - INFO - Chunk 2:
+2025-08-01 15:25:21,815 - __main__ - INFO -   Type: <class 'dict'>
+2025-08-01 15:25:21,815 - __main__ - INFO -   Keys: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,815 - __main__ - INFO -   Content preview: 1013     Daniel Thomas    Finance   67000       High                 82                 5
+        10...
+2025-08-01 15:25:21,815 - __main__ - INFO -   Content type: <class 'str'>
+2025-08-01 15:25:21,815 - __main__ - INFO - === Testing CSV Document Upload ===
+2025-08-01 15:25:21,821 - __main__ - INFO - Upload result: {'status': 'success', 'doc_name': 'sample_data.csv', 'chunks_created': 3}
+2025-08-01 15:25:21,821 - __main__ - INFO - 
+=== Document Store After Upload ===
+2025-08-01 15:25:21,821 - __main__ - INFO - === Examining Document Store ===
+2025-08-01 15:25:21,821 - __main__ - INFO - Documents in store: ['persist_test.txt', 'e2e_test_document.txt', 'test_lamaindex', 'riskandfinace.pdf', 'tmpbyslc_ok.pdf', 'tmpdr1bkiab.pdf', 'test-document.txt', '4fd048f0-8cc3-424b-903e-76da5b7d07be_test-document.txt', '7b8dd658-1f1c-4a49-aef8-f9ed07d18990_test-document.txt', 'bd7f0a4e-5cb0-417e-bf0a-99aa6a2216e1_test-document.txt', 'a2243a48-e0b5-44e8-b65e-94900bee3e21_test-document.txt', 'bd0bc6d4-f1d8-4d82-b5f3-ad330f6695e9_test-document.txt', 'af112d8a-b14d-474e-a733-3e1c57269e05_test-document.txt', '1cd16304-4aec-4f29-92d5-e0c8e5b88dad_test-document.txt', '78f95d8c-46c3-4b06-88b0-18f27ac34b27_test-document.txt', '6f2241da-4233-4c65-8949-1f2911d10a65_test-document.txt', 'de3e2e08-f2ca-4a26-bec6-39dcf2112167_test-document.txt', 'edc761b0-db0f-4b7e-8ef7-35ad89e2e9b5_test-document.txt', '99fd8457-70a7-4417-9f35-0b080c717fe7_test-document.txt', '702ae8fe-0f5f-47ab-ac96-d517214f7384_test-document.txt', '3382d9be-4f71-4b68-af69-9bed32019cfb_test-document.txt', 'be626782-c7ca-44d2-8f6d-cd8f3f40a287_test-document.txt', 'eb203d5d-97e0-4ff1-b7a9-70de29bf2a1a_test-document.txt', 'e4a28631-fcae-4bbc-9a3e-39f028e5fe73_test-document.txt', '2d81faaf-604f-48dc-b0b9-4ff275a2ab8e_test-document.txt', '048ba78c-96a8-4224-a653-a634b5690308_test-document.txt', 'b4bfaa0f-7598-4adc-846c-2cb7a3631571_test-document.txt', '131e751f-b393-4190-a42c-250bb8333ef6_test-document.txt', '6f53aa7f-8026-41e8-9408-a0ae73be507c_test-document.txt', '4679a7d1-5264-46d1-a9ae-54ab4313ba88_test-document.txt', 'ff7fe6f7-9f7b-4f04-9e03-df8b2466f721_test-document.txt', 'c8c6f426-89e6-4ec0-aa43-ef590ae2a063_test-document.txt', 'a4ede6cd-56d7-4b66-b87c-636d743687e5_test-document.txt', '519d052e-459b-4fef-8ca9-fe70437054e7_test-document.txt', 'ed612a01-1ee6-4d01-af60-f6299c565b5c_test-document.txt', 'c50767f7-448d-49a0-b48c-40cbdca4c0f3_test-document.txt', '8c172d11-f048-4326-ae5e-51554e52df4e_test-document.txt', '38ebc68f-898c-454c-9886-ca1a581f9c20_test-document.txt', 'fd4c12fc-3f72-4807-b04b-c8d52270c568_test-document.txt', 'd4445e21-723f-4147-b376-1da294245b94_test-document.txt', '9c9a7bf8-32b8-4048-b7cb-ca1ded0681e3_test-document.txt', 'a264827c-2a21-4157-a802-2cf4eb9029c3_test-document.txt', '5b96e0d9-6ca2-42a0-9793-eba261a697fb_test-document.txt', '76bf121e-04e9-4025-be1b-1ce517a8109f_test-document.txt', 'bccd81d3-6148-4fb7-97ef-520fff15e65e_test-document.txt', 'c5ac0101-1dde-4fcd-87fc-073c23b5a25e_test-document.txt', 'd14b8fc1-0efb-4c00-be81-cfc5b594dbfb_test-document.txt', 'c1fd781c-7c14-4442-bb5b-e9b63e3f37cb_test_business_data.csv', 'ec0c8c32-cd60-4183-860b-99f16b29f7bc_test_business_data.csv', '9cb7a5c4-2bf4-4261-9e09-faa8710d4e4c_test_business_data.csv', '66ef3504-e1c4-47be-9b6c-d596cf81308d_test_business_data.csv', '5a47c23c-5b57-414f-8192-6e2ee266306f_test_business_data.csv', '690d2b68-95fd-442d-87aa-f8e8f0a60ef8_test-document.txt', '8a756c33-1024-435b-826e-419c198e4030_test-document.txt', 'a015fd2b-3e10-4c61-9e81-c166374b8e02_test-document.txt', '2c15d38b-2a13-4fff-b218-4896fdf986da_test_business_data.csv', '628a1a52-5fed-401f-9587-da0406026e31_bmo_quarterly_review.docx', 'a6fc66fd-e534-4b3e-8528-184b453ff981_test-document.txt', '1311fb23-2c3b-4e28-a06a-33bf949599aa_test-document.txt', '71003ffb-957a-437a-a4e0-8ffdf5ef784a_test_business_data.csv', 'dc03e586-82c2-48bd-ab3d-01030d414aa2_bmo_quarterly_review.docx', '4fa6a850-049b-437c-b093-637b7ef4bac7_test-document.txt', '258d3ad6-d5a7-4b15-ae27-bfffb672ead3_bmo_quarterly_review.docx', 'dd9a0262-1548-4e2d-9a21-e72b6f8622fe_test_business_data.csv', '75c80c52-5033-44ac-9637-558cbf117712_test-document.txt', '3bc9c8ea-a8c2-4045-8064-532faefdee50_test-document.txt', 'b630ff35-f689-45ff-b1b0-013e996aca71_test-document.txt', 'b237d7d1-f161-4860-b228-dec9f8b422b4_test_business_data.csv', '51f47378-edbe-4130-9b8d-167d8726f904_test_business_data.csv', '547db662-9ef1-4a20-aacf-1b16d12ed13c_test_business_data.csv', '1354c1f4-ac6c-407c-9e4b-1753fb696cb1_test-document.txt', '18559c18-9b3a-4184-9ad9-25b61327657d_test-document.txt', 'da89533a-92a4-4e22-9e92-45fee34e7bb5_test-document.txt', 'e66e6241-eeb7-4859-a1ed-c0f81a369759_test_business_data.csv', '7ff75643-5c63-49ab-9e11-c2e62d3445da_test-document.txt', 'a2f57747-7b94-4420-807e-069bbe9ed2f3_test-document.txt', '541ba867-8acb-4d44-b4b6-f3c49d865451_test-document.txt', 'aa045322-a40b-4155-a8ed-902c002e568d_test-document.txt', '7dc1a0cc-37d9-4d86-b977-026110e07d09_test-document.txt', '0210d7f6-964f-440e-853a-be1f2d3bda9c_test-document.txt', '87d80b62-e28e-40f2-a5e4-c18e8b448b59_test-document.txt', 'a9e3d0b2-37e3-40fb-b645-f7498b833cfc_test-document.txt', 'fcd8eb12-7ebc-41c6-acaf-6da929ad28b6_test-document.txt', 'ad02a2cc-59ad-4280-87c0-8dc28ccacb0c_test-document.txt', '16ec973e-527b-4b7b-8f80-66686b422aad_test-document.txt', '7e44a792-b43e-4a97-8da5-a30311e4d46c_test-document.txt', '0e378fef-48f7-4ccd-a7e2-da2aaaa35837_test-document.txt', '1e70562f-f6ed-4914-9141-ea3ef6a0ad0c_test-document.txt', 'bd356890-dbbe-412e-b433-8bc5ba563ba2_test-document.txt', 'e97dafde-4670-4ec1-b9a6-87018c29df1b_test_document.txt', '0f743eaf-f73d-45c0-a225-1efc41e5e3cf_sample_data.csv', 'fd8acb10-e010-41dc-87d2-4e888784f10d_test_document.txt', '05cdd587-b4da-47ea-8493-098fe735f011_sample_data.csv', 'fd5051c0-d643-4594-9323-b414aa9e3e27_test_document.txt', 'c5ace5df-a07e-4148-9ca9-3d265e37302e_test_document.txt', 'e67af61c-2f5c-41f0-b2f5-800c31fe423d_test_document.txt', 'f2b564a1-d975-4ea8-a0ad-0320df308302_sample_data.csv', 'e64fba6c-6433-42b4-829a-38e31313bdee_sample_data.csv', '61446d7b-26a5-4d89-adbb-5ce0bffc82ee_sample_data.csv', 'b62e7a2a-fd0a-4194-81c3-140105f9f347_sample_data.csv', '05ae6ee8-02e2-411c-a7b4-7750e0feeb4e_test_document.txt', '0617e5ed-6f69-4e30-9a12-88bc439b503d_sample_data.csv', 'sample_data.csv']
+2025-08-01 15:25:21,822 - __main__ - INFO - CSV documents found: ['c1fd781c-7c14-4442-bb5b-e9b63e3f37cb_test_business_data.csv', 'ec0c8c32-cd60-4183-860b-99f16b29f7bc_test_business_data.csv', '9cb7a5c4-2bf4-4261-9e09-faa8710d4e4c_test_business_data.csv', '66ef3504-e1c4-47be-9b6c-d596cf81308d_test_business_data.csv', '5a47c23c-5b57-414f-8192-6e2ee266306f_test_business_data.csv', '2c15d38b-2a13-4fff-b218-4896fdf986da_test_business_data.csv', '71003ffb-957a-437a-a4e0-8ffdf5ef784a_test_business_data.csv', 'dd9a0262-1548-4e2d-9a21-e72b6f8622fe_test_business_data.csv', 'b237d7d1-f161-4860-b228-dec9f8b422b4_test_business_data.csv', '51f47378-edbe-4130-9b8d-167d8726f904_test_business_data.csv', '547db662-9ef1-4a20-aacf-1b16d12ed13c_test_business_data.csv', 'e66e6241-eeb7-4859-a1ed-c0f81a369759_test_business_data.csv', '0f743eaf-f73d-45c0-a225-1efc41e5e3cf_sample_data.csv', '05cdd587-b4da-47ea-8493-098fe735f011_sample_data.csv', 'f2b564a1-d975-4ea8-a0ad-0320df308302_sample_data.csv', 'e64fba6c-6433-42b4-829a-38e31313bdee_sample_data.csv', '61446d7b-26a5-4d89-adbb-5ce0bffc82ee_sample_data.csv', 'b62e7a2a-fd0a-4194-81c3-140105f9f347_sample_data.csv', '0617e5ed-6f69-4e30-9a12-88bc439b503d_sample_data.csv', 'sample_data.csv']
+2025-08-01 15:25:21,822 - __main__ - INFO - Latest CSV (sample_data.csv) has 3 chunks
+2025-08-01 15:25:21,822 - __main__ - INFO - Chunk 0:
+2025-08-01 15:25:21,822 - __main__ - INFO -   Type: <class 'dict'>
+2025-08-01 15:25:21,822 - __main__ - INFO -   Keys: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,822 - __main__ - INFO -   Content preview: # CSV Data: sample_data.csv...
+2025-08-01 15:25:21,822 - __main__ - INFO -   Content type: <class 'str'>
+2025-08-01 15:25:21,822 - __main__ - INFO - Chunk 1:
+2025-08-01 15:25:21,822 - __main__ - INFO -   Type: <class 'dict'>
+2025-08-01 15:25:21,822 - __main__ - INFO -   Keys: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,822 - __main__ - INFO -   Content preview: Employee_ID              Name Department  Salary Risk_Level  Performance_Score  Years_Experience
+   ...
+2025-08-01 15:25:21,822 - __main__ - INFO -   Content type: <class 'str'>
+2025-08-01 15:25:21,822 - __main__ - INFO - Chunk 2:
+2025-08-01 15:25:21,822 - __main__ - INFO -   Type: <class 'dict'>
+2025-08-01 15:25:21,822 - __main__ - INFO -   Keys: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,822 - __main__ - INFO -   Content preview: 1013     Daniel Thomas    Finance   67000       High                 82                 5
+        10...
+2025-08-01 15:25:21,822 - __main__ - INFO -   Content type: <class 'str'>
+2025-08-01 15:25:21,822 - __main__ - INFO - === Testing Document Search for sample_data.csv ===
+2025-08-01 15:25:21,822 - __main__ - INFO - Search result type: <class 'list'>
+2025-08-01 15:25:21,822 - __main__ - INFO - Search result length: 3
+2025-08-01 15:25:21,822 - __main__ - INFO - First chunk keys: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,822 - __main__ - INFO - First chunk content preview: {'page_content': '# CSV Data: sample_data.csv', 'metadata': {'source': 'test_documents/sample_data.csv', 'file_type': 'CSV', 'file_name': 'sample_data.csv', 'chunk_index': 0}}...
+2025-08-01 15:25:21,822 - __main__ - INFO - === Testing process_table_data Tool ===
+2025-08-01 15:25:21,822 - __main__ - INFO - Input chunks type: <class 'list'>
+2025-08-01 15:25:21,822 - __main__ - INFO - Input chunks length: 3
+2025-08-01 15:25:21,822 - __main__ - INFO - First chunk structure: dict_keys(['page_content', 'metadata'])
+2025-08-01 15:25:21,826 - __main__ - INFO - process_table_data result: {'status': 'success', 'operation': 'summary', 'data': {'shape': (22, 7), 'columns': ['Employee_ID', 'Name', 'Department', 'Salary', 'Risk_Level', 'Performance_Score', 'Years_Experience'], 'dtypes': {'Employee_ID': dtype('O'), 'Name': dtype('O'), 'Department': dtype('O'), 'Salary': dtype('int64'), 'Risk_Level': dtype('O'), 'Performance_Score': dtype('int64'), 'Years_Experience': dtype('int64')}, 'numeric_summary': {'Salary': {'count': 22.0, 'mean': 64545.454545454544, 'std': 6822.422923379534, 'min': 55000.0, '25%': 58250.0, '50%': 63500.0, '75%': 69750.0, 'max': 76000.0}, 'Performance_Score': {'count': 22.0, 'mean': 86.77272727272727, 'std': 4.0933374226187675, 'min': 78.0, '25%': 84.25, '50%': 87.0, '75%': 89.75, 'max': 94.0}, 'Years_Experience': {'count': 22.0, 'mean': 5.045454545454546, 'std': 2.192569111193375, 'min': 2.0, '25%': 3.0, '50%': 5.0, '75%': 6.75, 'max': 9.0}}}}
+2025-08-01 15:25:21,826 - __main__ - INFO - 
+=== TEST SUMMARY ===
+2025-08-01 15:25:21,826 - __main__ - INFO - ✅ CSV Upload: SUCCESS
+2025-08-01 15:25:21,827 - __main__ - INFO - ✅ Document Search: SUCCESS
+2025-08-01 15:25:21,827 - __main__ - INFO - ✅ Table Processing: SUCCESS
+2025-08-01 15:25:21,827 - __main__ - INFO - Final result: {
+  "status": "success",
+  "operation": "summary",
+  "data": {
+    "shape": [
+      22,
+      7
+    ],
+    "columns": [
+      "Employee_ID",
+      "Name",
+      "Department",
+      "Salary",
+      "Risk_Level",
+      "Performance_Score",
+      "Years_Experience"
+    ],
+    "dtypes": {
+      "Employee_ID": "object",
+      "Name": "object",
+      "Department": "object",
+      "Salary": "int64",
+      "Risk_Level": "object",
+      "Performance_Score": "int64",
+      "Years_Experience": "int64"
+    },
+    "numeric_summary": {
+      "Salary": {
+        "count": 22.0,
+        "mean": 64545.454545454544,
+        "std": 6822.422923379534,
+        "min": 55000.0,
+        "25%": 58250.0,
+        "50%": 63500.0,
+        "75%": 69750.0,
+        "max": 76000.0
+      },
+      "Performance_Score": {
+        "count": 22.0,
+        "mean": 86.77272727272727,
+        "std": 4.0933374226187675,
+        "min": 78.0,
+        "25%": 84.25,
+        "50%": 87.0,
+        "75%": 89.75,
+        "max": 94.0
+      },
+      "Years_Experience": {
+        "count": 22.0,
+        "mean": 5.045454545454546,
+        "std": 2.192569111193375,
+        "min": 2.0,
+        "25%": 3.0,
+        "50%": 5.0,
+        "75%": 6.75,
+        "max": 9.0
+      }
+    }
+  }
+}
