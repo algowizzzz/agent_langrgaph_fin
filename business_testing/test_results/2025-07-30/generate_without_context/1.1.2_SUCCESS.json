@@ -1,8 +1,0 @@
-{
-    "role": "assistant",
-    "content": "I apologize, but I'm experiencing technical difficulties. Please try your question again or contact IT support for assistance.",
-    "status": "error",
-    "source": "Error Fallback",
-    "reasoning_steps": [],
-    "thoughts": null
-}

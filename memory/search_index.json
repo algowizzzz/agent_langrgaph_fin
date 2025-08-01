@@ -10,14 +10,17 @@
       "conv_3bbc8e4f",
       "conv_6e27d86a",
       "conv_4187ed42",
-      "conv_482563a1"
+      "conv_482563a1",
+      "conv_a1ee9c0e"
     ],
     "regulatory": [
       "conv_18a81393",
       "conv_90006982",
       "conv_c930d148",
       "conv_4187ed42",
-      "conv_482563a1"
+      "conv_482563a1",
+      "conv_a1ee9c0e",
+      "conv_9e3057a3"
     ],
     "compliance": [
       "conv_18a81393",
@@ -33,13 +36,17 @@
       "conv_c930d148",
       "conv_fef5c195",
       "conv_4187ed42",
-      "conv_482563a1"
+      "conv_482563a1",
+      "conv_a1ee9c0e",
+      "conv_9e3057a3"
     ],
     "audit": [
       "conv_90006982"
     ],
     "governance": [
-      "conv_c930d148"
+      "conv_c930d148",
+      "conv_a1ee9c0e",
+      "conv_9e3057a3"
     ],
     "document_analysis": [
       "conv_fef5c195",
@@ -50,7 +57,10 @@
       "conv_3bbc8e4f",
       "conv_6e27d86a",
       "conv_4187ed42",
-      "conv_482563a1"
+      "conv_482563a1",
+      "conv_a1ee9c0e",
+      "conv_9e3057a3",
+      "conv_e8a81452"
     ],
     "financial": [
       "conv_4ddbef9d",
@@ -58,10 +68,13 @@
       "conv_3640ed4c",
       "conv_3bbc8e4f",
       "conv_6e27d86a",
-      "conv_4187ed42"
+      "conv_4187ed42",
+      "conv_e8a81452"
     ],
     "search_queries": [
-      "conv_482563a1"
+      "conv_482563a1",
+      "conv_9e3057a3",
+      "conv_e8a81452"
     ]
   },
   "conversations": {
@@ -179,6 +192,37 @@
         "search_queries"
       ],
       "created_at": "2025-07-31T19:19:42.807473"
+    },
+    "conv_a1ee9c0e": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-07-31T19:26:08.816400"
+    },
+    "conv_9e3057a3": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: regulatory, capital, governance, document_analysis, search_queries",
+      "topics": [
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-07-31T19:28:54.087447"
+    },
+    "conv_e8a81452": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis, search_queries, financial",
+      "topics": [
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-07-31T19:54:59.263482"
     }
   }
 }
