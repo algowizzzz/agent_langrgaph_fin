@@ -21,7 +21,7 @@ class Config:
         def __init__(self):
             self.host = "0.0.0.0"
             self.port = 8000
-            self.cors_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+            self.cors_origins = ["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"]
 
     class Logging:
         def __init__(self):

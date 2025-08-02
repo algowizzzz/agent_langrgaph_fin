@@ -4,6 +4,7 @@ import logging
 import re
 import json
 import os
+from datetime import datetime
 
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter, MarkdownHeaderTextSplitter
@@ -61,10 +62,23 @@ class DocumentProcessor:
             # Process with appropriate splitter
             if file_type == "PDF":
                 # PDF content already has page headers, use markdown splitter
-                text_chunks = self.markdown_splitter.split_text(content)
+                split_result = self.markdown_splitter.split_text(content)
             else:
                 # Use recursive splitter for other types
-                text_chunks = self.recursive_splitter.split_text(content)
+                split_result = self.recursive_splitter.split_text(content)
+            
+            # Handle different splitter return types
+            text_chunks = []
+            for chunk in split_result:
+                if isinstance(chunk, Document):
+                    # MarkdownHeaderTextSplitter returns Document objects
+                    text_chunks.append(chunk.page_content)
+                elif isinstance(chunk, str):
+                    # RecursiveCharacterTextSplitter returns strings
+                    text_chunks.append(chunk)
+                else:
+                    # Fallback - convert to string
+                    text_chunks.append(str(chunk))
                 
             # Create Document objects with metadata
             docs = []
@@ -208,13 +222,42 @@ document_chunk_store = PersistentDocumentStore()
 logger = logging.getLogger(__name__)
 
 # --- Tool Implementations ---
-async def upload_document(file_path: str) -> dict:
+async def upload_document(file_path: str, session_id: str = "unknown", additional_metadata: dict = None) -> dict:
+    """Upload document with enhanced metadata tracking."""
     result = await document_processor.process_document(file_path)
     if not result["success"]: return {"status": "error", "message": result.get("error")}
+    
     chunks = result["documents"]
     doc_name = Path(file_path).name
-    document_chunk_store[doc_name] = [{"page_content": doc.page_content, "metadata": doc.metadata} for doc in chunks]
-    return {"status": "success", "doc_name": doc_name, "chunks_created": len(chunks)}
+    
+    # Enhanced metadata for each chunk
+    enhanced_chunks = []
+    for doc in chunks:
+        enhanced_metadata = {
+            **doc.metadata,
+            "uploaded_by_session": session_id,
+            "upload_timestamp": datetime.now().isoformat(),
+            "file_size": Path(file_path).stat().st_size,
+            "original_path": str(file_path)
+        }
+        
+        # Add any additional metadata
+        if additional_metadata:
+            enhanced_metadata.update(additional_metadata)
+            
+        enhanced_chunks.append({
+            "page_content": doc.page_content, 
+            "metadata": enhanced_metadata
+        })
+    
+    document_chunk_store[doc_name] = enhanced_chunks
+    return {
+        "status": "success", 
+        "doc_name": doc_name, 
+        "chunks_created": len(chunks),
+        "file_type": result.get("file_type", "UNKNOWN"),
+        "file_size": Path(file_path).stat().st_size
+    }
 
 def _apply_search_query(chunks: List[Dict], query: str) -> List[Dict]:
     """Apply search query with boolean logic support."""
@@ -248,7 +291,39 @@ async def discover_document_structure(doc_name: str) -> dict:
     headers = {c.get("metadata", {}).get(k) for c in chunks for k in c.get("metadata", {}) if "Header" in k}
     return {"status": "success", "headers": sorted(list(h for h in headers if h is not None))}
 
+async def search_multiple_docs(doc_names: List[str], query: str = None, filter_by_metadata: dict = None, **kwargs) -> list:
+    """Search across multiple documents simultaneously."""
+    if not doc_names:
+        return [{"error": "No documents specified"}]
+    
+    all_chunks = []
+    
+    # Collect chunks from all specified documents
+    for doc_name in doc_names:
+        if doc_name in document_chunk_store:
+            chunks = document_chunk_store[doc_name]
+            # Add source document info to each chunk
+            for chunk in chunks:
+                chunk_copy = chunk.copy()
+                chunk_copy["source_document"] = doc_name
+                all_chunks.append(chunk_copy)
+        else:
+            # Add error chunk for missing document
+            all_chunks.append({"error": f"Document '{doc_name}' not found", "source_document": doc_name})
+    
+    # Apply metadata filter if provided
+    if filter_by_metadata:
+        key, value = list(filter_by_metadata.items())[0]
+        all_chunks = [c for c in all_chunks if not c.get("error") and value == c.get("metadata", {}).get(key)]
+    
+    # Apply keyword query filter with proper boolean logic
+    if query:
+        all_chunks = _apply_search_query(all_chunks, query)
+    
+    return all_chunks
+
 async def search_uploaded_docs(doc_name: str, query: str = None, filter_by_metadata: dict = None, **kwargs) -> list:
+    """Search single document (backward compatibility)."""
     if doc_name not in document_chunk_store: return [{"error": f"Doc '{doc_name}' not found."}]
     
     # Start with all chunks for the document
@@ -264,3 +339,44 @@ async def search_uploaded_docs(doc_name: str, query: str = None, filter_by_metad
         filtered_chunks = _apply_search_query(filtered_chunks, query)
         
     return filtered_chunks
+
+# Cross-session document management
+async def get_all_documents() -> List[Dict]:
+    """Get list of all uploaded documents across sessions with enhanced metadata."""
+    all_docs = []
+    for doc_name in document_chunk_store.keys():
+        # Get first chunk to extract metadata
+        chunks = document_chunk_store[doc_name]
+        if chunks and len(chunks) > 0:
+            first_chunk = chunks[0]
+            metadata = first_chunk.get("metadata", {})
+            
+            # Enhanced document information
+            file_size = metadata.get("file_size", 0)
+            file_size_str = f"{file_size / 1024:.1f} KB" if file_size < 1024*1024 else f"{file_size / (1024*1024):.1f} MB"
+            
+            all_docs.append({
+                "name": doc_name,
+                "file_type": metadata.get("file_type", "UNKNOWN"),
+                "chunks_count": len(chunks),
+                "upload_time": metadata.get("upload_timestamp", metadata.get("upload_time", "")),
+                "uploaded_by_session": metadata.get("uploaded_by_session", "unknown"),
+                "file_size": file_size,
+                "file_size_display": file_size_str,
+                "source": metadata.get("source", "")
+            })
+    
+    # Sort by upload time (newest first)
+    all_docs.sort(key=lambda x: x.get("upload_time", ""), reverse=True)
+    return all_docs
+
+async def remove_document(doc_name: str) -> dict:
+    """Remove document from the system."""
+    if doc_name in document_chunk_store:
+        # Remove from store
+        data = document_chunk_store._load()
+        del data[doc_name]
+        document_chunk_store._save(data)
+        return {"status": "success", "message": f"Document '{doc_name}' removed successfully"}
+    else:
+        return {"status": "error", "message": f"Document '{doc_name}' not found"}

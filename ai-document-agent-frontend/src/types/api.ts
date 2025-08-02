@@ -3,7 +3,8 @@
 export interface ChatRequest {
   query: string;
   session_id: string;
-  active_document?: string;
+  active_document?: string;  // Backward compatibility
+  active_documents?: string[];  // Multi-document support
 }
 
 export interface ReasoningStep {
@@ -44,12 +45,29 @@ export interface Message {
 }
 
 export interface UploadedDocument {
-  filename: string;
-  file_type: 'PDF' | 'DOCX' | 'CSV' | 'TXT';
-  file_size: string;
-  chunks_created: number;
-  upload_date: Date;
-  active: boolean;
+  name: string;  // Changed from filename for consistency
+  file_type: 'PDF' | 'DOCX' | 'CSV' | 'TXT' | 'UNKNOWN';
+  file_size: number;
+  file_size_display: string;
+  chunks_count: number;  // Changed from chunks_created for consistency
+  upload_time: string;
+  uploaded_by_session: string;
+  source: string;
+  active?: boolean;  // For UI state
+}
+
+// Document list response from backend
+export interface DocumentListResponse {
+  status: 'success' | 'error';
+  documents: UploadedDocument[];
+  total_count: number;
+  message?: string;
+}
+
+// Document removal response
+export interface DocumentRemovalResponse {
+  status: 'success' | 'error';
+  message: string;
 }
 
 export interface ChatSession {

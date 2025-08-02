@@ -29,8 +29,8 @@ const config: Config = {
         'neutral-900': '#171923',
         
         // Chat Specific
-        'user-message-bg': '#4299E1',
-        'user-message-text': '#FFFFFF',
+        'user-message-bg': '#BFDBFE',
+        'user-message-text': '#1F2937',
         'assistant-message-bg': '#F7FAFC',
         'assistant-message-text': '#2D3748',
         'reasoning-bg': '#EDF2F7',

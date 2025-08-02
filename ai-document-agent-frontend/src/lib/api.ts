@@ -1,7 +1,7 @@
 // API Client for AI Document Agent Backend
 
 import axios, { AxiosResponse } from 'axios';
-import { ChatRequest, ChatResponse, DocumentUploadResponse } from '@/types/api';
+import { ChatRequest, ChatResponse, DocumentUploadResponse, DocumentListResponse, DocumentRemovalResponse } from '@/types/api';
 
 // Base configuration
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
@@ -66,6 +66,22 @@ export class DocumentAgentAPI {
    */
   static async healthCheck(): Promise<{ status: string; timestamp: string }> {
     const response: AxiosResponse = await apiClient.get('/health');
+    return response.data;
+  }
+
+  /**
+   * Get all uploaded documents across sessions
+   */
+  static async getAllDocuments(): Promise<DocumentListResponse> {
+    const response: AxiosResponse<DocumentListResponse> = await apiClient.get('/documents');
+    return response.data;
+  }
+
+  /**
+   * Remove a document from the system
+   */
+  static async removeDocument(documentName: string): Promise<DocumentRemovalResponse> {
+    const response: AxiosResponse<DocumentRemovalResponse> = await apiClient.delete(`/documents/${encodeURIComponent(documentName)}`);
     return response.data;
   }
 }

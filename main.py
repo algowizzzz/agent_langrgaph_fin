@@ -15,6 +15,7 @@ from models import (
     UploadResponse, SessionCleanupResponse,
     FrontendChatRequest, FrontendChatResponse, FrontendUploadResponse
 )
+from tools.document_tools import get_all_documents, remove_document
 
 # Set up logging
 logging.basicConfig(
@@ -83,8 +84,26 @@ async def health_check():
 async def get_document_processing_stats():
     """Get statistics about document processing capabilities."""
     try:
-        from document_processor import document_processor
-        stats = document_processor.get_processing_stats()
+        from tools.document_tools import document_chunk_store
+        
+        # Get basic stats from the document store
+        all_docs = document_chunk_store.keys()
+        total_docs = len(all_docs)
+        
+        # Calculate total chunks
+        total_chunks = 0
+        for doc_name in all_docs:
+            chunks = document_chunk_store[doc_name]
+            total_chunks += len(chunks)
+        
+        stats = {
+            "total_documents": total_docs,
+            "total_chunks": total_chunks,
+            "supported_formats": ["PDF", "DOCX", "CSV", "TXT"],
+            "cross_session_storage": True,
+            "multi_document_support": True
+        }
+        
         return {
             "status": "success",
             "stats": stats,
@@ -124,13 +143,14 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
                 error_message=validation_message
             )
         
-        # Generate file ID and create directory
+        # Generate file ID and create global directory (cross-session storage)
         file_id = str(uuid.uuid4())
-        upload_dir = Path(f"./uploads/{session_id}")
-        upload_dir.mkdir(parents=True, exist_ok=True)
+        upload_dir = Path(f"./global_uploads")
+        upload_dir.mkdir(exist_ok=True)
         
-        # Save file temporarily
-        temp_file_path = upload_dir / f"{file_id}_{file.filename}"
+        # Save file with enhanced naming for cross-session access
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        temp_file_path = upload_dir / f"{timestamp}_{file_id}_{file.filename}"
         with open(temp_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
@@ -145,7 +165,7 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
         
         # Process document through orchestrator's document tools
         try:
-            result = await upload_document(str(temp_file_path))
+            result = await upload_document(str(temp_file_path), session_id=session_id)
             chunks_created = result.get('chunks_created', 0) if isinstance(result, dict) else 0
             stored_doc_name = result.get('doc_name', file.filename) if isinstance(result, dict) else file.filename
             logger.info(f"Document processing result - session: {session_id}, result: {result}, correlation_id: {correlation_id}")
@@ -180,6 +200,43 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
             error_message=str(e)
         )
 
+@app.get("/test-documents")
+async def test_documents():
+    """Test endpoint for debugging."""
+    return {"message": "Test endpoint works", "timestamp": "2025-08-01"}
+
+@app.get("/documents")
+async def get_all_documents_endpoint():
+    """Get list of all uploaded documents across sessions."""
+    try:
+        documents = await get_all_documents()
+        return {
+            "status": "success", 
+            "documents": documents,
+            "total_count": len(documents)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching documents: {str(e)}")
+        return {
+            "status": "error",
+            "message": str(e),
+            "documents": [],
+            "total_count": 0
+        }
+
+@app.delete("/documents/{doc_name}")
+async def delete_document_endpoint(doc_name: str):
+    """Delete a document from the system."""
+    try:
+        result = await remove_document(doc_name)
+        return result
+    except Exception as e:
+        logger.error(f"Error deleting document {doc_name}: {str(e)}")
+        return {
+            "status": "error",
+            "message": str(e)
+        }
+
 @app.post("/chat", response_model=FrontendChatResponse)
 async def chat(request: FrontendChatRequest):
     """Handle chat requests using the Orchestrator with memory integration."""
@@ -208,11 +265,19 @@ async def chat(request: FrontendChatRequest):
         # Initialize orchestrator
         orchestrator = Orchestrator()
         
+        # Determine active documents (support both single and multiple)
+        active_docs = []
+        if request.active_documents:
+            active_docs = request.active_documents
+        elif request.active_document:
+            active_docs = [request.active_document]
+        
         # Run orchestrator with the user query and memory context
         result = await orchestrator.run(
             user_query=request.query,
             session_id=request.session_id,
-            active_document=request.active_document,
+            active_document=request.active_document,  # Backward compatibility
+            active_documents=active_docs,  # Multi-document support
             memory_context=memory_context
         )
         

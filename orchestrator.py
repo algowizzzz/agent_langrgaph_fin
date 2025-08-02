@@ -1,10 +1,11 @@
 import asyncio
 import json
 import logging
+import time
 from typing import Dict, List, Any
 
 from langchain_anthropic import ChatAnthropic
-from tools.document_tools import upload_document, discover_document_structure, search_uploaded_docs, document_chunk_store
+from tools.document_tools import upload_document, discover_document_structure, search_uploaded_docs, search_multiple_docs, document_chunk_store
 from tools.synthesis_tools import synthesize_content
 from tools.search_tools import search_knowledge_base, search_conversation_history
 from tools.code_execution_tools import execute_python_code, process_table_data, calculate_statistics
@@ -28,6 +29,35 @@ class Orchestrator:
         self.system_prompt = self._build_system_prompt()
         self.state = {"loaded_documents": {}, "conversation_history": []}
         self.reasoning_log = []
+        
+        # Rate limiting for API calls
+        self.api_semaphore = asyncio.Semaphore(2)  # Max 2 concurrent calls for orchestrator
+        self.max_retries = 3
+        self.base_delay = 1
+
+    async def _llm_with_retry(self, prompt: str) -> str:
+        """LLM call with connection limiting and retry logic for rate limit errors."""
+        async with self.api_semaphore:
+            for attempt in range(self.max_retries):
+                try:
+                    response = await self.llm.ainvoke(prompt)
+                    return response.content if hasattr(response, 'content') else str(response)
+                except Exception as e:
+                    error_str = str(e)
+                    if "rate_limit_error" in error_str or "429" in error_str or "concurrent connections" in error_str:
+                        if attempt < self.max_retries - 1:
+                            delay = self.base_delay * (2 ** attempt)  # Exponential backoff
+                            logger.warning(f"Rate limit hit in orchestrator, retrying in {delay}s (attempt {attempt + 1}/{self.max_retries})")
+                            await asyncio.sleep(delay)
+                            continue
+                        else:
+                            logger.error(f"Rate limit exceeded in orchestrator after {self.max_retries} attempts")
+                            raise e
+                    else:
+                        # Non-rate-limit error, don't retry
+                        logger.error(f"Orchestrator LLM call failed with non-rate-limit error: {e}")
+                        raise e
+            return f"Error: Failed to get orchestrator response after {self.max_retries} attempts"
 
     def _load_tools(self) -> Dict[str, Any]:
         """Loads all available tools with their signatures and descriptions."""
@@ -41,6 +71,11 @@ class Orchestrator:
                 "function": discover_document_structure,
                 "signature": "discover_document_structure(doc_name: str) -> dict",
                 "description": "Scans a previously uploaded document to identify its structure, such as headers, sections, and page numbers. Returns a dictionary containing lists of headers and other metadata keys."
+            },
+            "search_multiple_docs": {
+                "function": search_multiple_docs,
+                "signature": "search_multiple_docs(doc_names: list[str], query: str = None, filter_by_metadata: dict = None) -> list",
+                "description": "Performs keyword search across multiple uploaded documents simultaneously. Each result chunk includes 'source_document' field for identification. Use for multi-document analysis and comparison. Returns a list of matching text chunks from all specified documents."
             },
             "search_uploaded_docs": {
                 "function": search_uploaded_docs,
@@ -163,11 +198,34 @@ You have access to the following tools. Respond with a JSON object containing a 
    Step 1: search_uploaded_docs(doc_name="ACTIVE_DOCUMENT", retrieve_full_doc=True)
    Step 2: extract_key_phrases(text="EXTRACT_PAGE_CONTENT_FROM_STEP_1", top_n=10)
 
+🌟 MULTI-DOCUMENT WORKFLOWS (USE WHEN MULTIPLE ACTIVE_DOCUMENTS):
+
+5. COMPARATIVE ANALYSIS:
+   Query: "compare documents", "differences between X and Y", "analyze both reports"
+   Proven Pattern:
+   Step 1: search_multiple_docs(doc_names=["ACTIVE_DOCUMENTS"], query="KEY_TERMS")
+   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="map_reduce", length="comparison analysis")
+   ⚠️ CRITICAL: Use search_multiple_docs when multiple documents are active!
+
+6. CROSS-DOCUMENT SEARCH:
+   Query: "find mentions across all documents", "search all files for X"
+   Proven Pattern:
+   Step 1: search_multiple_docs(doc_names=["ACTIVE_DOCUMENTS"], query="SEARCH_TERMS")
+   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="refine", length="comprehensive findings")
+
+7. COMPREHENSIVE MULTI-DOC SUMMARY:
+   Query: "summarize all documents", "overview of all files"
+   Proven Pattern:
+   Step 1: search_multiple_docs(doc_names=["ACTIVE_DOCUMENTS"])
+   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="refine", length="executive summary")
+
 🚨 CRITICAL DATA FLOW RULES:
 - search_uploaded_docs returns: [{"page_content": "text...", "metadata": {...}}]
+- search_multiple_docs returns: [{"page_content": "text...", "metadata": {...}, "source_document": "filename"}]
 - Text analytics tools (analyze_text_metrics, extract_key_phrases, analyze_sentiment) need: "text string"
 - Synthesis tools (synthesize_content) need: chunk arrays
 - ALWAYS extract chunks[0]["page_content"] when passing to text analytics!
+- Multi-document chunks include "source_document" field for identification
 
 Available tools:
 
@@ -374,8 +432,7 @@ Requirements:
 Final Response:"""
             
             try:
-                response = await self.llm.ainvoke(synthesis_prompt)
-                return response.content if hasattr(response, 'content') else str(response)
+                return await self._llm_with_retry(synthesis_prompt)
             except Exception as e:
                 logger.error(f"Failed to create intelligent final response: {e}")
                 # Fallback to smart selection
@@ -384,7 +441,7 @@ Final Response:"""
         # Fallback for single-step results
         return self._select_best_final_answer(user_query, step_results, last_result)
 
-    async def run(self, user_query: str, session_id: str, active_document: str = None, memory_context: Dict = None):
+    async def run(self, user_query: str, session_id: str, active_document: str = None, active_documents: List[str] = None, memory_context: Dict = None):
         """Main execution loop (OODA) with memory integration."""
         print(f"\n--- 🚀 Orchestrator Starting for Session {session_id} ---")
         self.reasoning_log = [] # Reset for each run
@@ -392,8 +449,15 @@ Final Response:"""
         # 1. Orient - Build the prompt with memory context
         current_state_prompt = f"Current State:\n- Loaded Docs: {list(document_chunk_store.keys())}\n- User Query: '{user_query}'"
         
-        # Add active document context if provided
-        if active_document:
+        # Add active document context (handle both single and multiple)
+        if active_documents and len(active_documents) > 0:
+            if len(active_documents) == 1:
+                current_state_prompt += f"\n- ACTIVE DOCUMENT: '{active_documents[0]}' (PRIORITIZE this document for analysis)"
+            else:
+                docs_list = "', '".join(active_documents)
+                current_state_prompt += f"\n- ACTIVE DOCUMENTS: ['{docs_list}'] (PRIORITIZE these documents for multi-document analysis)"
+        elif active_document:
+            # Backward compatibility for single document
             current_state_prompt += f"\n- ACTIVE DOCUMENT: '{active_document}' (PRIORITIZE this document for analysis)"
         
         # Format conversation history clearly (LAST 3 MESSAGES)
@@ -428,8 +492,7 @@ Please create a plan to answer the current query, using conversation history whe
         print("\n--- 🤔 Asking LLM for a plan ---")
         print(f"📝 Prompt includes conversation history: {len(memory_context.get('conversation_history', [])) if memory_context else 0} messages")
         try:
-            response = await self.llm.ainvoke(formatted_prompt)
-            response_text = response.content
+            response_text = await self._llm_with_retry(formatted_prompt)
             
             parsed_response = self._parse_llm_response(response_text)
             
@@ -469,13 +532,25 @@ Please create a plan to answer the current query, using conversation history whe
                                     if "process_table_data" in step_results:
                                         replacement_data = step_results["process_table_data"]
                                         print(f"    📎 Tool-specific fix: {value} → table processing results for synthesis")
+                                    elif "search_multiple_docs" in step_results:
+                                        replacement_data = step_results["search_multiple_docs"]
+                                        print(f"    📎 Tool-specific fix: {value} → multi-document chunks for synthesis")
                                     elif "search_uploaded_docs" in step_results:
                                         replacement_data = step_results["search_uploaded_docs"]
                                         print(f"    📎 Tool-specific fix: {value} → document chunks for synthesis")
                                     
                                 elif tool_name in ["analyze_text_metrics", "extract_key_phrases", "analyze_sentiment"] and key == "text":
                                     # Text analytics tools need plain text from first chunk
-                                    if "search_uploaded_docs" in step_results:
+                                    if "search_multiple_docs" in step_results:
+                                        search_results = step_results["search_multiple_docs"]
+                                        if isinstance(search_results, list) and len(search_results) > 0:
+                                            # Find first valid chunk (not error object)
+                                            for chunk in search_results:
+                                                if isinstance(chunk, dict) and "page_content" in chunk:
+                                                    replacement_data = chunk["page_content"]
+                                                    print(f"    📎 Text extraction: {value} → page content from multi-doc search")
+                                                    break
+                                    elif "search_uploaded_docs" in step_results:
                                         search_results = step_results["search_uploaded_docs"]
                                         if isinstance(search_results, list) and len(search_results) > 0:
                                             first_chunk = search_results[0]
@@ -488,7 +563,10 @@ Please create a plan to answer the current query, using conversation history whe
                                     value_upper = value.upper()
                                     if "CHUNK" in value_upper or "SEARCH" in value_upper:
                                         # For chunk/search references, prefer document search results
-                                        if "search_uploaded_docs" in step_results:
+                                        if "search_multiple_docs" in step_results:
+                                            replacement_data = step_results["search_multiple_docs"]
+                                            print(f"    📎 Content-based: {value} → multi-document chunks")
+                                        elif "search_uploaded_docs" in step_results:
                                             replacement_data = step_results["search_uploaded_docs"]
                                             print(f"    📎 Content-based: {value} → document chunks")
                                     elif "SYNTHESIS" in value_upper or "SUMMARY" in value_upper:
@@ -508,8 +586,13 @@ Please create a plan to answer the current query, using conversation history whe
                         for idx, value in enumerate(tool_params):
                             if isinstance(value, str) and self._is_placeholder(value):
                                 value_lower = value.lower()
-                                if ("search" in value_lower or "chunk" in value_lower) and "search_uploaded_docs" in step_results:
-                                    tool_params[idx] = step_results["search_uploaded_docs"]
+                                if ("search" in value_lower or "chunk" in value_lower):
+                                    if "search_multiple_docs" in step_results:
+                                        tool_params[idx] = step_results["search_multiple_docs"]
+                                    elif "search_uploaded_docs" in step_results:
+                                        tool_params[idx] = step_results["search_uploaded_docs"]
+                                    else:
+                                        tool_params[idx] = step_result
                                 elif ("table" in value_lower or "process" in value_lower) and "process_table_data" in step_results:
                                     tool_params[idx] = step_results["process_table_data"]
                                 elif ("synthesis" in value_lower or "summary" in value_lower) and "synthesize_content" in step_results:

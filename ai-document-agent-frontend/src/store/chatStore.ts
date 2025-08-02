@@ -12,7 +12,8 @@ interface ChatState {
   
   // Documents
   documents: UploadedDocument[];
-  activeDocument: string | null;
+  activeDocument: string | null;  // Backward compatibility
+  activeDocuments: string[];  // Multi-document support
   
   // Chat actions
   addMessage: (message: Omit<Message, 'id' | 'timestamp'>) => void;
@@ -23,8 +24,12 @@ interface ChatState {
   
   // Document actions
   addDocument: (document: UploadedDocument) => void;
-  setActiveDocument: (filename: string | null) => void;
+  setActiveDocument: (filename: string | null) => void;  // Backward compatibility
   removeDocument: (filename: string) => void;
+  // Multi-document actions
+  toggleActiveDocument: (filename: string) => void;
+  setActiveDocuments: (filenames: string[]) => void;
+  clearActiveDocuments: () => void;
   
   // Session actions
   generateSessionId: () => string;
@@ -43,6 +48,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   error: null,
   documents: [],
   activeDocument: null,
+  activeDocuments: [],
 
   // Chat actions
   addMessage: (message) => {
@@ -79,29 +85,61 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   // Document actions
   addDocument: (document) => {
     set((state) => ({
-      documents: [...state.documents.filter(d => d.filename !== document.filename), document],
-      activeDocument: document.filename, // Auto-select newly uploaded document
+      documents: [...state.documents.filter(d => d.name !== document.name), document],
+      activeDocument: document.name, // Auto-select newly uploaded document
+      activeDocuments: [document.name], // Auto-select for multi-document
     }));
   },
 
-  setActiveDocument: (filename) => set({ activeDocument: filename }),
+  setActiveDocument: (filename) => set({ 
+    activeDocument: filename,
+    activeDocuments: filename ? [filename] : []
+  }),
 
   removeDocument: (filename) => {
     set((state) => ({
-      documents: state.documents.filter(d => d.filename !== filename),
+      documents: state.documents.filter(d => d.name !== filename),
       activeDocument: state.activeDocument === filename ? null : state.activeDocument,
+      activeDocuments: state.activeDocuments.filter(name => name !== filename),
     }));
   },
+
+  // Multi-document actions
+  toggleActiveDocument: (filename) => {
+    set((state) => {
+      const isActive = state.activeDocuments.includes(filename);
+      const newActiveDocuments = isActive 
+        ? state.activeDocuments.filter(name => name !== filename)
+        : [...state.activeDocuments, filename];
+      
+      return {
+        activeDocuments: newActiveDocuments,
+        activeDocument: newActiveDocuments.length === 1 ? newActiveDocuments[0] : null
+      };
+    });
+  },
+
+  setActiveDocuments: (filenames) => set({ 
+    activeDocuments: filenames,
+    activeDocument: filenames.length === 1 ? filenames[0] : null
+  }),
+
+  clearActiveDocuments: () => set({ 
+    activeDocuments: [],
+    activeDocument: null
+  }),
 
   // Session actions
   generateSessionId,
 
   loadSession: (session) => {
+    const activeDocuments = session.documents.filter(d => d.active).map(d => d.name);
     set({
       sessionId: session.session_id,
       messages: session.messages,
       documents: session.documents,
-      activeDocument: session.documents.find(d => d.active)?.filename || null,
+      activeDocument: activeDocuments.length === 1 ? activeDocuments[0] : null,
+      activeDocuments: activeDocuments,
     });
   },
 
@@ -112,7 +150,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       messages: state.messages,
       documents: state.documents.map(d => ({
         ...d,
-        active: d.filename === state.activeDocument,
+        active: state.activeDocuments.includes(d.name),
       })),
       created_at: new Date(state.messages[0]?.timestamp || Date.now()),
       updated_at: new Date(),
