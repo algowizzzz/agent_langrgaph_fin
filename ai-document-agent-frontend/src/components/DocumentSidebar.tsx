@@ -136,9 +136,9 @@ export default function DocumentSidebar({
         ) : (
           documents.map((doc) => (
             <div
-              key={doc.name}
+              key={doc.internal_name}
               className={`border rounded-lg p-3 cursor-pointer transition-all ${
-                activeDocuments.includes(doc.name)
+                activeDocuments.includes(doc.internal_name)
                   ? 'border-blue-500 bg-blue-50 shadow-sm'
                   : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
               }`}
@@ -147,14 +147,14 @@ export default function DocumentSidebar({
               <div className="flex items-start justify-between mb-2">
                 <div 
                   className="flex-1 min-w-0"
-                  onClick={() => onDocumentToggle(doc.name)}
+                  onClick={() => onDocumentToggle(doc.internal_name)}
                 >
                   <div className="flex items-center space-x-2">
                     {getFileTypeIcon(doc.file_type)}
                     <h3 className="text-sm font-medium text-gray-900 truncate">
                       {doc.name}
                     </h3>
-                    {activeDocuments.includes(doc.name) && (
+                    {activeDocuments.includes(doc.internal_name) && (
                       <CheckCircleIcon className="w-4 h-4 text-blue-500 flex-shrink-0" />
                     )}
                   </div>
@@ -178,7 +178,7 @@ export default function DocumentSidebar({
                 <button
                   onClick={(e) => {
                     e.stopPropagation();
-                    handleDocumentRemove(doc.name);
+                    handleDocumentRemove(doc.internal_name);
                   }}
                   disabled={removeDocumentMutation.isPending}
                   className="text-gray-400 hover:text-red-500 transition-colors p-1 disabled:opacity-50"
@@ -189,7 +189,7 @@ export default function DocumentSidebar({
               </div>
 
               {/* Selection Indicator */}
-              {activeDocuments.includes(doc.name) && (
+              {activeDocuments.includes(doc.internal_name) && (
                 <div className="flex items-center justify-between">
                   <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                     ✓ Selected
@@ -211,11 +211,14 @@ export default function DocumentSidebar({
             Active Documents ({activeDocuments.length})
           </h3>
           <div className="space-y-1 max-h-24 overflow-y-auto">
-            {activeDocuments.map((docName) => (
-              <div key={docName} className="text-xs text-blue-700 truncate">
-                • {docName}
-              </div>
-            ))}
+            {activeDocuments.map((internalName) => {
+              const doc = documents.find(d => d.internal_name === internalName);
+              return (
+                <div key={internalName} className="text-xs text-blue-700 truncate">
+                  • {doc?.name || internalName}
+                </div>
+              );
+            })}
           </div>
           {activeDocuments.length > 1 && (
             <div className="text-xs text-blue-600 mt-2 font-medium">

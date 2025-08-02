@@ -45,7 +45,8 @@ class SessionCleanupResponse(BaseModel):
 class FrontendChatRequest(BaseModel):
     query: str
     session_id: str
-    active_document: Optional[str] = None
+    active_document: Optional[str] = None  # Backward compatibility
+    active_documents: Optional[List[str]] = []  # Multi-document support
 
 class ReasoningStep(BaseModel):
     tool_name: str

@@ -25,12 +25,20 @@ except ImportError:
     HAS_DOCX_SUPPORT = False
     logging.warning("python-docx not available. DOCX processing disabled.")
 
-# Assumes config is available or use defaults
-class MockConfig:
-    class AI:
-        chunk_size = 1500
-        chunk_overlap = 200
-config = MockConfig()
+# Use real config instead of MockConfig
+try:
+    from config import config
+except ImportError:
+    # Fallback MockConfig with 5k word chunks
+    class MockConfig:
+        def __init__(self):
+            self.ai = self.AI()
+        
+        class AI:
+            def __init__(self):
+                self.chunk_size = 25000  # ~5k words 
+                self.chunk_overlap = 1000  # Better context overlap
+    config = MockConfig()
 
 
 class DocumentProcessor:
@@ -38,7 +46,7 @@ class DocumentProcessor:
     def __init__(self):
         self.headers_to_split_on = [("#", "Header 1"), ("##", "Header 2"), ("###", "Header 3")]
         self.markdown_splitter = MarkdownHeaderTextSplitter(headers_to_split_on=self.headers_to_split_on, strip_headers=False)
-        self.recursive_splitter = RecursiveCharacterTextSplitter(chunk_size=config.AI.chunk_size, chunk_overlap=config.AI.chunk_overlap)
+        self.recursive_splitter = RecursiveCharacterTextSplitter(chunk_size=config.ai.chunk_size, chunk_overlap=config.ai.chunk_overlap)
 
     async def process_document(self, file_path: str) -> Dict:
         """Process document with proper file type detection."""
@@ -59,26 +67,12 @@ class DocumentProcessor:
                 # Fallback to text reading
                 content, file_type = await self._extract_text_file(file_path)
             
-            # Process with appropriate splitter
-            if file_type == "PDF":
-                # PDF content already has page headers, use markdown splitter
-                split_result = self.markdown_splitter.split_text(content)
-            else:
-                # Use recursive splitter for other types
-                split_result = self.recursive_splitter.split_text(content)
+            # Process with appropriate splitter - using 5k word chunks for all types
+            # Use recursive splitter for 5k word chunks instead of page-based splitting
+            split_result = self.recursive_splitter.split_text(content)
             
-            # Handle different splitter return types
-            text_chunks = []
-            for chunk in split_result:
-                if isinstance(chunk, Document):
-                    # MarkdownHeaderTextSplitter returns Document objects
-                    text_chunks.append(chunk.page_content)
-                elif isinstance(chunk, str):
-                    # RecursiveCharacterTextSplitter returns strings
-                    text_chunks.append(chunk)
-                else:
-                    # Fallback - convert to string
-                    text_chunks.append(str(chunk))
+            # RecursiveCharacterTextSplitter returns strings
+            text_chunks = split_result
                 
             # Create Document objects with metadata
             docs = []
@@ -222,13 +216,14 @@ document_chunk_store = PersistentDocumentStore()
 logger = logging.getLogger(__name__)
 
 # --- Tool Implementations ---
-async def upload_document(file_path: str, session_id: str = "unknown", additional_metadata: dict = None) -> dict:
+async def upload_document(file_path: str, session_id: str = "unknown", additional_metadata: dict = None, original_filename: str = None) -> dict:
     """Upload document with enhanced metadata tracking."""
     result = await document_processor.process_document(file_path)
     if not result["success"]: return {"status": "error", "message": result.get("error")}
     
     chunks = result["documents"]
     doc_name = Path(file_path).name
+    display_name = original_filename or Path(file_path).name
     
     # Enhanced metadata for each chunk
     enhanced_chunks = []
@@ -238,7 +233,8 @@ async def upload_document(file_path: str, session_id: str = "unknown", additiona
             "uploaded_by_session": session_id,
             "upload_timestamp": datetime.now().isoformat(),
             "file_size": Path(file_path).stat().st_size,
-            "original_path": str(file_path)
+            "original_path": str(file_path),
+            "display_name": display_name
         }
         
         # Add any additional metadata
@@ -356,7 +352,8 @@ async def get_all_documents() -> List[Dict]:
             file_size_str = f"{file_size / 1024:.1f} KB" if file_size < 1024*1024 else f"{file_size / (1024*1024):.1f} MB"
             
             all_docs.append({
-                "name": doc_name,
+                "name": metadata.get("display_name", doc_name),  # Use display_name for human-readable names
+                "internal_name": doc_name,  # Keep internal name for backend operations
                 "file_type": metadata.get("file_type", "UNKNOWN"),
                 "chunks_count": len(chunks),
                 "upload_time": metadata.get("upload_timestamp", metadata.get("upload_time", "")),

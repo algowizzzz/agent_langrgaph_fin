@@ -85,9 +85,9 @@ export const useChatStore = create<ChatState>()((set, get) => ({
   // Document actions
   addDocument: (document) => {
     set((state) => ({
-      documents: [...state.documents.filter(d => d.name !== document.name), document],
-      activeDocument: document.name, // Auto-select newly uploaded document
-      activeDocuments: [document.name], // Auto-select for multi-document
+      documents: [...state.documents.filter(d => d.internal_name !== document.internal_name), document],
+      activeDocument: document.internal_name, // Auto-select newly uploaded document (use internal_name for backend)
+      activeDocuments: [document.internal_name], // Auto-select for multi-document (use internal_name for backend)
     }));
   },
 
@@ -98,7 +98,7 @@ export const useChatStore = create<ChatState>()((set, get) => ({
 
   removeDocument: (filename) => {
     set((state) => ({
-      documents: state.documents.filter(d => d.name !== filename),
+      documents: state.documents.filter(d => d.internal_name !== filename),
       activeDocument: state.activeDocument === filename ? null : state.activeDocument,
       activeDocuments: state.activeDocuments.filter(name => name !== filename),
     }));

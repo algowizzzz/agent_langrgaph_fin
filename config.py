@@ -16,6 +16,9 @@ class Config:
             # The API key is now loaded from the environment
             self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
             self.anthropic_model = "claude-3-5-sonnet-20241022"
+            # Document chunking settings for ~5k words
+            self.chunk_size = 25000  # ~5000 words (5 chars per word average)
+            self.chunk_overlap = 1000  # Better context overlap for large chunks
 
     class API:
         def __init__(self):

@@ -233,7 +233,10 @@ export default function Home() {
               }
             </h3>
             <div className="text-xs text-blue-700">
-              {activeDocuments.join(', ')}
+              {activeDocuments.map(internalName => {
+                const doc = documents.find(d => d.internal_name === internalName);
+                return doc?.name || internalName;
+              }).join(', ')}
             </div>
           </div>
         )}

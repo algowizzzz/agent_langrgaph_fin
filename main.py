@@ -15,7 +15,7 @@ from models import (
     UploadResponse, SessionCleanupResponse,
     FrontendChatRequest, FrontendChatResponse, FrontendUploadResponse
 )
-from tools.document_tools import get_all_documents, remove_document
+from tools.document_tools import get_all_documents, remove_document, upload_document
 
 # Set up logging
 logging.basicConfig(
@@ -121,7 +121,6 @@ async def get_document_processing_stats():
 @app.post("/upload", response_model=FrontendUploadResponse)
 async def upload_file(session_id: str, file: UploadFile = File(...)):
     """Upload, process, and validate file for document analysis."""
-    from tools.document_tools import upload_document
     
     start_time = datetime.now()
     correlation_id = str(uuid.uuid4())
@@ -165,7 +164,14 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
         
         # Process document through orchestrator's document tools
         try:
-            result = await upload_document(str(temp_file_path), session_id=session_id)
+            logger.info(f"About to call upload_document with original_filename: {file.filename}")
+            result = await upload_document(
+                file_path=str(temp_file_path), 
+                session_id=session_id, 
+                additional_metadata=None, 
+                original_filename=file.filename
+            )
+            logger.info(f"upload_document result: {result}")
             chunks_created = result.get('chunks_created', 0) if isinstance(result, dict) else 0
             stored_doc_name = result.get('doc_name', file.filename) if isinstance(result, dict) else file.filename
             logger.info(f"Document processing result - session: {session_id}, result: {result}, correlation_id: {correlation_id}")

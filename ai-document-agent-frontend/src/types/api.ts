@@ -45,7 +45,8 @@ export interface Message {
 }
 
 export interface UploadedDocument {
-  name: string;  // Changed from filename for consistency
+  name: string;  // Human-readable display name
+  internal_name: string;  // Internal storage name for backend operations
   file_type: 'PDF' | 'DOCX' | 'CSV' | 'TXT' | 'UNKNOWN';
   file_size: number;
   file_size_display: string;

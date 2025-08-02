@@ -123,27 +123,7 @@ const DocumentUpload: React.FC<DocumentUploadProps> = ({
           </div>
         )}
 
-        {/* Supported Formats */}
-        <div className="mt-6 pt-6 border-t border-neutral-200">
-          <p className="text-sm text-neutral-600 mb-3">Supported formats:</p>
-          <div className="flex justify-center space-x-6">
-            {[
-              { type: 'PDF', icon: '📄', desc: 'Documents' },
-              { type: 'DOCX', icon: '📝', desc: 'Word files' },
-              { type: 'CSV', icon: '📊', desc: 'Data files' },
-              { type: 'TXT', icon: '📋', desc: 'Text files' },
-            ].map((format) => (
-              <div key={format.type} className="flex flex-col items-center space-y-1">
-                <span className="text-2xl">{format.icon}</span>
-                <span className="text-xs font-medium text-neutral-700">{format.type}</span>
-                <span className="text-xs text-neutral-500">{format.desc}</span>
-              </div>
-            ))}
-          </div>
-          <p className="text-xs text-neutral-500 mt-3">
-            Maximum file size: {maxSize}MB
-          </p>
-        </div>
+
       </div>
 
       {/* Error Message */}
