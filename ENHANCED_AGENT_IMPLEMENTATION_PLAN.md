@@ -8,7 +8,7 @@
 
 ## 🎯 **Project Vision**
 
-Transform the current basic orchestrator into a sophisticated AI Document Intelligence Agent with comprehensive workflow guidance, transparent reasoning, and robust error handling.
+Transform the current basic orchestrator into a sophisticated AI Document Intelligence Agent with **intelligent query routing**, **multi-document analysis capabilities**, and **comprehensive data analysis workflows** - seamlessly switching between uploaded documents, knowledge base, and LLM memory based on context.
 
 ---
 
@@ -28,10 +28,16 @@ Transform the current basic orchestrator into a sophisticated AI Document Intell
    - Add self-awareness responses ("What can you do?")
    - Create capability discovery prompts
 
-3. **Create priority-based workflow classification system**
-   - Document Analysis (Priority 1 - if active_documents exist)
-   - Q&A Workflow (Priority 2 - embeddings DB > LLM memory)
-   - Data Analysis (Priority 3 - CSV/Excel detection)
+3. **Create intelligent query routing system with fallback chain**
+   - **Document Analysis** (Priority 1 - if active_documents exist)
+     - Single doc: Direct search and synthesis
+     - Multi-doc: 5k word chunks → refine method for comparison analysis
+   - **Q&A Workflow** (Priority 2 - smart fallback chain)
+     - Step 1: Search uploaded docs (if any)
+     - Step 2: Knowledge base internal memory 
+     - Step 3: LLM memory (if knowledge base says "idk")
+   - **Data Analysis** (Priority 3 - CSV/Excel detection)
+     - Table summary → Python calculations → Visualizations
 
 4. **Enhance planning prompt with workflow examples and guidance**
    - Add few-shot examples for each workflow type
@@ -39,21 +45,30 @@ Transform the current basic orchestrator into a sophisticated AI Document Intell
    - Provide workflow-specific instructions
 
 #### **Phase 3: Main Workflows Implementation**
-5. **Implement document analysis workflow (upload → parse → chunk → analyze)**
-   - Token size detection (<200k = simple LLM, >200k = refine method)
-   - Reduce-map for large content summaries
-   - Multi-document synthesis capabilities
+5. **Implement document analysis workflow with intelligent processing**
+   - **Single Document:** Direct search and synthesis from uploaded content
+   - **Multi-Document (2+ docs):** 5k word chunks → refine method for deep analysis
+   - **Financial Analysis Example:** "Compare similarities and differences as financial analyst"
+     - Creates specific instruction prompt
+     - Passes all chunks through refine method for comprehensive comparison
+   - **Chunking Strategy:** 5k words per chunk for optimal processing
 
-6. **Implement Q&A workflow with embeddings DB and LLM memory priorities**
-   - Embeddings DB search (Priority 1 - search-based queries)
-   - LLM memory (Priority 2 - general knowledge like "how to make tea")
-   - Intelligent query routing based on content type
+6. **Implement Q&A workflow with intelligent fallback chain**
+   - **Example Query:** "What is risk?"
+   - **With Uploaded Doc:** Answer comes directly from uploaded document content
+   - **No Uploaded Doc:** 
+     - Step 1: Search knowledge base internal memory
+     - Step 2: If knowledge base responds "idk" → fallback to LLM memory
+     - Step 3: Generate answer from LLM general knowledge
+   - **Smart Context Detection:** Route queries to appropriate source automatically
 
-7. **Implement data analysis workflow (CSV → Python → visualize)**
-   - Automated table detection and extraction
-   - Python code generation for calculations
-   - Visualization creation with multiple chart types
-   - Results presentation with code blocks
+7. **Implement data analysis workflow with progressive complexity**
+   - **Step 1 - Upload CSV:** `test_business_data.csv` automatic detection
+   - **Step 2 - Table Summary:** "Give table data summary" → simple prompt synthesis
+   - **Step 3 - Calculations:** "Add column A and B" → Python tool execution
+   - **Step 4 - Visualizations:** "Draw a graph" → chart creation tools
+   - **Progressive Workflow:** Each step builds on previous results
+   - **Code Transparency:** Show Python code used for calculations
 
 #### **Phase 4: Transparency & Quality Systems**
 8. **Create reasoning steps tracking system with input/output logging**
@@ -121,28 +136,44 @@ AGENT_IDENTITY = {
 }
 ```
 
-### **Workflow Priority System**
+### **Intelligent Query Routing System**
 ```python
-WORKFLOW_PRIORITIES = {
-    1: {
-        "name": "Document Analysis",
+QUERY_ROUTING_LOGIC = {
+    "document_analysis": {
         "trigger": "active_documents exist",
-        "tools": ["search_uploaded_docs", "discover_document_structure", "synthesize_content"],
-        "method_selection": "token_size < 200k ? simple_llm : refine_method"
-    },
-    2: {
-        "name": "Q&A Workflow", 
-        "sub_priorities": {
-            1: {"name": "Embeddings DB", "trigger": "search-based query"},
-            2: {"name": "LLM Memory", "trigger": "general knowledge"}
+        "single_doc": {
+            "method": "direct_search_synthesis",
+            "example": "What is risk? (with riskandfinace.pdf uploaded)",
+            "tools": ["search_uploaded_docs", "synthesize_content"]
         },
-        "tools": ["search_knowledge_base", "search_conversation_history"]
+        "multi_doc": {
+            "method": "5k_chunk_refine",
+            "example": "Compare car24_chpt1_0.pdf and car24_chpt7.pdf for similarities",
+            "chunking": "5k words per chunk",
+            "tools": ["chunk_documents", "refine_method", "financial_analysis_prompt"]
+        }
     },
-    3: {
-        "name": "Data Analysis",
-        "trigger": "CSV/Excel/data analysis request",
-        "workflow": "Upload → Extract → Python → Visualize → Present",
-        "tools": ["process_table_data", "execute_python_code", "create_chart"]
+    "qa_fallback_chain": {
+        "step_1": {
+            "source": "uploaded_documents",
+            "condition": "if active_documents exist"
+        },
+        "step_2": {
+            "source": "knowledge_base_internal",
+            "condition": "if no uploaded docs OR step_1 fails"
+        },
+        "step_3": {
+            "source": "llm_memory",
+            "condition": "if knowledge_base returns 'idk'"
+        }
+    },
+    "data_analysis_progressive": {
+        "trigger": "CSV/Excel file detected (e.g., test_business_data.csv)",
+        "workflow": [
+            {"step": 1, "action": "table_summary", "method": "prompt_synthesis"},
+            {"step": 2, "action": "calculations", "method": "python_tool", "example": "add column A and B"},
+            {"step": 3, "action": "visualization", "method": "chart_tools", "example": "draw a graph"}
+        ]
     }
 }
 ```
@@ -205,18 +236,18 @@ class WorkflowErrorHandler:
 ## 🎯 **Expected Outcomes**
 
 ### **Enhanced Capabilities**
-- ✅ Priority-based workflow selection (Document → Q&A → Data Analysis)
-- ✅ Transparent reasoning with detailed step logging
-- ✅ Robust error handling with user feedback loops  
-- ✅ Quality assurance through independent review
-- ✅ Interactive tool discovery and custom workflows
+- ✅ **Intelligent Query Routing:** Documents → Knowledge Base → LLM Memory fallback chain
+- ✅ **Multi-Document Analysis:** 5k word chunks with refine method for financial comparisons
+- ✅ **Progressive Data Analysis:** CSV summary → Python calculations → Visualizations
+- ✅ **Transparent Reasoning:** Detailed step logging with tool inputs/outputs
+- ✅ **Context-Aware Processing:** Single vs multi-document detection with appropriate methods
 
 ### **User Experience Improvements**
-- **Clear Workflow Guidance:** Users understand what the agent can do
-- **Transparent Processing:** See exactly how queries are handled
-- **Error Recovery:** Helpful suggestions when workflows fail
-- **Quality Confidence:** Know how reliable each response is
-- **Interactive Discovery:** Explore tools and create custom workflows
+- **Smart Document Routing:** "What is risk?" automatically finds answer in uploaded docs or falls back appropriately
+- **Financial Analysis Expertise:** Multi-document comparisons with specialized financial analyst prompts
+- **Progressive Data Exploration:** CSV → summary → calculations → visualizations in logical sequence
+- **Transparent Processing:** See exactly which source (document/knowledge base/LLM) provided the answer
+- **Context Awareness:** System knows when to use simple synthesis vs complex refine methods
 
 ### **Technical Achievements** 
 - **100% V2-Only Operation:** No dependency on legacy systems
@@ -230,11 +261,11 @@ class WorkflowErrorHandler:
 
 | Phase | Focus | Duration | Items | Success Criteria |
 |-------|-------|----------|-------|------------------|
-| 1 | Fix Current Bug | 1 day | 1 | LLM planning works, document search tools selected |
-| 2 | Core Agent System | 2 days | 3 | Agent identity, workflow priorities, enhanced prompts |  
-| 3 | Main Workflows | 3 days | 3 | Document analysis, Q&A, data analysis workflows |
-| 4 | Transparency Systems | 2 days | 4 | Reasoning steps, progress tracking, reviewer, errors |
-| 5 | Testing & Validation | 1 day | 1 | All workflows tested and validated |
+| 1 | ✅ Fix Current Bug | ✅ Complete | 1 | ✅ LLM planning works, document search tools selected |
+| 2 | Query Routing System | 2 days | 3 | Smart fallback chain: docs → knowledge base → LLM |  
+| 3 | Document Analysis Workflows | 3 days | 3 | Single doc synthesis + Multi-doc 5k chunk refine method |
+| 4 | Data Analysis Pipeline | 2 days | 4 | CSV: summary → Python → visualization progression |
+| 5 | Integration & Testing | 1 day | 1 | Test all files: riskandfinace.pdf, car24 docs, test_business_data.csv |
 
 **Total Estimated Duration:** 9 days for high-priority items
 
@@ -242,11 +273,15 @@ class WorkflowErrorHandler:
 
 ## 🚀 **Next Steps**
 
-1. **[IMMEDIATE]** Fix ExecutionStep creation bug to restore LLM planning
-2. **[Phase 2]** Implement agent identity and workflow priority system
-3. **[Phase 3]** Build document analysis workflow with proper tool selection
-4. **[Phase 4]** Add reasoning transparency and quality assurance
-5. **[Phase 5]** Comprehensive testing and validation
+1. **[✅ COMPLETE]** ~~Fix ExecutionStep creation bug to restore LLM planning~~
+2. **[CURRENT - Phase 2]** Implement intelligent query routing system with fallback chain
+   - Build docs → knowledge base → LLM memory routing logic
+   - Test with "What is risk?" query in both scenarios
+3. **[Phase 3]** Implement document analysis workflows
+   - Single document: Direct synthesis (riskandfinace.pdf)
+   - Multi-document: 5k chunks + refine method (car24 chapters)
+4. **[Phase 4]** Build progressive data analysis pipeline (test_business_data.csv)
+5. **[Phase 5]** Integration testing with all specified test files
 
 ---
 
@@ -254,20 +289,35 @@ class WorkflowErrorHandler:
 
 
 
----- addition 
+---
 
-so hwne user uplaod doc and ask what is risk - asnwer comesfrom doc 
-when no doc uploaded same question - it goes to knwoeldge base internal memory, if knweldge abse say idk , it goes to llm memeory and answers the question 
+## 📂 **Test Files & Examples**
 
-i uploaded 2 big docs, they get parsed and chunked in 5k word chunked, when i say comapre thw two for simialrities and differences as a fianncial analysts a specifi instructions prompt created and use refine all chunks passed through it 
+### **Test Document Collection**
 
-when i uplaod csv, i can ask to give table data sumamry - thats simple prompt synthesis , then i can say addd column a and b thats python tool, then I can say draw a graph 
+**🔍 Large Document Analysis (Multi-Document Workflow):**
+- `car24_chpt1_0.pdf` - Financial document chapter 1
+- `car24_chpt7.pdf` - Financial document chapter 7
+- **Processing:** 5k word chunks → refine method
+- **Example Query:** "Compare the two for similarities and differences as a financial analyst"
 
-large docs: 
-car24_chpt1_0.pdf, car24_chpt7.pdf, 
+**📄 Small Document Analysis (Single Document Workflow):**
+- `riskandfinace.pdf` - Risk and finance document  
+- **Processing:** Direct search and synthesis
+- **Example Query:** "What is risk?" (answer comes from document content)
 
-small docs: 
+**📊 Data Analysis Workflow:**
+- `test_business_data.csv` - Business data for progressive analysis
+- **Workflow Examples:**
+  1. "Give table data summary" → prompt synthesis
+  2. "Add column A and B" → Python tool
+  3. "Draw a graph" → visualization tool
 
+### **Query Routing Test Cases**
 
-data anlysis: 
-test_business_data.csv 
+| Query Type | Uploaded Docs | Expected Route | Example |
+|------------|---------------|----------------|---------|
+| Document Question | ✅ riskandfinace.pdf | Document Search | "What is risk?" → document content |
+| Knowledge Question | ❌ None | Knowledge Base → LLM | "What is risk?" → knowledge base → LLM fallback |
+| Multi-Doc Analysis | ✅ car24_chpt1_0.pdf, car24_chpt7.pdf | 5k Chunk Refine | "Compare similarities as financial analyst" |
+| Data Analysis | ✅ test_business_data.csv | Progressive CSV Workflow | Summary → Calculate → Visualize | 
