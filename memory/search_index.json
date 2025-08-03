@@ -25,7 +25,29 @@
       "conv_8de6dd62",
       "conv_e90fbc1f",
       "conv_5f1fc0d1",
-      "conv_e65339b0"
+      "conv_e65339b0",
+      "conv_3e914e27",
+      "conv_29fe76d9",
+      "conv_da796130",
+      "conv_d66e6c40",
+      "conv_853a71da",
+      "conv_8d25c982",
+      "conv_28dc4670",
+      "conv_40d7667a",
+      "conv_c2a943ab",
+      "conv_3a6fe98d",
+      "conv_bc8f6145",
+      "conv_2cd1fe79",
+      "conv_eb93425f",
+      "conv_304f8534",
+      "conv_f4713f02",
+      "conv_58ea1f85",
+      "conv_cc2d34b5",
+      "conv_163fc6f1",
+      "conv_d1031841",
+      "conv_ba1fbd31",
+      "conv_4f757447",
+      "conv_6ebe56fd"
     ],
     "regulatory": [
       "conv_18a81393",
@@ -38,14 +60,31 @@
       "conv_ba0dc4d2",
       "conv_2b6664f5",
       "conv_abe41b65",
-      "conv_2de93486"
+      "conv_2de93486",
+      "conv_853a71da",
+      "conv_8d25c982",
+      "conv_28dc4670",
+      "conv_40d7667a",
+      "conv_c2a943ab",
+      "conv_3a6fe98d",
+      "conv_bc8f6145",
+      "conv_2cd1fe79",
+      "conv_eb93425f",
+      "conv_f4713f02",
+      "conv_58ea1f85",
+      "conv_583c6946",
+      "conv_cc2d34b5",
+      "conv_163fc6f1",
+      "conv_d1031841"
     ],
     "compliance": [
       "conv_18a81393",
       "conv_90006982",
       "conv_c930d148",
       "conv_abe41b65",
-      "conv_2de93486"
+      "conv_2de93486",
+      "conv_2cd1fe79",
+      "conv_eb93425f"
     ],
     "wrong_way_risk": [
       "conv_18a81393"
@@ -60,7 +99,28 @@
       "conv_a1ee9c0e",
       "conv_9e3057a3",
       "conv_ba0dc4d2",
-      "conv_2b6664f5"
+      "conv_2b6664f5",
+      "conv_853a71da",
+      "conv_8d25c982",
+      "conv_28dc4670",
+      "conv_40d7667a",
+      "conv_c2a943ab",
+      "conv_a922f679",
+      "conv_c1c3f2fe",
+      "conv_edb0e978",
+      "conv_3a6fe98d",
+      "conv_bc8f6145",
+      "conv_2cd1fe79",
+      "conv_eb93425f",
+      "conv_f4713f02",
+      "conv_58ea1f85",
+      "conv_583c6946",
+      "conv_cc2d34b5",
+      "conv_163fc6f1",
+      "conv_d1031841",
+      "conv_ba1fbd31",
+      "conv_4f757447",
+      "conv_6ebe56fd"
     ],
     "audit": [
       "conv_90006982"
@@ -70,7 +130,12 @@
       "conv_a1ee9c0e",
       "conv_9e3057a3",
       "conv_ba0dc4d2",
-      "conv_2b6664f5"
+      "conv_2b6664f5",
+      "conv_28dc4670",
+      "conv_40d7667a",
+      "conv_c2a943ab",
+      "conv_cc2d34b5",
+      "conv_163fc6f1"
     ],
     "document_analysis": [
       "conv_fef5c195",
@@ -113,7 +178,37 @@
       "conv_27191837",
       "conv_56892dd6",
       "conv_ddbb5ce7",
-      "conv_e65339b0"
+      "conv_e65339b0",
+      "conv_3e914e27",
+      "conv_2a006e9a",
+      "conv_29fe76d9",
+      "conv_da796130",
+      "conv_ef0c098c",
+      "conv_069887a3",
+      "conv_c76ec524",
+      "conv_d66e6c40",
+      "conv_853a71da",
+      "conv_8d25c982",
+      "conv_28dc4670",
+      "conv_40d7667a",
+      "conv_c2a943ab",
+      "conv_a922f679",
+      "conv_c1c3f2fe",
+      "conv_edb0e978",
+      "conv_3a6fe98d",
+      "conv_bc8f6145",
+      "conv_2cd1fe79",
+      "conv_eb93425f",
+      "conv_304f8534",
+      "conv_f4713f02",
+      "conv_58ea1f85",
+      "conv_583c6946",
+      "conv_cc2d34b5",
+      "conv_163fc6f1",
+      "conv_d1031841",
+      "conv_ba1fbd31",
+      "conv_4f757447",
+      "conv_6ebe56fd"
     ],
     "financial": [
       "conv_4ddbef9d",
@@ -131,7 +226,21 @@
       "conv_27191837",
       "conv_56892dd6",
       "conv_ddbb5ce7",
-      "conv_e65339b0"
+      "conv_e65339b0",
+      "conv_3e914e27",
+      "conv_2a006e9a",
+      "conv_29fe76d9",
+      "conv_da796130",
+      "conv_ef0c098c",
+      "conv_069887a3",
+      "conv_c76ec524",
+      "conv_d66e6c40",
+      "conv_a922f679",
+      "conv_c1c3f2fe",
+      "conv_edb0e978",
+      "conv_583c6946",
+      "conv_4f757447",
+      "conv_6ebe56fd"
     ],
     "search_queries": [
       "conv_482563a1",
@@ -157,12 +266,40 @@
       "conv_d57c8f42",
       "conv_d03a1753",
       "conv_27191837",
-      "conv_56892dd6"
+      "conv_56892dd6",
+      "conv_3e914e27",
+      "conv_2a006e9a",
+      "conv_29fe76d9",
+      "conv_da796130",
+      "conv_ef0c098c",
+      "conv_069887a3",
+      "conv_c76ec524",
+      "conv_853a71da",
+      "conv_8d25c982",
+      "conv_edb0e978",
+      "conv_3a6fe98d",
+      "conv_bc8f6145",
+      "conv_304f8534",
+      "conv_f4713f02",
+      "conv_58ea1f85",
+      "conv_583c6946",
+      "conv_d1031841",
+      "conv_ba1fbd31",
+      "conv_4f757447",
+      "conv_6ebe56fd"
     ],
     "reporting": [
       "conv_ba6d5dbc",
       "conv_4f0536a3",
-      "conv_fa5b3964"
+      "conv_fa5b3964",
+      "conv_069887a3",
+      "conv_c76ec524",
+      "conv_d66e6c40"
+    ],
+    "basel": [
+      "conv_c1c3f2fe",
+      "conv_edb0e978",
+      "conv_ba1fbd31"
     ]
   },
   "conversations": {
@@ -571,6 +708,321 @@
         "financial"
       ],
       "created_at": "2025-08-01T18:12:11.511379"
+    },
+    "conv_3e914e27": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, document_analysis, search_queries, financial",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-01T20:19:58.843065"
+    },
+    "conv_2a006e9a": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, search_queries, financial",
+      "topics": [
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-01T21:14:25.209283"
+    },
+    "conv_29fe76d9": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, document_analysis, search_queries, financial",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-01T21:38:53.628052"
+    },
+    "conv_da796130": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, search_queries, financial",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-01T21:44:08.835596"
+    },
+    "conv_ef0c098c": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis, search_queries, financial",
+      "topics": [
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-01T21:48:54.598134"
+    },
+    "conv_069887a3": {
+      "summary": "Conversation with 7 user queries and 4 assistant responses. Key topics: document_analysis, search_queries, financial, reporting",
+      "topics": [
+        "document_analysis",
+        "search_queries",
+        "financial",
+        "reporting"
+      ],
+      "created_at": "2025-08-01T21:52:34.134376"
+    },
+    "conv_c76ec524": {
+      "summary": "Conversation with 7 user queries and 4 assistant responses. Key topics: document_analysis, search_queries, financial, reporting",
+      "topics": [
+        "document_analysis",
+        "search_queries",
+        "financial",
+        "reporting"
+      ],
+      "created_at": "2025-08-01T21:56:26.251195"
+    },
+    "conv_d66e6c40": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial, reporting",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "financial",
+        "reporting"
+      ],
+      "created_at": "2025-08-01T22:30:17.630756"
+    },
+    "conv_853a71da": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-01T22:35:03.439098"
+    },
+    "conv_8d25c982": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-01T23:00:53.163178"
+    },
+    "conv_28dc4670": {
+      "summary": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-01T23:26:47.204041"
+    },
+    "conv_40d7667a": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-02T00:08:33.191996"
+    },
+    "conv_c2a943ab": {
+      "summary": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-02T00:12:55.133947"
+    },
+    "conv_a922f679": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: capital, document_analysis, financial",
+      "topics": [
+        "capital",
+        "document_analysis",
+        "financial"
+      ],
+      "created_at": "2025-08-02T00:21:59.470150"
+    },
+    "conv_c1c3f2fe": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: capital, document_analysis, basel, financial",
+      "topics": [
+        "capital",
+        "document_analysis",
+        "basel",
+        "financial"
+      ],
+      "created_at": "2025-08-02T01:03:34.688120"
+    },
+    "conv_edb0e978": {
+      "summary": "Conversation with 8 user queries and 3 assistant responses. Key topics: capital, document_analysis, search_queries, basel, financial",
+      "topics": [
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "basel",
+        "financial"
+      ],
+      "created_at": "2025-08-02T01:07:33.783188"
+    },
+    "conv_3a6fe98d": {
+      "summary": "Conversation with 8 user queries and 3 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-02T01:15:43.399910"
+    },
+    "conv_bc8f6145": {
+      "summary": "Conversation with 8 user queries and 3 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-02T10:09:32.913194"
+    },
+    "conv_2cd1fe79": {
+      "summary": "Conversation with 8 user queries and 3 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-02T10:33:06.251219"
+    },
+    "conv_eb93425f": {
+      "summary": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-02T10:42:11.077556"
+    },
+    "conv_304f8534": {
+      "summary": "Conversation with 10 user queries and 1 assistant responses. Key topics: risk_factors, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-02T11:17:54.298516"
+    },
+    "conv_f4713f02": {
+      "summary": "Conversation with 9 user queries and 2 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-02T11:18:50.390907"
+    },
+    "conv_58ea1f85": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-02T11:38:50.854464"
+    },
+    "conv_583c6946": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: regulatory, capital, document_analysis, search_queries, financial",
+      "topics": [
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-02T11:40:21.552413"
+    },
+    "conv_cc2d34b5": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-02T12:37:30.227514"
+    },
+    "conv_163fc6f1": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, governance, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "governance",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-02T12:50:41.555055"
+    },
+    "conv_d1031841": {
+      "summary": "Conversation with 8 user queries and 3 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-02T13:03:28.396526"
+    },
+    "conv_ba1fbd31": {
+      "summary": "Conversation with 10 user queries and 1 assistant responses. Key topics: risk_factors, capital, document_analysis, search_queries, basel",
+      "topics": [
+        "risk_factors",
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "basel"
+      ],
+      "created_at": "2025-08-02T13:13:16.436598"
+    },
+    "conv_4f757447": {
+      "summary": "Conversation with 9 user queries and 2 assistant responses. Key topics: risk_factors, capital, document_analysis, search_queries, financial",
+      "topics": [
+        "risk_factors",
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-02T23:57:20.310860"
+    },
+    "conv_6ebe56fd": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, capital, document_analysis, search_queries, financial",
+      "topics": [
+        "risk_factors",
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-02T23:59:27.724564"
     }
   }
 }

@@ -203,9 +203,9 @@ You have access to the following tools. Respond with a JSON object containing a 
 5. COMPARATIVE ANALYSIS:
    Query: "compare documents", "differences between X and Y", "analyze both reports"
    Proven Pattern:
-   Step 1: search_multiple_docs(doc_names=["ACTIVE_DOCUMENTS"], query="KEY_TERMS")
-   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="map_reduce", length="comparison analysis")
-   ⚠️ CRITICAL: Use search_multiple_docs when multiple documents are active!
+   Step 1: search_multiple_docs(doc_names=["ACTIVE_DOCUMENTS"])
+   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="simple_llm_call", length="comparison analysis")
+   ⚠️ CRITICAL: Use search_multiple_docs when multiple documents are active! No query needed for full comparison.
 
 6. CROSS-DOCUMENT SEARCH:
    Query: "find mentions across all documents", "search all files for X"
@@ -340,6 +340,49 @@ Example - TARGETED SEARCH:
                     value.startswith('$')
         
         return is_wrapped
+    
+    def _replace_placeholders(self, tool_params: dict, step_results: dict, step_result) -> dict:
+        """Replace placeholder values in tool parameters with actual data from previous steps."""
+        final_params = tool_params.copy()
+        
+        if isinstance(final_params, dict):
+            for key, value in final_params.items():
+                if isinstance(value, str) and self._is_placeholder(value):
+                    replacement_data = None
+                    
+                    # Tool-specific replacement rules
+                    if key == "chunks" and "search_multiple_docs" in step_results:
+                        replacement_data = step_results["search_multiple_docs"]
+                    elif key == "chunks" and "search_uploaded_docs" in step_results:
+                        replacement_data = step_results["search_uploaded_docs"]
+                    elif key == "text" and "search_multiple_docs" in step_results:
+                        # For text analytics, extract page_content from first chunk
+                        search_results = step_results["search_multiple_docs"]
+                        if isinstance(search_results, list) and len(search_results) > 0:
+                            for chunk in search_results:
+                                if isinstance(chunk, dict) and "page_content" in chunk:
+                                    replacement_data = chunk["page_content"]
+                                    break
+                    
+                    # Content-based replacement rules
+                    if replacement_data is None:
+                        value_upper = value.upper()
+                        if "CHUNK" in value_upper or "SEARCH" in value_upper:
+                            if "search_multiple_docs" in step_results:
+                                replacement_data = step_results["search_multiple_docs"]
+                            elif "search_uploaded_docs" in step_results:
+                                replacement_data = step_results["search_uploaded_docs"]
+                        elif "SYNTHESIS" in value_upper or "SUMMARY" in value_upper:
+                            if "synthesize_content" in step_results:
+                                replacement_data = step_results["synthesize_content"]
+                    
+                    # Fallback to most recent result
+                    if replacement_data is None:
+                        replacement_data = step_result
+                    
+                    final_params[key] = replacement_data
+        
+        return final_params
     
     def _select_best_final_answer(self, user_query: str, step_results: dict, last_result) -> str:
         """Select the most appropriate final answer based on query type and available results."""
@@ -526,8 +569,16 @@ Please create a plan to answer the current query, using conversation history whe
                             if isinstance(value, str) and self._is_placeholder(value):
                                 replacement_data = None
                                 
+                                # CRITICAL FIX: Handle ACTIVE_DOCUMENTS placeholder
+                                if value == "ACTIVE_DOCUMENTS" and key == "doc_names":
+                                    replacement_data = active_documents if active_documents else []
+                                    print(f"    🔧 CRITICAL FIX: {value} → {active_documents}")
+                                elif value == ["ACTIVE_DOCUMENTS"] and key == "doc_names":
+                                    replacement_data = active_documents if active_documents else []
+                                    print(f"    🔧 CRITICAL FIX: {value} → {active_documents}")
+                                
                                 # Tool-specific replacement rules (most important first)
-                                if tool_name == "synthesize_content" and key == "chunks":
+                                elif tool_name == "synthesize_content" and key == "chunks":
                                     # synthesize_content should use the most recent relevant data
                                     if "process_table_data" in step_results:
                                         replacement_data = step_results["process_table_data"]
@@ -585,6 +636,11 @@ Please create a plan to answer the current query, using conversation history whe
                         # Handle list parameters with placeholders
                         for idx, value in enumerate(tool_params):
                             if isinstance(value, str) and self._is_placeholder(value):
+                                # CRITICAL FIX: Handle ACTIVE_DOCUMENTS in list parameters
+                                if value == "ACTIVE_DOCUMENTS":
+                                    tool_params[idx] = active_documents if active_documents else []
+                                    print(f"    🔧 CRITICAL FIX (list): {value} → {active_documents}")
+                                    continue
                                 value_lower = value.lower()
                                 if ("search" in value_lower or "chunk" in value_lower):
                                     if "search_multiple_docs" in step_results:
@@ -627,3 +683,240 @@ Please create a plan to answer the current query, using conversation history whe
             logger.error(f"Error during plan execution: {e}")
             self.reasoning_log.append({"error": str(e)})
             return {"status": "error", "final_answer": f"An error occurred: {e}", "reasoning_log": self.reasoning_log}
+
+    async def run_streaming(self, user_query: str, session_id: str, active_document: str = None, active_documents: List[str] = None, memory_context: Dict = None):
+        """Streaming version of the main execution loop with real-time reasoning steps."""
+        print(f"\n--- 🚀 Streaming Orchestrator Starting for Session {session_id} ---")
+        self.reasoning_log = []  # Reset for each run
+        
+        # Stream initial setup
+        yield {
+            'type': 'reasoning_step',
+            'step': 'setup',
+            'message': '🤔 Analyzing your query and preparing execution plan...',
+            'timestamp': time.time()
+        }
+        
+        # 1. Orient - Build the prompt with memory context
+        current_state_prompt = f"Current State:\n- Loaded Docs: {list(document_chunk_store.keys())}\n- User Query: '{user_query}'"
+        
+        # Add active document context
+        if active_documents and len(active_documents) > 0:
+            if len(active_documents) == 1:
+                current_state_prompt += f"\n- ACTIVE DOCUMENT: '{active_documents[0]}' (PRIORITIZE this document for analysis)"
+                yield {
+                    'type': 'reasoning_step',
+                    'step': 'context',
+                    'message': f'📄 Focusing analysis on: {active_documents[0]}',
+                    'timestamp': time.time()
+                }
+            else:
+                docs_list = "', '".join(active_documents)
+                current_state_prompt += f"\n- ACTIVE DOCUMENTS: ['{docs_list}'] (PRIORITIZE these documents for multi-document analysis)"
+                yield {
+                    'type': 'reasoning_step',
+                    'step': 'context',
+                    'message': f'📚 Analyzing {len(active_documents)} documents: {docs_list[:50]}...',
+                    'timestamp': time.time()
+                }
+        elif active_document:
+            current_state_prompt += f"\n- ACTIVE DOCUMENT: '{active_document}' (PRIORITIZE this document for analysis)"
+            yield {
+                'type': 'reasoning_step',
+                'step': 'context',
+                'message': f'📄 Focusing analysis on: {active_document}',
+                'timestamp': time.time()
+            }
+        
+        # Format conversation history
+        conversation_section = ""
+        if memory_context and memory_context.get('conversation_history'):
+            conversation_history = memory_context['conversation_history'][-3:]
+            if conversation_history:
+                yield {
+                    'type': 'reasoning_step',
+                    'step': 'memory',
+                    'message': f'🧠 Loading conversation context ({len(conversation_history)} recent messages)',
+                    'timestamp': time.time()
+                }
+                conversation_section = "\n\n" + "="*60 + "\n📋 PREVIOUS CONVERSATION (Last 3 messages):\n" + "="*60 + "\n"
+                for i, msg in enumerate(conversation_history, 1):
+                    role = msg.get('role', 'unknown')
+                    content = msg.get('content', '')
+                    
+                    if role.lower() == 'user':
+                        conversation_section += f"\n🔹 USER QUERY {i}: {content}\n"
+                    elif role.lower() == 'assistant':
+                        truncated_content = content[:300] + "..." if len(content) > 300 else content
+                        conversation_section += f"\n🤖 ASSISTANT RESPONSE {i}: {truncated_content}\n"
+                
+                conversation_section += "\n" + "="*60 + "\n"
+        
+        # Stream plan generation
+        yield {
+            'type': 'reasoning_step',
+            'step': 'planning',
+            'message': '🎯 Creating execution plan with AI reasoning...',
+            'timestamp': time.time()
+        }
+        
+        # Combine prompts
+        formatted_prompt = f"""{self.system_prompt}
+
+{current_state_prompt}{conversation_section}
+
+🎯 CURRENT USER QUERY: "{user_query}"
+
+Please create a plan to answer the current query, using conversation history when relevant."""
+        
+        try:
+            # Get plan from LLM
+            response_text = await self._llm_with_retry(formatted_prompt)
+            parsed_response = self._parse_llm_response(response_text)
+            
+            yield {
+                'type': 'reasoning_step',
+                'step': 'plan_ready',
+                'message': '📋 Execution plan created, starting analysis...',
+                'timestamp': time.time()
+            }
+            
+            if "plan" in parsed_response:
+                plan = parsed_response["plan"]
+                step_results = {}
+                step_result = None
+                
+                # Stream each step execution
+                for i, step in enumerate(plan):
+                    # Parse step format
+                    if "tool_call" in step:
+                        tool_name = step["tool_call"]["name"]
+                        tool_params = step["tool_call"]["params"]
+                    elif "tool" in step and step["tool"] is not None:
+                        tool_name = step["tool"]
+                        if "params" in step:
+                            tool_params = step["params"]
+                        elif "tool_input" in step:
+                            tool_params = step["tool_input"]
+                        else:
+                            tool_params = {}
+                    else:
+                        continue
+                    
+                    # Stream step start
+                    step_description = step.get("description", f"Executing {tool_name}")
+                    yield {
+                        'type': 'reasoning_step',
+                        'step': 'tool_execution',
+                        'tool_name': tool_name,
+                        'message': f'⚡ Step {i+1}: {step_description}',
+                        'timestamp': time.time()
+                    }
+                    
+                    # Execute the tool
+                    if tool_name in self.tools:
+                        try:
+                            tool_function = self.tools[tool_name]["function"]
+                            start_time = time.time()
+                            
+                            # Smart parameter replacement with ACTIVE_DOCUMENTS fix
+                            final_params = tool_params.copy()
+                            
+                            # CRITICAL FIX for streaming: Handle ACTIVE_DOCUMENTS placeholder
+                            if isinstance(final_params, dict):
+                                for key, value in final_params.items():
+                                    if value == "ACTIVE_DOCUMENTS" and key == "doc_names":
+                                        final_params[key] = active_documents if active_documents else []
+                                        print(f"    🔧 STREAMING FIX: {value} → {active_documents}")
+                                    elif value == ["ACTIVE_DOCUMENTS"] and key == "doc_names":
+                                        final_params[key] = active_documents if active_documents else []
+                                        print(f"    🔧 STREAMING FIX: {value} → {active_documents}")
+                            
+                            final_params = self._replace_placeholders(final_params, step_results, step_result)
+                            
+                            # Execute tool
+                            if asyncio.iscoroutinefunction(tool_function):
+                                result = await tool_function(**final_params)
+                            else:
+                                result = tool_function(**final_params)
+                            
+                            execution_time = time.time() - start_time
+                            
+                            # Store result
+                            step_results[tool_name] = result
+                            step_result = result
+                            
+                            # Stream step completion
+                            result_preview = str(result)[:100] + "..." if len(str(result)) > 100 else str(result)
+                            yield {
+                                'type': 'reasoning_step',
+                                'step': 'tool_complete',
+                                'tool_name': tool_name,
+                                'message': f'✅ {tool_name} completed ({execution_time:.1f}s)',
+                                'result_preview': result_preview,
+                                'timestamp': time.time()
+                            }
+                            
+                            # Log the step
+                            self.reasoning_log.append({
+                                "tool_name": tool_name,
+                                "tool_params": final_params,
+                                "tool_output": result
+                            })
+                            
+                        except Exception as e:
+                            error_msg = f"Error in {tool_name}: {str(e)}"
+                            yield {
+                                'type': 'reasoning_step',
+                                'step': 'tool_error',
+                                'tool_name': tool_name,
+                                'message': f'❌ {error_msg}',
+                                'timestamp': time.time()
+                            }
+                            logger.error(error_msg)
+                            self.reasoning_log.append({"tool_name": tool_name, "error": str(e)})
+                            step_results[tool_name] = {"error": str(e)}
+                    else:
+                        error_msg = f"Unknown tool: {tool_name}"
+                        yield {
+                            'type': 'reasoning_step',
+                            'step': 'tool_error',
+                            'tool_name': tool_name,
+                            'message': f'❌ {error_msg}',
+                            'timestamp': time.time()
+                        }
+                        logger.error(error_msg)
+                
+                # Stream final synthesis
+                yield {
+                    'type': 'reasoning_step',
+                    'step': 'synthesis',
+                    'message': '🧠 Synthesizing insights and creating final response...',
+                    'timestamp': time.time()
+                }
+                
+                # Create final response
+                final_answer = await self._create_intelligent_final_response(user_query, step_results, step_result)
+                
+                # Stream final answer
+                yield {
+                    'type': 'final_answer',
+                    'content': final_answer,
+                    'reasoning_log': self.reasoning_log,
+                    'timestamp': time.time()
+                }
+                
+            else:
+                yield {
+                    'type': 'error',
+                    'message': "Could not generate a valid execution plan.",
+                    'timestamp': time.time()
+                }
+                
+        except Exception as e:
+            logger.error(f"Error during streaming execution: {e}")
+            yield {
+                'type': 'error',
+                'message': f"An error occurred during analysis: {str(e)}",
+                'timestamp': time.time()
+            }

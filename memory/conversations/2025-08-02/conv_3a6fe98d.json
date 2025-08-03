@@ -1,0 +1,86 @@
+{
+  "id": "conv_3a6fe98d",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello, simple test",
+      "timestamp": "2025-08-02T01:04:58.047378",
+      "session_id": "backend_test"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! I received your test message successfully. While I notice the analysis tools provided some additional context about verification dates and backend testing, for a simple greeting and test like this, I'll keep my response straightforward: I'm here and ready to help! Let me know if you'd like to test anything specific or if you have any other questions.",
+      "timestamp": "2025-08-02T01:05:10.870381",
+      "session_id": "backend_test"
+    },
+    {
+      "role": "user",
+      "content": "Hello streaming test",
+      "timestamp": "2025-08-02T01:06:54.733780",
+      "session_id": "stream_test"
+    },
+    {
+      "role": "user",
+      "content": "What is the capital adequacy ratio (CAR) mentioned in this document?",
+      "timestamp": "2025-08-02T01:07:17.332430",
+      "session_id": "osfi_test"
+    },
+    {
+      "role": "user",
+      "content": "What is CAR mentioned in this document?",
+      "timestamp": "2025-08-02T01:07:33.782107",
+      "session_id": "osfi_test"
+    },
+    {
+      "role": "user",
+      "content": "What is CAR mentioned in this document?",
+      "timestamp": "2025-08-02T01:07:33.782107",
+      "session_id": "osfi_test"
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the provided document analysis, CAR stands for Capital Adequacy Requirements, which is a comprehensive regulatory framework for financial institutions in Canada. Here's a detailed explanation:\n\nCore Definition:\nCAR is a guideline that establishes capital standards and requirements for various Canadian financial institutions, including:\n- Banks (including federal credit unions)\n- Bank holding companies\n- Federally regulated trust companies\n- Loan companies\n\nKey Aspects:\n1. Legal Basis:\n- Established under the Bank Act and Trust and Loan Companies Act\n- Gives the Superintendent authority to direct institutions to increase capital when necessary\n\n2. Framework Structure:\nThe CAR guideline is organized into nine chapters covering:\n- Overview of Risk-based Capital Requirements\n- Definition of Capital\n- Operational Risk\n- Credit Risk\n- Securitization\n- Settlement and Counterparty Risk\n- Credit Valuation Adjustment Risk\n- Market Risk\n\n3. Purpose:\nThe framework serves to:\n- Assess whether institutions maintain adequate capital levels\n- Provide standardized capital requirements based on the Basel capital framework\n- Ensure financial institutions' stability through proper capital management\n\nThis regulatory framework is fundamental to maintaining the stability and security of Canada's financial system by ensuring institutions maintain appropriate capital levels relative to their risks.",
+      "timestamp": "2025-08-02T01:07:56.032659",
+      "session_id": "osfi_test"
+    },
+    {
+      "role": "user",
+      "content": "summarise for a five year old in 100 words",
+      "timestamp": "2025-08-02T01:10:39.717011",
+      "session_id": "session_1754111425740_doug983zb"
+    },
+    {
+      "role": "user",
+      "content": "Hello test",
+      "timestamp": "2025-08-02T01:14:42.872655",
+      "session_id": "test_fixed"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there! Thanks for reaching out. I'm here and ready to help you with any questions or analysis you need. While I notice you've just said \"Hello test,\" I want to let you know that I'm equipped to assist with document analysis, particularly around Capital Adequacy Requirements (CAR) and related materials. Feel free to ask me anything specific you'd like to know!",
+      "timestamp": "2025-08-02T01:14:50.554553",
+      "session_id": "test_fixed"
+    },
+    {
+      "role": "user",
+      "content": "Summarize document",
+      "timestamp": "2025-08-02T01:15:43.398097",
+      "session_id": "session_1754111737759_vo6wj8r7g"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250802_011543",
+    "content": "Conversation with 8 user queries and 3 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+    "original_message_count": 11,
+    "timespan": "2025-08-02T01:04:58.047378 - 2025-08-02T01:15:43.398097",
+    "topics": [
+      "risk_factors",
+      "regulatory",
+      "capital",
+      "document_analysis",
+      "search_queries"
+    ],
+    "created_at": "2025-08-02T01:15:43.398366"
+  },
+  "created_at": "2025-08-02T01:15:43.399194"
+}

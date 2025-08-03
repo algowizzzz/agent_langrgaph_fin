@@ -9,6 +9,7 @@ import ChatInput from '@/components/ui/ChatInput';
 
 import DocumentStatus from '@/components/ui/DocumentStatus';
 import DocumentSidebar from '@/components/DocumentSidebar';
+import ReasoningSteps, { ReasoningStep } from '@/components/ReasoningSteps';
 import { ChatBubbleLeftRightIcon, DocumentTextIcon, SparklesIcon } from '@heroicons/react/24/outline';
 
 export default function Home() {
@@ -34,6 +35,10 @@ export default function Home() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const [showWelcome, setShowWelcome] = useState(true);
   const [uploadSuccess, setUploadSuccess] = useState<string | null>(null);
+  
+  // Streaming state
+  const [reasoningSteps, setReasoningSteps] = useState<ReasoningStep[]>([]);
+  const [isStreaming, setIsStreaming] = useState(false);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -47,36 +52,7 @@ export default function Home() {
     }
   }, [messages]);
 
-  // Chat mutation
-  const chatMutation = useMutation({
-    mutationFn: DocumentAgentAPI.sendChatMessage,
-    onSuccess: (data) => {
-      // Find the message we're updating (it has status 'sending')
-      const messageToUpdate = messages.find(m => m.status === 'sending');
-      if (messageToUpdate) {
-        updateMessage(messageToUpdate.id, {
-          content: data.final_answer,
-          reasoning_steps: data.reasoning_log,
-          processing_time: data.processing_time_ms,
-          status: data.status === 'success' ? 'success' : 'error',
-        });
-      }
-      setLoading(false);
-      setError(null);
-    },
-    onError: (error: Error) => {
-      // Update the sending message to show error
-      const messageToUpdate = messages.find(m => m.status === 'sending');
-      if (messageToUpdate) {
-        updateMessage(messageToUpdate.id, {
-          content: 'Sorry, I encountered an error processing your request. Please try again.',
-          status: 'error',
-        });
-      }
-      setLoading(false);
-      setError(error.message || 'Failed to send message');
-    },
-  });
+
 
   // Document upload mutation
   const uploadMutation = useMutation({
@@ -103,7 +79,7 @@ export default function Home() {
     },
   });
 
-  const handleSendMessage = (message: string) => {
+  const handleSendMessage = async (message: string) => {
     // Check if we have active documents for document-based queries
     if (activeDocuments.length === 0) {
       // Allow general Q&A even without documents
@@ -122,21 +98,62 @@ export default function Home() {
     });
 
     // Add placeholder assistant message with loading state
-    addMessage({
+    const assistantMessageId = addMessage({
       role: 'assistant',
       content: '',
       status: 'sending',
     });
 
+    // Reset reasoning steps and start streaming
+    setReasoningSteps([]);
+    setIsStreaming(true);
     setLoading(true);
+    setError(null);
 
-    // Send to API with multi-document support
-    chatMutation.mutate({
-      query: message,
-      session_id: sessionId,
-      active_document: activeDocument, // Backward compatibility
-      active_documents: activeDocuments, // Multi-document support
-    });
+    try {
+      await DocumentAgentAPI.sendChatMessageStreaming(
+        {
+          query: message,
+          session_id: sessionId,
+          active_document: activeDocument,
+          active_documents: activeDocuments,
+        },
+        // onReasoningStep
+        (step: ReasoningStep) => {
+          setReasoningSteps(prev => [...prev, step]);
+        },
+        // onFinalAnswer
+        (finalAnswer: string, reasoningLog: any[]) => {
+          updateMessage(assistantMessageId, {
+            content: finalAnswer,
+            reasoning_steps: reasoningLog,
+            status: 'success',
+          });
+        },
+        // onError
+        (errorMessage: string) => {
+          updateMessage(assistantMessageId, {
+            content: `Sorry, I encountered an error: ${errorMessage}`,
+            status: 'error',
+          });
+          setError(errorMessage);
+        },
+        // onComplete
+        () => {
+          setIsStreaming(false);
+          setLoading(false);
+        }
+      );
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
+      updateMessage(assistantMessageId, {
+        content: `Sorry, I encountered an error: ${errorMessage}`,
+        status: 'error',
+      });
+      setError(errorMessage);
+      setIsStreaming(false);
+      setLoading(false);
+    }
   };
 
   const handleFileUpload = (file: File) => {
@@ -239,6 +256,14 @@ export default function Home() {
               }).join(', ')}
             </div>
           </div>
+        )}
+
+        {/* AI Reasoning Steps */}
+        {(reasoningSteps.length > 0 || isStreaming) && (
+          <ReasoningSteps 
+            steps={reasoningSteps} 
+            isActive={isStreaming} 
+          />
         )}
 
         {/* Chat Messages */}

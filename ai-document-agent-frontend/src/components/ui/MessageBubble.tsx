@@ -27,7 +27,7 @@ const MessageBubble: React.FC<MessageBubbleProps> = ({ message }) => {
       <div className={clsx(
         'max-w-[80%] rounded-2xl px-4 py-3 shadow-sm',
         isUser 
-          ? 'bg-user-message-bg text-user-message-text ml-4' 
+          ? 'bg-blue-200 text-gray-800 ml-4' 
           : 'bg-white text-neutral-800 mr-4 border border-neutral-200'
       )}>
         {/* Message Content */}

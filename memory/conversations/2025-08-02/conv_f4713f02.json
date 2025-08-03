@@ -1,0 +1,86 @@
+{
+  "id": "conv_f4713f02",
+  "messages": [
+    {
+      "role": "user",
+      "content": "summarise document",
+      "timestamp": "2025-08-02T10:43:26.203379",
+      "session_id": "session_1754145286199_plbqii532"
+    },
+    {
+      "role": "user",
+      "content": "Hello streaming debug test",
+      "timestamp": "2025-08-02T10:45:38.123300",
+      "session_id": "debug_test_1754145938009"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document",
+      "timestamp": "2025-08-02T11:14:10.858790",
+      "session_id": "session_1754147639991_wnnojt1mf"
+    },
+    {
+      "role": "user",
+      "content": "how many times is risk mentioned in the document",
+      "timestamp": "2025-08-02T11:16:40.914723",
+      "session_id": "session_1754147639991_wnnojt1mf"
+    },
+    {
+      "role": "user",
+      "content": "read the document again, and identify all instance of the word \"risk\"",
+      "timestamp": "2025-08-02T11:17:54.295922",
+      "session_id": "session_1754147639991_wnnojt1mf"
+    },
+    {
+      "role": "user",
+      "content": "read the document again, and identify all instance of the word \"risk\"",
+      "timestamp": "2025-08-02T11:17:54.295922",
+      "session_id": "session_1754147639991_wnnojt1mf"
+    },
+    {
+      "role": "user",
+      "content": "explain what is cet ratio?",
+      "timestamp": "2025-08-02T11:17:58.432479",
+      "session_id": "test_series_1754147878"
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the provided documents, I apologize but I cannot provide a complete direct explanation of the CET ratio from these specific document excerpts, as they don't explicitly define CET ratio. However, I can provide some relevant context:\n\nThe documents appear to be from banking regulatory guidelines discussing capital adequacy requirements (CAR) and include information about capital requirements and ratios, but don't specifically define CET ratio.\n\nTo properly answer your question: CET ratio (Common Equity Tier 1 ratio) is a key measure of a bank's financial strength that compares a bank's core equity capital to its risk-weighted assets. It's one of the most important measures of a bank's capital adequacy and financial strength.\n\nThe ratio is calculated as:\nCET Ratio = (Common Equity Tier 1 Capital / Risk-Weighted Assets) x 100%\n\nKey points about CET ratio:\n1. It's a crucial regulatory metric for banks\n2. It measures the bank's core capital against its risk-weighted assets\n3. Higher CET ratios indicate stronger financial stability\n4. It's part of the Basel framework for banking supervision\n\nWould you like me to provide more specific information about CET ratios or explain any particular aspect in more detail?",
+      "timestamp": "2025-08-02T11:18:26.726066",
+      "session_id": "test_series_1754147878"
+    },
+    {
+      "role": "user",
+      "content": "how many times was risk mentioned in document?",
+      "timestamp": "2025-08-02T11:18:33.721281",
+      "session_id": "test_series_1754146165"
+    },
+    {
+      "role": "assistant",
+      "content": "Based on the key topics analysis provided, the word \"risk\" appears 99 times in the document.\n\nThis high frequency of the term \"risk\" is not surprising given that this appears to be a document about risk-based capital requirements for financial institutions. The document specifically focuses on:\n\n1. Risk-weighted assets\n2. Counterparty credit risk\n3. Risk-based capital requirements\n\nThis frequency indicates that risk management and assessment is a central theme throughout the document, which is appropriate given it appears to be a Capital Adequacy Requirements (CAR) guideline for Banks, Bank Holding Companies, and Trust & Loan Companies.",
+      "timestamp": "2025-08-02T11:18:42.697339",
+      "session_id": "test_series_1754146165"
+    },
+    {
+      "role": "user",
+      "content": "what is cet ratio? answer from prev response only without reading the document?",
+      "timestamp": "2025-08-02T11:18:50.390032",
+      "session_id": "test_series_1754146165"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250802_111850",
+    "content": "Conversation with 9 user queries and 2 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+    "original_message_count": 11,
+    "timespan": "2025-08-02T10:43:26.203379 - 2025-08-02T11:18:50.390032",
+    "topics": [
+      "risk_factors",
+      "regulatory",
+      "capital",
+      "document_analysis",
+      "search_queries"
+    ],
+    "created_at": "2025-08-02T11:18:50.390126"
+  },
+  "created_at": "2025-08-02T11:18:50.390426"
+}

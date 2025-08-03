@@ -16,7 +16,7 @@ interface ChatState {
   activeDocuments: string[];  // Multi-document support
   
   // Chat actions
-  addMessage: (message: Omit<Message, 'id' | 'timestamp'>) => void;
+  addMessage: (message: Omit<Message, 'id' | 'timestamp'>) => string;
   updateMessage: (id: string, updates: Partial<Message>) => void;
   setLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
@@ -62,6 +62,8 @@ export const useChatStore = create<ChatState>()((set, get) => ({
       messages: [...state.messages, newMessage],
       error: null,
     }));
+    
+    return newMessage.id;
   },
 
   updateMessage: (id, updates) => {

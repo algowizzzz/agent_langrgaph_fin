@@ -1,0 +1,86 @@
+{
+  "id": "conv_2cd1fe79",
+  "messages": [
+    {
+      "role": "user",
+      "content": "Hello streaming test",
+      "timestamp": "2025-08-02T01:17:52.252647",
+      "session_id": "stream_test_fixed"
+    },
+    {
+      "role": "user",
+      "content": "Quick test",
+      "timestamp": "2025-08-02T01:17:59.480422",
+      "session_id": "test_fixed_final"
+    },
+    {
+      "role": "assistant",
+      "content": "Since the user query is simply \"Quick test\", I'll provide a brief, direct response to acknowledge the test while incorporating a small relevant detail from the available information:\n\nThis appears to be a test message. I can confirm that I'm receiving and processing the information correctly. The provided document appears to be about Capital Adequacy Requirements (CAR) guidelines from October 2023, which establishes capital requirements for banks and financial institutions in Canada.\n\nPlease feel free to ask any specific questions about the capital requirements or other aspects of the document, and I'll be happy to provide more detailed information.",
+      "timestamp": "2025-08-02T01:18:13.615702",
+      "session_id": "test_fixed_final"
+    },
+    {
+      "role": "user",
+      "content": "summarize the document",
+      "timestamp": "2025-08-02T10:03:13.403063",
+      "session_id": "session_1754143345374_w665c87tg"
+    },
+    {
+      "role": "user",
+      "content": "Test fix verification",
+      "timestamp": "2025-08-02T10:09:32.912280",
+      "session_id": "fix_test"
+    },
+    {
+      "role": "user",
+      "content": "Test fix verification",
+      "timestamp": "2025-08-02T10:09:32.912280",
+      "session_id": "fix_test"
+    },
+    {
+      "role": "assistant",
+      "content": "Here's a structured response addressing test fix verification:\n\nTest Fix Verification Framework\n\nThe verification process for test fixes requires a comprehensive, multi-step approach that combines both systematic validation and regulatory compliance measures. Here are the key components:\n\n1. Approval Requirements\n- Must obtain explicit prior approval from regulatory authorities (OSFI)\n- Need to demonstrate compliance through:\n  * Out-of-sample back-testing\n  * Parallel reporting\n  * Ongoing qualitative and quantitative assessments\n\n2. Implementation Criteria\n- Must implement approved approaches (AIRB or FIRB) across approximately 80% of consolidated exposures\n- Follows a structured phase-in schedule with progressive requirements\n- Quarterly compliance monitoring after initial approval\n\n3. Verification Standards\n- Must satisfy internal model regime requirements\n- Ongoing compliance monitoring by regulatory authorities\n- Regular assessment of implementation progress\n- Back-testing validation of results\n\n4. Conditional Approval Process\n- \"Approval with conditions\" may be granted if full requirements aren't initially met\n- Higher initial capital requirements may apply until full compliance is achieved\n- Regular review and adjustment of approval conditions based on implementation progress\n\nThis framework ensures thorough verification of test fixes while maintaining regulatory compliance and systematic validation throughout the process.\n\nNote: Implementation should align with effective dates of November 2023 or January 2024, depending on the institution's fiscal year end (October 31 or December 31).",
+      "timestamp": "2025-08-02T10:09:57.876891",
+      "session_id": "fix_test"
+    },
+    {
+      "role": "user",
+      "content": "suumarise",
+      "timestamp": "2025-08-02T10:10:32.637901",
+      "session_id": "session_1754143825642_7pw5vflae"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document",
+      "timestamp": "2025-08-02T10:21:14.287951",
+      "session_id": "session_1754144453242_mwwf7qsbu"
+    },
+    {
+      "role": "user",
+      "content": "Hello test",
+      "timestamp": "2025-08-02T10:32:55.052708",
+      "session_id": "test_regular"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋\n\nI notice that your message is \"Hello test\" which appears to be a simple greeting or test message. While I have information available about finance and risk management, it doesn't seem directly relevant to your greeting.\n\nIs there something specific you'd like to know about finance or risk management? I'd be happy to share information about:\n- Personal finance\n- Corporate finance \n- Public finance\n- Risk management principles\n\nPlease feel free to ask any specific questions and I'll provide a detailed response using the available information.",
+      "timestamp": "2025-08-02T10:33:06.248717",
+      "session_id": "test_regular"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250802_103306",
+    "content": "Conversation with 8 user queries and 3 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+    "original_message_count": 11,
+    "timespan": "2025-08-02T01:17:52.252647 - 2025-08-02T10:33:06.248717",
+    "topics": [
+      "risk_factors",
+      "regulatory",
+      "compliance",
+      "capital",
+      "document_analysis"
+    ],
+    "created_at": "2025-08-02T10:33:06.249193"
+  },
+  "created_at": "2025-08-02T10:33:06.250394"
+}

@@ -1,0 +1,86 @@
+{
+  "id": "conv_eb93425f",
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "Here's a structured response addressing test fix verification:\n\nTest Fix Verification Framework\n\nThe verification process for test fixes requires a comprehensive, multi-step approach that combines both systematic validation and regulatory compliance measures. Here are the key components:\n\n1. Approval Requirements\n- Must obtain explicit prior approval from regulatory authorities (OSFI)\n- Need to demonstrate compliance through:\n  * Out-of-sample back-testing\n  * Parallel reporting\n  * Ongoing qualitative and quantitative assessments\n\n2. Implementation Criteria\n- Must implement approved approaches (AIRB or FIRB) across approximately 80% of consolidated exposures\n- Follows a structured phase-in schedule with progressive requirements\n- Quarterly compliance monitoring after initial approval\n\n3. Verification Standards\n- Must satisfy internal model regime requirements\n- Ongoing compliance monitoring by regulatory authorities\n- Regular assessment of implementation progress\n- Back-testing validation of results\n\n4. Conditional Approval Process\n- \"Approval with conditions\" may be granted if full requirements aren't initially met\n- Higher initial capital requirements may apply until full compliance is achieved\n- Regular review and adjustment of approval conditions based on implementation progress\n\nThis framework ensures thorough verification of test fixes while maintaining regulatory compliance and systematic validation throughout the process.\n\nNote: Implementation should align with effective dates of November 2023 or January 2024, depending on the institution's fiscal year end (October 31 or December 31).",
+      "timestamp": "2025-08-02T10:09:57.876891",
+      "session_id": "fix_test"
+    },
+    {
+      "role": "user",
+      "content": "suumarise",
+      "timestamp": "2025-08-02T10:10:32.637901",
+      "session_id": "session_1754143825642_7pw5vflae"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document",
+      "timestamp": "2025-08-02T10:21:14.287951",
+      "session_id": "session_1754144453242_mwwf7qsbu"
+    },
+    {
+      "role": "user",
+      "content": "Hello test",
+      "timestamp": "2025-08-02T10:32:55.052708",
+      "session_id": "test_regular"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋\n\nI notice that your message is \"Hello test\" which appears to be a simple greeting or test message. While I have information available about finance and risk management, it doesn't seem directly relevant to your greeting.\n\nIs there something specific you'd like to know about finance or risk management? I'd be happy to share information about:\n- Personal finance\n- Corporate finance \n- Public finance\n- Risk management principles\n\nPlease feel free to ask any specific questions and I'll provide a detailed response using the available information.",
+      "timestamp": "2025-08-02T10:33:06.248717",
+      "session_id": "test_regular"
+    },
+    {
+      "role": "assistant",
+      "content": "Hello! 👋\n\nI notice that your message is \"Hello test\" which appears to be a simple greeting or test message. While I have information available about finance and risk management, it doesn't seem directly relevant to your greeting.\n\nIs there something specific you'd like to know about finance or risk management? I'd be happy to share information about:\n- Personal finance\n- Corporate finance \n- Public finance\n- Risk management principles\n\nPlease feel free to ask any specific questions and I'll provide a detailed response using the available information.",
+      "timestamp": "2025-08-02T10:33:06.248717",
+      "session_id": "test_regular"
+    },
+    {
+      "role": "user",
+      "content": "summarize this document",
+      "timestamp": "2025-08-02T10:37:17.111174",
+      "session_id": "session_1754145413640_7avsqdzg3"
+    },
+    {
+      "role": "user",
+      "content": "Hello test",
+      "timestamp": "2025-08-02T10:41:36.447258",
+      "session_id": "debug_test"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there! Thanks for reaching out. I'm here and ready to help you analyze any documents you'd like to explore. I have access to several documents covering topics like finance and risk management. Let me know what specific information you're interested in learning more about, and I'll be happy to assist you!",
+      "timestamp": "2025-08-02T10:41:42.444458",
+      "session_id": "debug_test"
+    },
+    {
+      "role": "user",
+      "content": "Hello streaming test",
+      "timestamp": "2025-08-02T10:41:56.055473",
+      "session_id": "stream_debug"
+    },
+    {
+      "role": "user",
+      "content": "Simple test",
+      "timestamp": "2025-08-02T10:42:11.076418",
+      "session_id": "full_stream_test"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250802_104211",
+    "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+    "original_message_count": 11,
+    "timespan": "2025-08-02T10:09:57.876891 - 2025-08-02T10:42:11.076418",
+    "topics": [
+      "risk_factors",
+      "regulatory",
+      "compliance",
+      "capital",
+      "document_analysis"
+    ],
+    "created_at": "2025-08-02T10:42:11.076607"
+  },
+  "created_at": "2025-08-02T10:42:11.077189"
+}
