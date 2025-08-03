@@ -60,6 +60,7 @@ class FrontendChatResponse(BaseModel):
     processing_time_ms: int
     session_id: str
     error_message: Optional[str] = None
+    metadata: Optional[Dict] = None
 
 class FrontendUploadResponse(BaseModel):
     status: str = "success"

@@ -80,13 +80,14 @@ class ExecutionStep:
     tool_name: str
     parameters: Dict[str, Any]
     dependencies: List[str] = field(default_factory=list)
-    condition: ConditionType = ConditionType.ALWAYS
+    condition: Union[ConditionType, str] = ConditionType.ALWAYS
     condition_expression: Optional[str] = None
     timeout: Optional[float] = None
     retry_count: int = 0
     fallback_steps: List[str] = field(default_factory=list)
     description: str = ""
     metadata: Dict[str, Any] = field(default_factory=dict)
+    retrieve_full_doc: bool = False
     
     def can_execute(self, completed_steps: Set[str], failed_steps: Set[str]) -> bool:
         """Check if this step can be executed based on dependencies and conditions."""
@@ -96,7 +97,11 @@ class ExecutionStep:
                 return False
         
         # Check condition
-        if self.condition == ConditionType.ALWAYS:
+        if isinstance(self.condition, str):
+            # Handle string-based conditions
+            self.condition_expression = self.condition
+            return self._evaluate_custom_condition(completed_steps, failed_steps)
+        elif self.condition == ConditionType.ALWAYS:
             return True
         elif self.condition == ConditionType.ON_SUCCESS:
             return all(dep not in failed_steps for dep in self.dependencies)
@@ -356,6 +361,30 @@ class ExecutionEngine:
             is_valid, errors = tool_meta.validate_inputs(resolved_params)
             if not is_valid:
                 raise ValueError(f"Parameter validation failed: {errors}")
+
+            # Add retrieve_full_doc to parameters if it's set in the step
+            if step.retrieve_full_doc:
+                resolved_params['retrieve_full_doc'] = True
+
+            # Add retrieve_full_doc to parameters if it's set in the step
+            if step.retrieve_full_doc:
+                resolved_params['retrieve_full_doc'] = True
+            
+            # Add retrieve_full_doc to parameters if it's set in the step
+            if step.retrieve_full_doc:
+                resolved_params['retrieve_full_doc'] = True
+            
+            # Add retrieve_full_doc to parameters if it's set in the step
+            if step.retrieve_full_doc:
+                resolved_params['retrieve_full_doc'] = True
+            
+            # Add retrieve_full_doc to parameters if it's set in the step
+            if step.retrieve_full_doc:
+                resolved_params['retrieve_full_doc'] = True
+            
+            # Add retrieve_full_doc to parameters if it's set in the step
+            if step.retrieve_full_doc:
+                resolved_params['retrieve_full_doc'] = True
             
             # Execute with timeout
             if step.timeout:
@@ -421,7 +450,11 @@ class ExecutionEngine:
                     step_id, field = ref.split(".", 1)
                     if step_id in self.step_outputs:
                         step_output = self.step_outputs[step_id]
-                        resolved[key] = self._get_nested_value(step_output, field)
+                        if isinstance(step_output, list) and len(step_output) > 0:
+                            # If the output is a list, assume we're accessing the first element
+                            resolved[key] = self._get_nested_value(step_output[0], field)
+                        else:
+                            resolved[key] = self._get_nested_value(step_output, field)
                     else:
                         raise ValueError(f"Referenced step '{step_id}' not found")
                 else:

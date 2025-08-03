@@ -203,9 +203,9 @@ You have access to the following tools. Respond with a JSON object containing a 
 5. COMPARATIVE ANALYSIS:
    Query: "compare documents", "differences between X and Y", "analyze both reports"
    Proven Pattern:
-   Step 1: search_multiple_docs(doc_names=["ACTIVE_DOCUMENTS"])
-   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="simple_llm_call", length="comparison analysis")
-   ⚠️ CRITICAL: Use search_multiple_docs when multiple documents are active! No query needed for full comparison.
+   Step 1: search_multiple_docs(doc_names=["ACTIVE_DOCUMENTS"], query="KEY_TERMS")
+   Step 2: synthesize_content(chunks="CHUNKS_FROM_STEP_1", method="map_reduce", length="comparison analysis")
+   ⚠️ CRITICAL: Use search_multiple_docs when multiple documents are active!
 
 6. CROSS-DOCUMENT SEARCH:
    Query: "find mentions across all documents", "search all files for X"
@@ -363,6 +363,8 @@ Example - TARGETED SEARCH:
                                 if isinstance(chunk, dict) and "page_content" in chunk:
                                     replacement_data = chunk["page_content"]
                                     break
+                    elif key == "table_data" and "search_uploaded_docs" in step_results:
+                        replacement_data = step_results["search_uploaded_docs"]
                     
                     # Content-based replacement rules
                     if replacement_data is None:

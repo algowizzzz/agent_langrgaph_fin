@@ -147,6 +147,8 @@ async def process_table_data(table_data: List[Dict], operation: str, **kwargs) -
                 "dtypes": {col: str(dtype) for col, dtype in df.dtypes.to_dict().items()},
                 "numeric_summary": df.describe().to_dict() if len(df.select_dtypes(include=[np.number]).columns) > 0 else {}
             }
+            result["processed_data"] = df.to_dict('records')
+
             
         elif operation == "aggregate":
             numeric_cols = df.select_dtypes(include=[np.number]).columns

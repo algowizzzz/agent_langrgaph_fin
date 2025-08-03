@@ -120,7 +120,8 @@ class OrchestratorV2:
             description="Search within uploaded documents with filtering options",
             category="search",
             reliability=ToolReliability.HIGH,
-            estimated_duration=1.5
+            estimated_duration=1.5,
+            retrieve_full_doc_description="Set to True to retrieve the entire document content."
         )
         
         self.tool_registry.register_function(
@@ -309,7 +310,7 @@ class OrchestratorV2:
             
             # Generate execution plan
             logger.info("🤔 Generating execution plan...")
-            execution_plan = self.planning_engine.create_execution_plan(planning_context, strategy)
+            execution_plan = await self.planning_engine.create_execution_plan(planning_context, strategy)
             
             logger.info(f"📋 Created plan with {len(execution_plan.steps)} steps")
             
@@ -448,7 +449,7 @@ class OrchestratorV2:
                 "timestamp": time.time()
             }
             
-            execution_plan = self.planning_engine.create_execution_plan(planning_context, strategy)
+            execution_plan = await self.planning_engine.create_execution_plan(planning_context, strategy)
             
             yield {
                 "type": "reasoning_step",

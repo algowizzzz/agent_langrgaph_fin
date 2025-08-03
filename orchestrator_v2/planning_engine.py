@@ -1,20 +1,25 @@
 """
-Step-wise Planning Engine for Orchestrator 2.0
+Fixed Step-wise Planning Engine for Orchestrator 2.0
 
 This module provides intelligent planning capabilities with validation,
 fallback mechanisms, and adaptive replanning based on execution feedback.
+
+Key fixes:
+- Proper condition parsing and validation
+- Better error handling for LLM responses
+- Enhanced condition type mapping
 """
 
 import logging
 import json
 import time
+import re
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional, Set, Union, Callable
 from enum import Enum
-import re
 
 from .tool_registry import ToolRegistry, ToolReliability
-from .execution_engine import ExecutionStep, ExecutionPlan, ConditionType
+from .execution_engine import ExecutionStep, ExecutionPlan, ConditionType, ExecutionStatus
 from .state_management import StateManager, StateScope
 
 logger = logging.getLogger(__name__)
@@ -96,620 +101,608 @@ class PlanValidationResult:
     confidence_score: float = 1.0
 
 
-class PlanningEngine:
-    """Intelligent planning engine with step-wise validation and adaptive replanning."""
+class ConditionParser:
+    """Parses and validates condition expressions from LLM responses."""
     
-    def __init__(self, tool_registry: ToolRegistry, state_manager: StateManager, llm_client):
-        self.tool_registry = tool_registry
-        self.state_manager = state_manager
-        self.llm_client = llm_client
+    @staticmethod
+    def parse_condition(condition_str: str) -> tuple[ConditionType, Optional[str]]:
+        """
+        Parse condition string and return appropriate ConditionType and expression.
         
-        # Planning templates for different query types
-        self.planning_templates = self._load_planning_templates()
-        
-        # Pattern-based tool suggestions
-        self.tool_patterns = self._load_tool_patterns()
-        
-    def create_execution_plan(self, 
-                            context: PlanningContext,
-                            strategy: PlanningStrategy = PlanningStrategy.ADAPTIVE) -> ExecutionPlan:
-        """Create an optimized execution plan based on context and strategy."""
-        
-        logger.info(f"Creating execution plan for query: {context.user_query[:100]}...")
-        
-        # Step 1: Analyze query and determine approach
-        query_type = context.get_query_type()
-        logger.info(f"Detected query type: {query_type.value}")
-        
-        # Step 2: Generate initial plan using templates and LLM
-        initial_plan = self._generate_initial_plan(context, query_type, strategy)
-        
-        # Step 3: Validate and optimize the plan
-        validation_result = self._validate_plan(initial_plan, context)
-        
-        if not validation_result.is_valid:
-            logger.warning(f"Initial plan validation failed: {validation_result.errors}")
-            # Try to fix the plan
-            initial_plan = self._fix_plan_issues(initial_plan, validation_result, context)
-        
-        # Step 4: Add fallback strategies
-        enhanced_plan = self._add_fallback_strategies(initial_plan, context)
-        
-        # Step 5: Optimize for parallel execution if possible
-        if strategy in [PlanningStrategy.PARALLEL, PlanningStrategy.ADAPTIVE]:
-            enhanced_plan = self._optimize_for_parallelism(enhanced_plan)
-        
-        logger.info(f"Created execution plan with {len(enhanced_plan.steps)} steps")
-        return enhanced_plan
-    
-    def replan(self, 
-               original_plan: ExecutionPlan,
-               failed_steps: List[str],
-               context: PlanningContext,
-               execution_results: Dict[str, Any]) -> ExecutionPlan:
-        """Create a new plan when the original plan fails or needs adjustment."""
-        
-        logger.info(f"Replanning due to failed steps: {failed_steps}")
-        
-        # Analyze what went wrong
-        failure_analysis = self._analyze_failures(failed_steps, execution_results, original_plan)
-        
-        # Generate alternative approach
-        new_plan = self._generate_alternative_plan(context, failure_analysis, execution_results)
-        
-        # Validate the new plan
-        validation_result = self._validate_plan(new_plan, context)
-        
-        if not validation_result.is_valid:
-            logger.error(f"Replanning failed validation: {validation_result.errors}")
-            # Fall back to conservative approach
-            new_plan = self._generate_conservative_plan(context)
-        
-        return new_plan
-    
-    def _generate_initial_plan(self, 
-                              context: PlanningContext,
-                              query_type: QueryType,
-                              strategy: PlanningStrategy) -> ExecutionPlan:
-        """Generate initial execution plan using templates and LLM reasoning."""
-        
-        # Try template-based planning first
-        template_plan = self._apply_planning_template(context, query_type)
-        
-        if template_plan and len(template_plan.steps) > 0:
-            logger.info("Used template-based planning")
-            return template_plan
-        
-        # Fall back to LLM-based planning
-        logger.info("Using LLM-based planning")
-        return self._generate_llm_plan(context, strategy)
-    
-    def _apply_planning_template(self, 
-                               context: PlanningContext,
-                               query_type: QueryType) -> Optional[ExecutionPlan]:
-        """Apply pre-defined planning templates for common query patterns."""
-        
-        template = self.planning_templates.get(query_type)
-        if not template:
-            return None
-        
-        steps = {}
-        step_counter = 1
-        
-        for template_step in template["steps"]:
-            step_id = f"step_{step_counter}"
+        Args:
+            condition_str: Condition string from LLM
             
-            # Resolve template parameters
-            parameters = self._resolve_template_parameters(
-                template_step["parameters"], 
-                context
-            )
-            
-            # Create execution step
-            step = ExecutionStep(
-                step_id=step_id,
-                tool_name=template_step["tool"],
-                parameters=parameters,
-                dependencies=template_step.get("dependencies", []),
-                description=template_step.get("description", "")
-            )
-            
-            steps[step_id] = step
-            step_counter += 1
+        Returns:
+            Tuple of (ConditionType, expression_string)
+        """
+        if not condition_str or condition_str == "always":
+            return ConditionType.ALWAYS, None
         
-        return ExecutionPlan(
-            steps=steps,
-            plan_id=f"template_{query_type.value}_{int(time.time())}",
-            description=f"Template-based plan for {query_type.value} query"
-        )
+        condition_lower = condition_str.lower().strip()
+        
+        # Map common condition patterns to standard types
+        success_patterns = [
+            "on_success", "if_success", "when_success", "step_success",
+            r"\$\w+\.success", r"step_\d+\.success"
+        ]
+        
+        failure_patterns = [
+            "on_failure", "if_failure", "when_failure", "step_failure",
+            "if_error", "on_error"
+        ]
+        
+        # Check for success conditions
+        for pattern in success_patterns:
+            if re.search(pattern, condition_lower):
+                return ConditionType.ON_SUCCESS, condition_str
+        
+        # Check for failure conditions
+        for pattern in failure_patterns:
+            if re.search(pattern, condition_lower):
+                return ConditionType.ON_FAILURE, condition_str
+        
+        # All other conditions are CUSTOM with expression
+        return ConditionType.CUSTOM, condition_str
     
-    def _generate_llm_plan(self, 
-                          context: PlanningContext,
-                          strategy: PlanningStrategy) -> ExecutionPlan:
-        """Generate execution plan using LLM reasoning."""
+    @staticmethod
+    def validate_condition_expression(expression: str, available_steps: Set[str]) -> tuple[bool, str]:
+        """
+        Validate a custom condition expression.
         
-        # Build prompt for LLM
-        available_tools = self.tool_registry.export_tool_definitions()
-        
-        prompt = f"""
-Create an execution plan for the following query:
-
-User Query: "{context.user_query}"
-Active Documents: {context.active_documents}
-Available Tools: {list(available_tools.keys())}
-
-Planning Strategy: {strategy.value}
-
-Tool Definitions:
-{json.dumps(available_tools, indent=2)}
-
-Create a JSON execution plan with the following structure:
-{{
-  "plan_id": "unique_plan_id",
-  "description": "Brief description of the plan",
-  "steps": [
-    {{
-      "step_id": "step_1",
-      "tool_name": "tool_name",
-      "parameters": {{"param": "value"}},
-      "dependencies": [],
-      "description": "What this step does",
-      "condition": "always"
-    }}
-  ]
-}}
-
-Guidelines:
-1. Use appropriate tools based on the query type
-2. Consider dependencies between steps
-3. Include error handling and fallbacks where needed
-4. Optimize for the specified strategy
-5. Use parameter references like "$step_1.output" for chaining
-
-Plan:"""
+        Args:
+            expression: Condition expression to validate
+            available_steps: Set of available step IDs
+            
+        Returns:
+            Tuple of (is_valid, error_message)
+        """
+        if not expression:
+            return True, ""
         
         try:
-            response = self.llm_client.invoke(prompt)
-            plan_data = json.loads(response.content)
+            # Basic validation patterns
+            valid_patterns = [
+                r'\$\w+\.output',           # Step output references
+                r'\$\w+\.success',          # Step success references
+                r'len\([^)]+\)',           # Length checks
+                r'exists\([^)]+\)',        # Existence checks
+                r'active_documents',        # Document state
+                r'document_exists',         # Document existence
+                r'user_interaction_required', # User interaction
+                r'no_active_documents',     # No documents
+                r'if_no_active_documents',  # Conditional no documents
+            ]
             
-            # Convert to ExecutionPlan object
+            # Check if expression matches known patterns
+            for pattern in valid_patterns:
+                if re.search(pattern, expression):
+                    return True, ""
+            
+            # If no patterns match, it's still valid but custom
+            logger.warning(f"Unknown condition pattern: {expression}")
+            return True, f"Unknown condition pattern: {expression}"
+            
+        except Exception as e:
+            return False, f"Invalid condition expression: {str(e)}"
+
+
+class PlanningEngine:
+    """Fixed intelligent planning engine with proper condition handling."""
+    
+    def __init__(self, tool_registry: ToolRegistry, state_manager: StateManager, llm: Any = None):
+        self.tool_registry = tool_registry
+        self.state_manager = state_manager
+        self.llm = llm
+        self.condition_parser = ConditionParser()
+        
+        # Planning history for learning
+        self.planning_history: List[Dict[str, Any]] = []
+        
+        logger.info("Fixed Planning Engine initialized")
+    
+    async def create_execution_plan(self, context: PlanningContext, strategy: PlanningStrategy = PlanningStrategy.ADAPTIVE) -> ExecutionPlan:
+        """
+        Create an execution plan with proper error handling and condition parsing.
+        """
+        logger.info(f"Creating execution plan for query: '{context.user_query[:100]}...' using {strategy.value} strategy")
+        
+        try:
+            # Get available tools
+            available_tools = list(self.tool_registry._tools.keys())
+            context.available_tools = set(available_tools)
+            
+            # Try LLM planning first, with fallback to template-based planning
+            plan = await self._try_llm_planning(context, strategy)
+            
+            if not plan or not plan.steps:
+                logger.warning("LLM planning failed, falling back to template-based planning")
+                plan = await self._create_template_plan(context, strategy)
+            
+            # Validate and fix the plan
+            validation_result = await self._validate_plan_with_fixes(plan, context)
+            
+            if not validation_result.is_valid and validation_result.errors:
+                logger.warning(f"Plan validation failed: {validation_result.errors}")
+                # Try to create a simple fallback plan
+                plan = await self._create_simple_fallback_plan(context)
+            
+            # Log plan details
+            logger.info(f"Created execution plan with {len(plan.steps)} steps")
+            for step in plan.steps.values():
+                logger.debug(f"Step {step.step_id}: {step.tool_name} with condition {step.condition}")
+            
+            return plan
+            
+        except Exception as e:
+            logger.error(f"Error creating execution plan: {e}")
+            # Return minimal fallback plan
+            return await self._create_simple_fallback_plan(context)
+    
+    async def _try_llm_planning(self, context: PlanningContext, strategy: PlanningStrategy) -> Optional[ExecutionPlan]:
+        """
+        Try to create a plan using LLM with proper error handling.
+        """
+        if not self.llm:
+            logger.warning("No LLM available for planning")
+            return None
+        
+        try:
+            # Create planning prompt
+            prompt = self._create_planning_prompt(context, strategy)
+            
+            # Get LLM response
+            response = await self.llm.ainvoke(prompt)
+            if hasattr(response, 'content'):
+                response_text = response.content
+            else:
+                response_text = str(response)
+            
+            # Parse LLM response
+            plan = await self._parse_llm_response(response_text, context)
+            return plan
+            
+        except json.JSONDecodeError as e:
+            logger.error(f"LLM planning failed: JSON parsing error: {e}")
+            return None
+        except Exception as e:
+            logger.error(f"LLM planning failed: {e}")
+            return None
+    
+    async def _parse_llm_response(self, response_text: str, context: PlanningContext) -> Optional[ExecutionPlan]:
+        """
+        Parse LLM response with improved error handling and condition parsing.
+        """
+        try:
+            # Extract JSON from response
+            json_match = re.search(r'```json\s*(\{.*?\})\s*```', response_text, re.DOTALL)
+            if not json_match:
+                json_match = re.search(r'(\{.*\})', response_text, re.DOTALL)
+            
+            if not json_match:
+                logger.error("No JSON found in LLM response")
+                return None
+            
+            plan_data = json.loads(json_match.group(1))
+            
+            # Validate plan structure
+            if 'steps' not in plan_data:
+                logger.error("No 'steps' found in plan data")
+                return None
+            
             steps = {}
-            for step_data in plan_data["steps"]:
-                step = ExecutionStep(
-                    step_id=step_data["step_id"],
-                    tool_name=step_data["tool_name"],
-                    parameters=step_data["parameters"],
-                    dependencies=step_data.get("dependencies", []),
-                    condition=ConditionType(step_data.get("condition", "always")),
-                    description=step_data.get("description", "")
-                )
-                steps[step.step_id] = step
+            for step_data in plan_data['steps']:
+                try:
+                    step = await self._create_step_from_data(step_data, context)
+                    if step:
+                        steps[step.step_id] = step
+                except Exception as e:
+                    logger.warning(f"Failed to create step from data: {e}, skipping step")
+                    continue
+            
+            if not steps:
+                logger.error("No valid steps created from plan data")
+                return None
             
             return ExecutionPlan(
+                plan_id=f"plan_{int(time.time())}",
                 steps=steps,
-                plan_id=plan_data["plan_id"],
-                description=plan_data["description"]
+                metadata=plan_data.get('metadata', {})
             )
             
         except Exception as e:
-            logger.error(f"LLM planning failed: {e}")
-            # Fall back to conservative plan
-            return self._generate_conservative_plan(context)
+            logger.error(f"Error parsing LLM response: {e}")
+            return None
     
-    def _generate_conservative_plan(self, context: PlanningContext) -> ExecutionPlan:
-        """Generate a simple, conservative plan as fallback."""
-        
-        steps = {}
-        
-        if context.active_documents:
-            # Simple document search and synthesis
-            steps["step_1"] = ExecutionStep(
-                step_id="step_1",
-                tool_name="search_uploaded_docs",
-                parameters={
-                    "doc_name": context.active_documents[0] if len(context.active_documents) == 1 else context.active_documents,
-                    "query": context.user_query,
-                    "retrieve_full_doc": True
-                },
-                description="Search document content"
+    async def _create_step_from_data(self, step_data: Dict, context: PlanningContext) -> Optional[ExecutionStep]:
+        """
+        Create an execution step with proper condition parsing and parameter validation.
+        """
+        try:
+            step_id = step_data.get('id', step_data.get('step_id', f"step_{len(context.available_tools)}"))
+            tool_name = step_data.get('tool', step_data.get('tool_name'))
+            
+            if not tool_name:
+                logger.warning(f"No tool specified for step {step_id}")
+                return None
+            
+            # Check if tool exists
+            if tool_name not in self.tool_registry._tools:
+                logger.warning(f"Tool '{tool_name}' not available")
+                return None
+            
+            # Parse condition with improved handling
+            condition_str = step_data.get('condition', 'always')
+            condition_type, condition_expression = self.condition_parser.parse_condition(condition_str)
+            
+            # Validate parameters
+            parameters = step_data.get('parameters', {})
+            
+            # Handle common parameter issues
+            if tool_name == 'search_uploaded_docs' and 'retrieve_full_doc' in parameters:
+                # Remove unexpected parameters
+                del parameters['retrieve_full_doc']
+                logger.debug(f"Removed unexpected parameter 'retrieve_full_doc' from {tool_name}")
+            
+            # Validate required parameters
+            validation_result = self.tool_registry.validate_parameters(tool_name, parameters)
+            if not validation_result.is_valid:
+                logger.warning(f"Parameter validation failed for {tool_name}: {validation_result.errors}")
+                # Try to fix common issues
+                parameters = await self._fix_common_parameter_issues(tool_name, parameters, context)
+            
+            step = ExecutionStep(
+                step_id=step_id,
+                tool_name=tool_name,
+                parameters=parameters,
+                dependencies=step_data.get('dependencies', []),
+                condition=condition_type,
+                condition_expression=condition_expression,
+                description=step_data.get('description', ''),
+                metadata=step_data.get('metadata', {})
             )
             
-            steps["step_2"] = ExecutionStep(
-                step_id="step_2",
-                tool_name="synthesize_content",
-                parameters={
-                    "chunks": "$step_1.output",
-                    "method": "simple_llm_call",
-                    "length": "comprehensive"
-                },
-                dependencies=["step_1"],
-                description="Synthesize search results"
-            )
+            return step
+            
+        except Exception as e:
+            logger.error(f"Error creating step from data: {e}")
+            return None
+    
+    async def _fix_common_parameter_issues(self, tool_name: str, parameters: Dict, context: PlanningContext) -> Dict:
+        """
+        Fix common parameter validation issues and parameter name mismatches.
+        """
+        fixed_params = parameters.copy()
+        
+        # Define parameter name translations (wrong_name -> correct_name)
+        parameter_translations = {
+            'search_uploaded_docs': {
+                'doc_id': 'doc_name',
+                'document_id': 'doc_name',
+                'document': 'doc_name'
+            },
+            'discover_document_structure': {
+                'doc_id': 'doc_name', 
+                'document_id': 'doc_name',
+                'document': 'doc_name'
+            },
+            'extract_key_phrases': {
+                'text_input': 'text',
+                'input_text': 'text',
+                'content': 'text'
+            },
+            'create_wordcloud': {
+                'text_input': 'text',
+                'input_text': 'text',
+                'content': 'text'
+            },
+            'synthesize_content': {
+                'input_text': 'documents',
+                'inputs': 'documents',
+                'content': 'documents'
+            }
+        }
+        
+        # Apply parameter name translations
+        if tool_name in parameter_translations:
+            translations = parameter_translations[tool_name]
+            for wrong_name, correct_name in translations.items():
+                if wrong_name in fixed_params and correct_name not in fixed_params:
+                    fixed_params[correct_name] = fixed_params.pop(wrong_name)
+                    logger.debug(f"Translated parameter '{wrong_name}' to '{correct_name}' for {tool_name}")
+        
+        # Remove unexpected parameters that we can't translate
+        tool_metadata = self.tool_registry.get_tool(tool_name)
+        if tool_metadata:
+            valid_params = set(tool_metadata.parameters.keys())
+            unexpected_params = set(fixed_params.keys()) - valid_params
+            for param in unexpected_params:
+                logger.debug(f"Removing unexpected parameter '{param}' from {tool_name}")
+                fixed_params.pop(param, None)
+        
+        # Fix missing doc_name parameter for document tools
+        if tool_name in ['search_uploaded_docs', 'discover_document_structure'] and 'doc_name' not in fixed_params:
+            if context.active_documents:
+                fixed_params['doc_name'] = context.active_documents[0]
+                logger.debug(f"Added missing doc_name parameter: {fixed_params['doc_name']}")
+            else:
+                fixed_params['doc_name'] = "riskandfinace.pdf"  # Use default document name
+                logger.debug("Added default doc_name parameter")
+        
+        # Fix missing query parameter for search tools
+        if tool_name in ['search_conversation_history', 'search_knowledge_base', 'search_uploaded_docs']:
+            if 'query' not in fixed_params:
+                fixed_params['query'] = context.user_query
+                logger.debug(f"Added missing query parameter for {tool_name}")
+        
+        # Fix synthesize_content required parameters
+        if tool_name == 'synthesize_content':
+            if 'documents' not in fixed_params:
+                fixed_params['documents'] = ["Retrieved information from previous steps"]
+                logger.debug("Added default documents parameter for synthesize_content")
+            if 'query' not in fixed_params:
+                fixed_params['query'] = context.user_query
+                logger.debug("Added missing query parameter for synthesize_content")
+        
+        return fixed_params
+    
+    async def _create_template_plan(self, context: PlanningContext, strategy: PlanningStrategy) -> ExecutionPlan:
+        """
+        Create a plan using predefined templates based on query type.
+        """
+        query_type = context.get_query_type()
+        logger.info(f"Creating template plan for query type: {query_type}")
+        
+        steps_list = []
+        
+        # Common step patterns based on query type
+        if query_type == QueryType.SEARCH:
+            steps_list = await self._create_search_template_steps(context)
+        elif query_type == QueryType.ANALYSIS:
+            steps_list = await self._create_analysis_template_steps(context)
+        elif query_type == QueryType.SUMMARY:
+            steps_list = await self._create_summary_template_steps(context)
         else:
-            # Knowledge base search
-            steps["step_1"] = ExecutionStep(
-                step_id="step_1",
-                tool_name="search_knowledge_base",
-                parameters={"query": context.user_query},
-                description="Search knowledge base"
-            )
+            steps_list = await self._create_general_template_steps(context)
+        
+        # Convert list to dictionary keyed by step_id
+        steps = {step.step_id: step for step in steps_list}
         
         return ExecutionPlan(
+            plan_id=f"template_plan_{int(time.time())}",
             steps=steps,
-            plan_id=f"conservative_{int(time.time())}",
-            description="Conservative fallback plan"
+            metadata={"query_type": query_type.value, "template_used": True}
         )
     
-    def _validate_plan(self, 
-                      plan: ExecutionPlan,
-                      context: PlanningContext) -> PlanValidationResult:
-        """Validate execution plan for correctness and feasibility."""
+    async def _create_search_template_steps(self, context: PlanningContext) -> List[ExecutionStep]:
+        """Create template steps for search queries."""
+        steps = []
         
+        # Step 1: Search uploaded documents (always include - let the tool handle availability)
+        steps.append(ExecutionStep(
+            step_id="search_docs",
+            tool_name="search_uploaded_docs",
+            parameters={
+                "doc_name": context.active_documents[0] if context.active_documents else "any_document",
+                "query": context.user_query
+            },
+            condition=ConditionType.ALWAYS,
+            description="Search uploaded documents"
+        ))
+        
+        # Step 2: Search conversation history
+        steps.append(ExecutionStep(
+            step_id="search_history",
+            tool_name="search_conversation_history",
+            parameters={"query": context.user_query},
+            condition=ConditionType.ALWAYS,
+            description="Search conversation history"
+        ))
+        
+        # Step 3: Synthesize results
+        steps.append(ExecutionStep(
+            step_id="synthesize",
+            tool_name="synthesize_content",
+            parameters={
+                "documents": "$search_docs.output",
+                "query": context.user_query
+            },
+            dependencies=["search_docs", "search_history"],
+            condition=ConditionType.ALWAYS,
+            description="Synthesize search results"
+        ))
+        
+        return steps
+    
+    async def _create_analysis_template_steps(self, context: PlanningContext) -> List[ExecutionStep]:
+        """Create template steps for analysis queries."""
+        return await self._create_search_template_steps(context)  # Similar to search for now
+    
+    async def _create_summary_template_steps(self, context: PlanningContext) -> List[ExecutionStep]:
+        """Create template steps for summary queries.""" 
+        return await self._create_search_template_steps(context)  # Similar to search for now
+    
+    async def _create_general_template_steps(self, context: PlanningContext) -> List[ExecutionStep]:
+        """Create general template steps."""
+        return await self._create_search_template_steps(context)  # Default to search template
+    
+    async def _create_simple_fallback_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """
+        Create a minimal fallback plan that should always work.
+        """
+        logger.info("Creating simple fallback plan")
+        
+        steps_list = [
+            ExecutionStep(
+                step_id="fallback_search",
+                tool_name="search_knowledge_base",
+                parameters={"query": context.user_query},
+                condition=ConditionType.ALWAYS,
+                description="Fallback knowledge base search"
+            )
+        ]
+        
+        # Convert list to dictionary keyed by step_id
+        steps = {step.step_id: step for step in steps_list}
+        
+        return ExecutionPlan(
+            plan_id=f"fallback_plan_{int(time.time())}",
+            steps=steps,
+            metadata={"fallback_plan": True}
+        )
+    
+    async def _validate_plan_with_fixes(self, plan: ExecutionPlan, context: PlanningContext) -> PlanValidationResult:
+        """
+        Validate plan and attempt to fix common issues.
+        """
         errors = []
         warnings = []
         suggestions = []
         
-        # Basic plan validation
-        is_valid, plan_errors = plan.validate()
-        errors.extend(plan_errors)
-        
-        # Tool availability validation
-        for step_id, step in plan.steps.items():
-            tool_meta = self.tool_registry.get_tool(step.tool_name)
-            if not tool_meta:
-                errors.append(f"Unknown tool '{step.tool_name}' in step '{step_id}'")
-                continue
-            
-            # Parameter validation
-            param_valid, param_errors = tool_meta.validate_inputs(step.parameters)
-            if not param_valid:
-                errors.extend([f"Step '{step_id}': {error}" for error in param_errors])
-        
-        # Context validation
-        if not context.active_documents:
-            document_tools = ["search_uploaded_docs", "discover_document_structure"]
+        try:
+            # Validate each step
             for step_id, step in plan.steps.items():
-                if step.tool_name in document_tools:
-                    warnings.append(f"Step '{step_id}' uses document tool but no active documents")
-        
-        # Efficiency suggestions
-        if len(plan.steps) > 5:
-            suggestions.append("Consider breaking down into smaller sub-plans for better error handling")
-        
-        # Calculate confidence score
-        confidence_score = self._calculate_plan_confidence(plan, errors, warnings)
-        
-        return PlanValidationResult(
-            is_valid=len(errors) == 0,
-            errors=errors,
-            warnings=warnings,
-            suggestions=suggestions,
-            confidence_score=confidence_score
-        )
-    
-    def _fix_plan_issues(self, 
-                        plan: ExecutionPlan,
-                        validation_result: PlanValidationResult,
-                        context: PlanningContext) -> ExecutionPlan:
-        """Attempt to fix issues in the execution plan."""
-        
-        fixed_steps = plan.steps.copy()
-        
-        for error in validation_result.errors:
-            # Fix unknown tool errors
-            if "Unknown tool" in error:
-                step_id = self._extract_step_id_from_error(error)
-                if step_id and step_id in fixed_steps:
-                    old_tool = fixed_steps[step_id].tool_name
-                    new_tool = self._suggest_alternative_tool(old_tool, context)
-                    if new_tool:
-                        fixed_steps[step_id].tool_name = new_tool
-                        logger.info(f"Fixed step '{step_id}': {old_tool} -> {new_tool}")
-            
-            # Fix parameter errors
-            if "Parameter validation failed" in error:
-                step_id = self._extract_step_id_from_error(error)
-                if step_id and step_id in fixed_steps:
-                    fixed_steps[step_id].parameters = self._fix_parameters(
-                        fixed_steps[step_id].parameters,
-                        context
-                    )
-        
-        return ExecutionPlan(
-            steps=fixed_steps,
-            plan_id=f"{plan.plan_id}_fixed",
-            description=f"{plan.description} (with fixes)"
-        )
-    
-    def _add_fallback_strategies(self, 
-                               plan: ExecutionPlan,
-                               context: PlanningContext) -> ExecutionPlan:
-        """Add fallback strategies to the execution plan."""
-        
-        enhanced_steps = plan.steps.copy()
-        
-        for step_id, step in plan.steps.items():
-            tool_meta = self.tool_registry.get_tool(step.tool_name)
-            
-            # Add fallbacks for low-reliability tools
-            if tool_meta and tool_meta.reliability in [ToolReliability.LOW, ToolReliability.EXPERIMENTAL]:
-                fallback_tools = self.tool_registry.get_tool_suggestions(step.tool_name, context.__dict__)
+                # Check tool availability
+                if step.tool_name not in self.tool_registry._tools:
+                    errors.append(f"Tool '{step.tool_name}' not available")
+                    continue
                 
-                if fallback_tools:
-                    fallback_id = f"{step_id}_fallback"
-                    fallback_step = ExecutionStep(
-                        step_id=fallback_id,
-                        tool_name=fallback_tools[0],
-                        parameters=step.parameters.copy(),
-                        condition=ConditionType.ON_FAILURE,
-                        dependencies=[step_id],
-                        description=f"Fallback for {step_id}"
-                    )
-                    enhanced_steps[fallback_id] = fallback_step
-                    step.fallback_steps = [fallback_id]
-        
-        return ExecutionPlan(
-            steps=enhanced_steps,
-            plan_id=f"{plan.plan_id}_enhanced",
-            description=f"{plan.description} (with fallbacks)"
-        )
-    
-    def _optimize_for_parallelism(self, plan: ExecutionPlan) -> ExecutionPlan:
-        """Optimize plan for parallel execution where possible."""
-        
-        # Get execution levels
-        execution_levels = plan.get_execution_order()
-        
-        # Identify steps that can run in parallel
-        parallel_opportunities = []
-        for level in execution_levels:
-            if len(level) > 1:
-                parallel_opportunities.extend(level)
-        
-        if parallel_opportunities:
-            logger.info(f"Identified {len(parallel_opportunities)} steps for parallel execution")
-        
-        # The DAG structure already enables parallelism through dependencies
-        # No structural changes needed
-        return plan
-    
-    def _analyze_failures(self, 
-                         failed_steps: List[str],
-                         execution_results: Dict[str, Any],
-                         original_plan: ExecutionPlan) -> Dict[str, Any]:
-        """Analyze execution failures to inform replanning."""
-        
-        analysis = {
-            "failed_tools": [],
-            "error_patterns": [],
-            "successful_steps": [],
-            "alternative_approaches": []
-        }
-        
-        for step_id in failed_steps:
-            if step_id in original_plan.steps:
-                step = original_plan.steps[step_id]
-                analysis["failed_tools"].append(step.tool_name)
+                # Validate parameters
+                param_validation = self.tool_registry.validate_parameters(step.tool_name, step.parameters)
+                if not param_validation.is_valid:
+                    for error in param_validation.errors:
+                        if "Required parameter" in error and "missing" in error:
+                            warnings.append(f"Step '{step.step_id}': {error}")
+                        else:
+                            errors.append(f"Step '{step.step_id}': {error}")
                 
-                # Extract error patterns
-                if step_id in execution_results:
-                    result = execution_results[step_id]
-                    if hasattr(result, 'error'):
-                        analysis["error_patterns"].append(result.error)
-        
-        # Identify successful steps
-        for step_id, step in original_plan.steps.items():
-            if step_id not in failed_steps:
-                analysis["successful_steps"].append(step.tool_name)
-        
-        return analysis
-    
-    def _generate_alternative_plan(self, 
-                                 context: PlanningContext,
-                                 failure_analysis: Dict[str, Any],
-                                 execution_results: Dict[str, Any]) -> ExecutionPlan:
-        """Generate alternative plan based on failure analysis."""
-        
-        # Avoid failed tools
-        avoided_tools = set(failure_analysis["failed_tools"])
-        
-        # Find alternative tools
-        alternative_steps = {}
-        step_counter = 1
-        
-        # Start with successful approaches from original plan
-        successful_tools = failure_analysis["successful_steps"]
-        
-        if successful_tools:
-            # Build on successful tools
-            for tool_name in successful_tools:
-                if tool_name not in avoided_tools:
-                    step_id = f"alt_step_{step_counter}"
-                    alternative_steps[step_id] = ExecutionStep(
-                        step_id=step_id,
-                        tool_name=tool_name,
-                        parameters=self._infer_parameters_for_tool(tool_name, context),
-                        description=f"Alternative approach using {tool_name}"
+                # Validate condition
+                if step.condition_expression:
+                    is_valid, error_msg = self.condition_parser.validate_condition_expression(
+                        step.condition_expression, 
+                        {s_id for s_id in plan.steps.keys()}
                     )
-                    step_counter += 1
-        
-        # Add conservative fallback if no alternatives found
-        if not alternative_steps:
-            return self._generate_conservative_plan(context)
-        
-        return ExecutionPlan(
-            steps=alternative_steps,
-            plan_id=f"alternative_{int(time.time())}",
-            description="Alternative plan based on failure analysis"
-        )
+                    if not is_valid:
+                        warnings.append(f"Step '{step.step_id}': {error_msg}")
+            
+            # Check for circular dependencies
+            if self._has_circular_dependencies(plan):
+                errors.append("Circular dependencies detected in plan")
+            
+            is_valid = len(errors) == 0
+            confidence = 1.0 - (len(errors) * 0.3 + len(warnings) * 0.1)
+            
+            return PlanValidationResult(
+                is_valid=is_valid,
+                errors=errors,
+                warnings=warnings,
+                suggestions=suggestions,
+                confidence_score=max(0.0, confidence)
+            )
+            
+        except Exception as e:
+            logger.error(f"Error during plan validation: {e}")
+            return PlanValidationResult(
+                is_valid=False,
+                errors=[f"Validation error: {str(e)}"],
+                confidence_score=0.0
+            )
     
-    def _load_planning_templates(self) -> Dict[QueryType, Dict[str, Any]]:
-        """Load pre-defined planning templates for common query patterns."""
-        
-        return {
-            QueryType.SEARCH: {
-                "steps": [
-                    {
-                        "tool": "search_uploaded_docs",
-                        "parameters": {
-                            "doc_name": "@active_documents[0]",
-                            "query": "@user_query"
-                        },
-                        "description": "Search for relevant content"
-                    }
-                ]
-            },
-            QueryType.SUMMARY: {
-                "steps": [
-                    {
-                        "tool": "search_uploaded_docs",
-                        "parameters": {
-                            "doc_name": "@active_documents[0]",
-                            "retrieve_full_doc": True
-                        },
-                        "description": "Retrieve full document"
-                    },
-                    {
-                        "tool": "synthesize_content",
-                        "parameters": {
-                            "chunks": "$step_1.output",
-                            "method": "refine",
-                            "length": "summary"
-                        },
-                        "dependencies": ["step_1"],
-                        "description": "Create summary"
-                    }
-                ]
-            },
-            QueryType.EXTRACTION: {
-                "steps": [
-                    {
-                        "tool": "search_uploaded_docs",
-                        "parameters": {
-                            "doc_name": "@active_documents[0]",
-                            "retrieve_full_doc": True
-                        },
-                        "description": "Retrieve full document"
-                    },
-                    {
-                        "tool": "extract_key_phrases",
-                        "parameters": {
-                            "text": "$step_1.output[0].page_content",
-                            "top_n": 20
-                        },
-                        "dependencies": ["step_1"],
-                        "description": "Extract key information"
-                    }
-                ]
-            }
-        }
+    def _has_circular_dependencies(self, plan: ExecutionPlan) -> bool:
+        """Check for circular dependencies in the plan."""
+        try:
+            # Simple cycle detection
+            visited = set()
+            rec_stack = set()
+            
+            def has_cycle(step_id: str) -> bool:
+                if step_id in rec_stack:
+                    return True
+                if step_id in visited:
+                    return False
+                
+                visited.add(step_id)
+                rec_stack.add(step_id)
+                
+                # Find step and check its dependencies
+                if step_id in plan.steps:
+                    step = plan.steps[step_id]
+                    for dep in step.dependencies:
+                        if has_cycle(dep):
+                            return True
+                
+                rec_stack.remove(step_id)
+                return False
+            
+            for step_id in plan.steps.keys():
+                if step_id not in visited:
+                    if has_cycle(step_id):
+                        return True
+            
+            return False
+            
+        except Exception as e:
+            logger.error(f"Error checking circular dependencies: {e}")
+            return False
     
-    def _load_tool_patterns(self) -> Dict[str, List[str]]:
-        """Load patterns for tool suggestions."""
+    def _create_planning_prompt(self, context: PlanningContext, strategy: PlanningStrategy) -> str:
+        """Create planning prompt for LLM with clear condition guidelines and tool specifications."""
         
-        return {
-            "document_analysis": ["search_uploaded_docs", "discover_document_structure", "synthesize_content"],
-            "text_processing": ["extract_key_phrases", "analyze_text_metrics", "analyze_sentiment"],
-            "data_analysis": ["process_table_data", "calculate_statistics", "execute_python_code"],
-            "visualization": ["create_chart", "create_wordcloud", "create_statistical_plot"]
-        }
-    
-    def _resolve_template_parameters(self, 
-                                   parameters: Dict[str, Any],
-                                   context: PlanningContext) -> Dict[str, Any]:
-        """Resolve template parameter placeholders."""
+        # Get detailed tool definitions with correct parameter names
+        tool_definitions = self.tool_registry.export_tool_definitions()
         
-        resolved = {}
+        # Format tool specifications for the prompt
+        tool_specs = []
+        for tool_name in context.available_tools:
+            if tool_name in tool_definitions:
+                tool_def = tool_definitions[tool_name]
+                params_spec = []
+                for param_name, param_info in tool_def["parameters"].items():
+                    required_str = "REQUIRED" if param_info["required"] else "optional"
+                    params_spec.append(f'"{param_name}": {param_info["type"]} ({required_str})')
+                
+                tool_specs.append(f"""- {tool_name}: {tool_def["description"]}
+  Parameters: {{{', '.join(params_spec)}}}""")
         
-        for key, value in parameters.items():
-            if isinstance(value, str) and value.startswith("@"):
-                # Context variable reference
-                var_name = value[1:]
-                if var_name == "user_query":
-                    resolved[key] = context.user_query
-                elif var_name == "active_documents[0]":
-                    resolved[key] = context.active_documents[0] if context.active_documents else None
-                elif var_name == "active_documents":
-                    resolved[key] = context.active_documents
-                else:
-                    resolved[key] = value
-            else:
-                resolved[key] = value
+        tools_specification = "\n".join(tool_specs)
         
-        return resolved
-    
-    def _calculate_plan_confidence(self, 
-                                 plan: ExecutionPlan,
-                                 errors: List[str],
-                                 warnings: List[str]) -> float:
-        """Calculate confidence score for the execution plan."""
+        prompt = f"""Create an execution plan for the user query using available tools.
+
+User Query: {context.user_query}
+Session ID: {context.session_id}
+Active Documents: {context.active_documents}
+Strategy: {strategy.value}
+
+AVAILABLE TOOLS WITH EXACT PARAMETER NAMES:
+{tools_specification}
+
+CRITICAL PARAMETER RULES:
+- ALWAYS use exact parameter names shown above
+- For search_uploaded_docs: use "doc_name" (NOT "doc_id")
+- For synthesize_content: use "documents" and "query" (REQUIRED)
+- For extract_key_phrases: use "text" (NOT "text_input" or "input_text")
+- For create_wordcloud: use "text" (NOT "text_input")
+- For discover_document_structure: use "doc_name" (NOT "doc_id")
+
+CONDITION GUIDELINES:
+- Use "always" for steps that should always execute
+- Use "on_success" for steps that depend on previous step success
+- Use "on_failure" for error handling steps
+
+Return a JSON plan with this structure:
+{{
+    "strategy": "{strategy.value}",
+    "steps": [
+        {{
+            "id": "step_1",
+            "tool": "tool_name",
+            "parameters": {{"exact_param_name": "value"}},
+            "dependencies": [],
+            "condition": "always",
+            "description": "What this step does"
+        }}
+    ]
+}}
+
+Create a plan that addresses the user query effectively using the available tools with EXACT parameter names."""
         
-        base_confidence = 1.0
-        
-        # Reduce confidence for errors
-        base_confidence -= len(errors) * 0.2
-        
-        # Reduce confidence for warnings
-        base_confidence -= len(warnings) * 0.1
-        
-        # Adjust for tool reliability
-        tool_confidence_sum = 0.0
-        for step in plan.steps.values():
-            tool_meta = self.tool_registry.get_tool(step.tool_name)
-            if tool_meta:
-                tool_confidence_sum += tool_meta.get_confidence_score()
-            else:
-                tool_confidence_sum += 0.5  # Unknown tool penalty
-        
-        if len(plan.steps) > 0:
-            avg_tool_confidence = tool_confidence_sum / len(plan.steps)
-            base_confidence = (base_confidence + avg_tool_confidence) / 2
-        
-        return max(0.0, min(1.0, base_confidence))
-    
-    def _extract_step_id_from_error(self, error: str) -> Optional[str]:
-        """Extract step ID from error message."""
-        match = re.search(r"step '([^']+)'", error)
-        return match.group(1) if match else None
-    
-    def _suggest_alternative_tool(self, failed_tool: str, context: PlanningContext) -> Optional[str]:
-        """Suggest alternative tool for a failed tool."""
-        suggestions = self.tool_registry.get_tool_suggestions(failed_tool, context.__dict__)
-        return suggestions[0] if suggestions else None
-    
-    def _fix_parameters(self, 
-                       parameters: Dict[str, Any],
-                       context: PlanningContext) -> Dict[str, Any]:
-        """Fix common parameter issues."""
-        
-        fixed_params = parameters.copy()
-        
-        # Add missing required parameters
-        if "doc_name" not in fixed_params and context.active_documents:
-            fixed_params["doc_name"] = context.active_documents[0]
-        
-        return fixed_params
-    
-    def _infer_parameters_for_tool(self, 
-                                  tool_name: str,
-                                  context: PlanningContext) -> Dict[str, Any]:
-        """Infer reasonable parameters for a tool based on context."""
-        
-        tool_meta = self.tool_registry.get_tool(tool_name)
-        if not tool_meta:
-            return {}
-        
-        parameters = {}
-        
-        # Common parameter patterns
-        for param_name, param_def in tool_meta.parameters.items():
-            if param_name == "query" and not param_def.required:
-                parameters[param_name] = context.user_query
-            elif param_name == "doc_name" and context.active_documents:
-                parameters[param_name] = context.active_documents[0]
-            elif param_name == "doc_names" and context.active_documents:
-                parameters[param_name] = context.active_documents
-            elif param_def.default_value is not None:
-                parameters[param_name] = param_def.default_value
-        
-        return parameters
+        return prompt

@@ -1,0 +1,94 @@
+[15:33:14] INFO: 🚀 Starting Orchestrator V2 Coverage Test (No Fallback)
+[15:33:14] INFO: 📊 V2 Configuration: max_parallel=5
+[15:33:14] INFO: ✅ Orchestrator V2 initialized successfully
+[15:33:14] INFO: 📋 Testing 12 scenarios covering 15 target tools
+[15:33:14] INFO: 
+============================================================
+[15:33:14] INFO: 🧪 Test 1/12: Text Analytics - Key Phrases
+[15:33:14] INFO: 🎯 Target Tools: extract_key_phrases, search_uploaded_docs
+[15:33:14] INFO: ❓ Query: Extract key phrases and important terms from any documents in the system. Show me the most significant terminology.
+[15:33:14] INFO: ✅ Result: success | Confidence: 0.00 | Time: 0.00s
+[15:33:14] WARN: ⚠️ No tools detected in execution trace
+[15:33:15] INFO: 
+============================================================
+[15:33:15] INFO: 🧪 Test 2/12: Text Analytics - Entity Extraction
+[15:33:15] INFO: 🎯 Target Tools: extract_entities, search_uploaded_docs
+[15:33:15] INFO: ❓ Query: Find and extract all named entities (people, places, dates, organizations) from available documents.
+[15:33:15] INFO: ✅ Result: success | Confidence: 0.00 | Time: 0.00s
+[15:33:15] WARN: ⚠️ No tools detected in execution trace
+[15:33:16] INFO: 
+============================================================
+[15:33:16] INFO: 🧪 Test 3/12: Text Analytics - Sentiment Analysis
+[15:33:16] INFO: 🎯 Target Tools: analyze_sentiment, search_uploaded_docs
+[15:33:16] INFO: ❓ Query: Analyze the sentiment and emotional tone of the document content. Is it positive, negative, or neutral?
+[15:33:25] INFO: ✅ Result: success | Confidence: 0.80 | Time: 8.67s
+[15:33:25] WARN: ⚠️ No tools detected in execution trace
+[15:33:26] INFO: 
+============================================================
+[15:33:26] INFO: 🧪 Test 4/12: Text Analytics - Text Metrics
+[15:33:26] INFO: 🎯 Target Tools: analyze_text_metrics, search_uploaded_docs
+[15:33:26] INFO: ❓ Query: Calculate detailed text statistics and readability metrics for the documents including word count, complexity scores.
+[15:33:36] INFO: ✅ Result: success | Confidence: 0.80 | Time: 10.68s
+[15:33:36] WARN: ⚠️ No tools detected in execution trace
+[15:33:37] INFO: 
+============================================================
+[15:33:37] INFO: 🧪 Test 5/12: Visualization - Word Cloud
+[15:33:37] INFO: 🎯 Target Tools: create_wordcloud, search_uploaded_docs
+[15:33:37] INFO: ❓ Query: Create a word cloud visualization showing the most frequent terms in the documents.
+[15:33:44] INFO: ✅ Result: success | Confidence: 0.80 | Time: 6.37s
+[15:33:44] WARN: ⚠️ No tools detected in execution trace
+[15:33:45] INFO: 
+============================================================
+[15:33:45] INFO: 🧪 Test 6/12: Visualization - Statistical Chart
+[15:33:45] INFO: 🎯 Target Tools: create_statistical_plot, analyze_text_metrics
+[15:33:45] INFO: ❓ Query: Create statistical charts showing document metrics and analysis results.
+[15:33:55] INFO: ✅ Result: success | Confidence: 0.80 | Time: 10.34s
+[15:33:55] WARN: ⚠️ No tools detected in execution trace
+[15:33:56] INFO: 
+============================================================
+[15:33:56] INFO: 🧪 Test 7/12: Computation - Python Code
+[15:33:56] INFO: 🎯 Target Tools: execute_python_code, search_uploaded_docs
+[15:33:56] INFO: ❓ Query: Calculate the total number of pages across all uploaded documents using Python code.
+[15:34:03] INFO: ✅ Result: success | Confidence: 0.80 | Time: 6.75s
+[15:34:03] WARN: ⚠️ No tools detected in execution trace
+[15:34:04] INFO: 
+============================================================
+[15:34:04] INFO: 🧪 Test 8/12: Computation - Statistics
+[15:34:04] INFO: 🎯 Target Tools: calculate_statistics, analyze_text_metrics
+[15:34:04] INFO: ❓ Query: Calculate statistical measures (mean, median, std dev) for document word counts and lengths.
+[15:34:04] INFO: ✅ Result: success | Confidence: 0.00 | Time: 0.00s
+[15:34:04] WARN: ⚠️ No tools detected in execution trace
+[15:34:05] INFO: 
+============================================================
+[15:34:05] INFO: 🧪 Test 9/12: Memory - Conversation History
+[15:34:05] INFO: 🎯 Target Tools: search_conversation_history
+[15:34:05] INFO: ❓ Query: Search through our conversation history to find previous document analysis discussions.
+[15:34:05] INFO: ✅ Result: success | Confidence: 0.00 | Time: 0.00s
+[15:34:05] WARN: ⚠️ No tools detected in execution trace
+[15:34:06] INFO: 
+============================================================
+[15:34:06] INFO: 🧪 Test 10/12: Memory - Knowledge Base
+[15:34:06] INFO: 🎯 Target Tools: search_knowledge_base
+[15:34:06] INFO: ❓ Query: Search the knowledge base for information about document analysis best practices and methodologies.
+[15:34:06] INFO: ✅ Result: success | Confidence: 0.00 | Time: 0.00s
+[15:34:06] WARN: ⚠️ No tools detected in execution trace
+[15:34:07] INFO: 
+============================================================
+[15:34:07] INFO: 🧪 Test 11/12: Multi-Document - Comparison
+[15:34:07] INFO: 🎯 Target Tools: search_multiple_docs, synthesize_content
+[15:34:07] INFO: ❓ Query: Compare content across multiple uploaded documents and identify common themes and differences.
+[15:34:20] INFO: ✅ Result: success | Confidence: 0.80 | Time: 12.70s
+[15:34:20] WARN: ⚠️ No tools detected in execution trace
+[15:34:21] INFO: 
+============================================================
+[15:34:21] INFO: 🧪 Test 12/12: Visualization - Comparison Chart
+[15:34:21] INFO: 🎯 Target Tools: create_comparison_chart, search_multiple_docs
+[15:34:21] INFO: ❓ Query: Create comparison charts showing differences between documents in terms of length, complexity, and key topics.
+[15:34:31] INFO: ✅ Result: success | Confidence: 0.80 | Time: 9.95s
+[15:34:31] WARN: ⚠️ No tools detected in execution trace
+[15:34:32] INFO: 
+============================================================
+[15:34:32] INFO: 📈 Generating final coverage report...
+[15:34:32] INFO: ✅ Final coverage report generated
+[15:34:32] INFO: 📄 Report saved to: output/v2_coverage_results_20250803_153314.md
+[15:34:32] INFO: 📝 Logs saved to: output/v2_coverage_test_log_20250803_153314.txt

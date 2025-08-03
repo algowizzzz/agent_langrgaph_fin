@@ -51,7 +51,11 @@ class ToolParameter:
                     return False, f"Parameter '{self.name}' failed validation: {rule}"
             
             # Basic type checking
-            if not isinstance(value, self.param_type):
+            if hasattr(self.param_type, '__origin__'):
+                # Handle generic types like list[str]
+                if not isinstance(value, self.param_type.__origin__):
+                    return False, f"Parameter '{self.name}' must be {self.param_type}, got {type(value).__name__}"
+            elif not isinstance(value, self.param_type):
                 # Try type conversion for common cases
                 if self.param_type == str and not isinstance(value, str):
                     value = str(value)
@@ -96,6 +100,15 @@ class ToolParameter:
             return True
         except:
             return False
+
+
+@dataclass
+class ParameterValidationResult:
+    """Result of parameter validation."""
+    is_valid: bool
+    errors: List[str] = field(default_factory=list)
+    warnings: List[str] = field(default_factory=list)
+    suggestions: List[str] = field(default_factory=list)
 
 
 @dataclass
@@ -183,7 +196,9 @@ class ToolRegistry:
             if param.kind in (inspect.Parameter.VAR_POSITIONAL, inspect.Parameter.VAR_KEYWORD):
                 continue
                 
-            param_type = type_hints.get(param_name, str)  # Default to str
+            param_type = type_hints.get(param_name, Any)
+            if isinstance(param.default, bool):
+                param_type = bool
             required = param.default == inspect.Parameter.empty
             default_value = None if required else param.default
             
@@ -309,6 +324,26 @@ class ToolRegistry:
             },
             "async_tools": len([t for t in self._tools.values() if t.requires_async])
         }
+    
+    def validate_parameters(self, tool_name: str, parameters: Dict[str, Any]) -> 'ParameterValidationResult':
+        """Validate parameters for a specific tool."""
+        if tool_name not in self._tools:
+            return ParameterValidationResult(
+                is_valid=False,
+                errors=[f"Unknown tool: {tool_name}"],
+                warnings=[],
+                suggestions=[]
+            )
+        
+        tool_meta = self._tools[tool_name]
+        is_valid, errors = tool_meta.validate_inputs(parameters)
+        
+        return ParameterValidationResult(
+            is_valid=is_valid,
+            errors=errors,
+            warnings=[],
+            suggestions=[]
+        )
     
     def export_tool_definitions(self) -> Dict[str, Any]:
         """Export tool definitions for LLM prompts."""
