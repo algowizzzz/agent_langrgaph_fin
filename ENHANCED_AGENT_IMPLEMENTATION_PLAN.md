@@ -1,4 +1,4 @@
-# 🚀 Enhanced AI Document Intelligence Agent - Implementation Plan
+# 🚀 Enhanced AI Finance and Risk Agent - Implementation Plan
 
 **Created:** August 3, 2025  
 **Status:** Implementation Ready  
@@ -8,7 +8,7 @@
 
 ## 🎯 **Project Vision**
 
-Transform the current basic orchestrator into a sophisticated AI Document Intelligence Agent with **intelligent query routing**, **multi-document analysis capabilities**, and **comprehensive data analysis workflows** - seamlessly switching between uploaded documents, knowledge base, and LLM memory based on context.
+Transform the current basic orchestrator into a sophisticated **AI Finance and Risk Agent** with **intelligent query routing**, **specialized financial analysis capabilities**, **multi-document comparison workflows**, and **productivity assistance** - seamlessly switching between uploaded documents, knowledge base, short-term memory, and LLM knowledge base based on context.
 
 ---
 
@@ -23,44 +23,47 @@ Transform the current basic orchestrator into a sophisticated AI Document Intell
    - **Solution:** Debug step creation process in planning engine
 
 #### **Phase 2: Core Agent System**
-2. **Implement agent identity and capabilities system**
-   - Define agent persona and core capabilities
-   - Add self-awareness responses ("What can you do?")
-   - Create capability discovery prompts
+2. **Implement AI Finance and Risk Agent identity and capabilities system**
+   - Define specialized finance/risk persona and core capabilities
+   - Add self-awareness responses ("What can you do?" - finance, risk, productivity)
+   - Create capability discovery prompts for financial analysis workflows
 
 3. **Create intelligent query routing system with fallback chain**
-   - **Document Analysis** (Priority 1 - if active_documents exist)
+   - **Document Analysis** (Priority 1 - if active_documents (uploaded docs) exist)
      - Single doc: Direct search and synthesis
      - Multi-doc: 5k word chunks → refine method for comparison analysis
-   - **Q&A Workflow** (Priority 2 - smart fallback chain)
+   - **Q&A Workflow** (Priority 2 - comprehensive fallback chain)
      - Step 1: Search uploaded docs (if any)
-     - Step 2: Knowledge base internal memory 
-     - Step 3: LLM memory (if knowledge base says "idk")
-   - **Data Analysis** (Priority 3 - CSV/Excel detection)
+     - Step 2: Knowledge base internal memory (embeddings)
+     - Step 3: long-term conversation memory
+     - Step 4: LLM knowledge base (if knowledge base says "idk")
+   - **Data Analysis** (Priority 3 - CSV/Excel detection or if table extracted from other file types), 
      - Table summary → Python calculations → Visualizations
 
-4. **Enhance planning prompt with workflow examples and guidance**
-   - Add few-shot examples for each workflow type
-   - Include tool selection priorities
-   - Provide workflow-specific instructions
+4. **Enhance planning prompt with structured instructions and financial expertise**
+   - Add few-shot examples for financial analysis workflows
+   - Include structured prompt templates (objective, persona, output format)
+   - Provide finance/risk-specific instructions and terminology
+   - Create productivity task guidance for daily workflow assistance
 
 #### **Phase 3: Main Workflows Implementation**
 5. **Implement document analysis workflow with intelligent processing**
    - **Single Document:** Direct search and synthesis from uploaded content
    - **Multi-Document (2+ docs):** 5k word chunks → refine method for deep analysis
    - **Financial Analysis Example:** "Compare similarities and differences as financial analyst"
-     - Creates specific instruction prompt
+     - Creates specific instruction prompt with objective, persona, output format structure, etc based on user query
      - Passes all chunks through refine method for comprehensive comparison
    - **Chunking Strategy:** 5k words per chunk for optimal processing
 
-6. **Implement Q&A workflow with intelligent fallback chain**
+6. **Implement Q&A workflow with comprehensive memory system**
    - **Example Query:** "What is risk?"
    - **With Uploaded Doc:** Answer comes directly from uploaded document content
-   - **No Uploaded Doc:** 
-     - Step 1: Search knowledge base internal memory
-     - Step 2: If knowledge base responds "idk" → fallback to LLM memory
-     - Step 3: Generate answer from LLM general knowledge
-   - **Smart Context Detection:** Route queries to appropriate source automatically
+   - **No Uploaded Doc (Comprehensive Fallback Chain):** 
+     - Step 1: Search knowledge base internal memory (embeddings)
+     - Step 2: Check short-term conversation memory for context
+     - Step 3: If knowledge base responds "idk" → fallback to LLM knowledge base
+     - Step 4: Generate answer from LLM general knowledge with financial/risk expertise
+   - **Smart Context Detection:** Route queries to appropriate source with finance/risk specialization
 
 7. **Implement data analysis workflow with progressive complexity**
    - **Step 1 - Upload CSV:** `test_business_data.csv` automatic detection
@@ -121,17 +124,19 @@ Transform the current basic orchestrator into a sophisticated AI Document Intell
 ### **Enhanced Agent Identity**
 ```python
 AGENT_IDENTITY = {
-    "name": "AI Document Intelligence Agent",
+    "name": "AI Finance and Risk Agent",
     "core_capabilities": [
         "Document Analysis & Synthesis (PDF, text, multi-document)",
         "Data Analysis (CSV, Excel, Python calculations, visualizations)", 
         "Q&A from Knowledge Base (embeddings DB + LLM memory)",
-        "Interactive workflow discovery and tool brainstorming"
+        "Interactive workflow discovery and tool brainstorming",
+        "Producitivy chatbot, help with daily tasks"
     ],
     "databases": {
         "embeddings": "Pre-defined knowledge vectors",
         "projects": "Uploaded documents (priority over knowledge base)",
-        "memories": "Long-term conversation history"
+        "memories": "Long-term conversation history, short term memory",
+        "llm_memory": "LLM's own knowledge base for general knowledge and financial expertise"
     }
 }
 ```
@@ -159,12 +164,17 @@ QUERY_ROUTING_LOGIC = {
             "condition": "if active_documents exist"
         },
         "step_2": {
-            "source": "knowledge_base_internal",
+            "source": "knowledge_base_internal_embeddings",
             "condition": "if no uploaded docs OR step_1 fails"
         },
         "step_3": {
-            "source": "llm_memory",
-            "condition": "if knowledge_base returns 'idk'"
+            "source": "short_term_conversation_memory",
+            "condition": "check for relevant context from recent conversation"
+        },
+        "step_4": {
+            "source": "llm_knowledge_base",
+            "condition": "if knowledge_base returns 'idk'",
+            "expertise": "financial and risk analysis specialization"
         }
     },
     "data_analysis_progressive": {
@@ -236,18 +246,20 @@ class WorkflowErrorHandler:
 ## 🎯 **Expected Outcomes**
 
 ### **Enhanced Capabilities**
-- ✅ **Intelligent Query Routing:** Documents → Knowledge Base → LLM Memory fallback chain
-- ✅ **Multi-Document Analysis:** 5k word chunks with refine method for financial comparisons
+- ✅ **Intelligent Query Routing:** Documents → Embeddings → Short-term Memory → LLM Knowledge Base fallback chain
+- ✅ **Financial Analysis Expertise:** 5k word chunks with specialized financial analyst prompts and refine method
+- ✅ **Structured Prompt Generation:** Objective, persona, output format templates for complex analysis
 - ✅ **Progressive Data Analysis:** CSV summary → Python calculations → Visualizations
-- ✅ **Transparent Reasoning:** Detailed step logging with tool inputs/outputs
-- ✅ **Context-Aware Processing:** Single vs multi-document detection with appropriate methods
+- ✅ **Productivity Assistance:** Daily task help with financial and risk analysis specialization
+- ✅ **Comprehensive Memory System:** Multiple memory sources with smart routing and context awareness
 
 ### **User Experience Improvements**
-- **Smart Document Routing:** "What is risk?" automatically finds answer in uploaded docs or falls back appropriately
-- **Financial Analysis Expertise:** Multi-document comparisons with specialized financial analyst prompts
-- **Progressive Data Exploration:** CSV → summary → calculations → visualizations in logical sequence
-- **Transparent Processing:** See exactly which source (document/knowledge base/LLM) provided the answer
-- **Context Awareness:** System knows when to use simple synthesis vs complex refine methods
+- **Smart Document Routing:** "What is risk?" automatically finds answer in uploaded docs with comprehensive fallback
+- **Financial Analysis Expertise:** Multi-document comparisons with structured prompts (objective, persona, format)
+- **Productivity Integration:** Daily task assistance combined with financial/risk analysis specialization
+- **Progressive Data Exploration:** CSV → summary → calculations → visualizations with financial context
+- **Memory-Aware Responses:** Leverages short-term memory and conversation context for coherent interactions
+- **Transparent Processing:** See exactly which source (document/embeddings/memory/LLM) provided the answer
 
 ### **Technical Achievements** 
 - **100% V2-Only Operation:** No dependency on legacy systems
@@ -285,7 +297,7 @@ class WorkflowErrorHandler:
 
 ---
 
-*This plan transforms a basic orchestrator into a production-ready AI Document Intelligence Agent with enterprise-grade capabilities, transparency, and reliability.*
+*This plan transforms a basic orchestrator into a production-ready AI Finance and Risk Agent with specialized financial analysis capabilities, comprehensive memory systems, productivity assistance, and enterprise-grade reliability.*
 
 
 
@@ -318,6 +330,7 @@ class WorkflowErrorHandler:
 | Query Type | Uploaded Docs | Expected Route | Example |
 |------------|---------------|----------------|---------|
 | Document Question | ✅ riskandfinace.pdf | Document Search | "What is risk?" → document content |
-| Knowledge Question | ❌ None | Knowledge Base → LLM | "What is risk?" → knowledge base → LLM fallback |
-| Multi-Doc Analysis | ✅ car24_chpt1_0.pdf, car24_chpt7.pdf | 5k Chunk Refine | "Compare similarities as financial analyst" |
-| Data Analysis | ✅ test_business_data.csv | Progressive CSV Workflow | Summary → Calculate → Visualize | 
+| Knowledge Question | ❌ None | Embeddings → Memory → LLM | "What is risk?" → embeddings → short-term memory → LLM fallback |
+| Multi-Doc Analysis | ✅ car24_chpt1_0.pdf, car24_chpt7.pdf | 5k Chunk + Structured Prompts | "Compare similarities as financial analyst" (objective, persona, format) |
+| Data Analysis | ✅ test_business_data.csv | Progressive CSV Workflow | Summary → Calculate → Visualize (with financial context) |
+| Productivity Task | ❌ None | LLM + Financial Expertise | "Help me analyze this quarterly report" → structured financial guidance | 
