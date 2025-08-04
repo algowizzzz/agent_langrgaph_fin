@@ -33,12 +33,14 @@ class Config:
 
     class Upload:
         def __init__(self):
-            self.allowed_extensions = ['.pdf', '.docx', '.csv', '.txt']
+            self.allowed_extensions = ['.pdf', '.docx', '.csv', '.txt', '.xlsx', '.xls']
             self.allowed_mime_types = [
                 'application/pdf',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'text/csv',
-                'text/plain'
+                'text/plain',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',  # .xlsx
+                'application/vnd.ms-excel'  # .xls
             ]
             self.max_file_size_mb = 200
 

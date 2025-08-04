@@ -149,3 +149,6 @@ def include_verification_endpoints(app):
     """Include verification endpoints in the FastAPI app."""
     app.include_router(verification_router)
     logger.info("🔒 Verification endpoints added to application")
+ 
+ 
+ 

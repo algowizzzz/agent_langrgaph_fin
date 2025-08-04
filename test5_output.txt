@@ -1,0 +1,40 @@
+🔍 Testing system status...
+✅ System Status:
+   📊 Status: operational
+   🤖 Orchestrator V2: ✅
+   💾 Memory: ✅
+   📄 Multi-docs: ✅
+   🌊 Streaming: ✅
+
+🔍 Testing query: 'what is corporate finance'
+============================================================
+✅ SUCCESS!
+📝 Answer: Corporate finance is the branch of finance that focuses on how corporations manage funding, investments, and capital to maximize shareholder value while managing financial risks. Here's a clear breakdown of what it encompasses:
+
+Key Areas of Corporate Finance:
+
+1. Capital Investment & Budgeting
+- Evaluating and selecting long-term investments
+- Using financial analysis tools (NPV, IRR, payback period)
+- Making strategic decisions about where to allocate capital
+- Assessing project risks and potential returns
+
+2. Capital Structure & Funding
+- Determining the optimal mix of debt and equity financing
+- Managing the company's cost of capital
+- Making decisions about raising funds through:
+  • Stocks (equity)
+  • Bonds and loans (debt)
+  • Hybrid securities
+
+3. Working Capital Management
+- Overseeing day-to-day financial operations
+- Managing cash flow
+- Optimizing inventory levels
+- Handling accounts receivable and payable
+
+Corporate finance professionals work to ensure companies make sound financial decisions that support long-term growth while maintaining financial stability. They play a crucial role in strategic planning, risk management, and creating value for shareholders.
+
+This field requires understanding of financial markets, accounting principles, and various analytical tools to make informed decisions about a company's financial resources and investments.
+⏱️  Time: 16288ms
+🎯 Confidence: 0

@@ -1,0 +1,5 @@
+# Streamlit Chat UI Requirements
+streamlit>=1.28.0
+requests>=2.31.0
+sseclient-py>=1.7.2
+aiohttp>=3.8.5

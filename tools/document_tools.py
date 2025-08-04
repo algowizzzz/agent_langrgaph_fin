@@ -63,16 +63,20 @@ class DocumentProcessor:
                 content, file_type = await self._extract_text_file(file_path)
             elif file_ext == '.csv':
                 content, file_type = await self._extract_csv_text(file_path)
+            elif file_ext in ['.xlsx', '.xls']:  # 🆕 EXCEL SUPPORT - SPECIAL HANDLING
+                sheet_chunks, file_type = await self._extract_excel_text(file_path)
+                # Excel files already come pre-chunked (1 sheet = 1 chunk)
+                text_chunks = sheet_chunks
             else:
                 # Fallback to text reading
                 content, file_type = await self._extract_text_file(file_path)
             
             # Process with appropriate splitter - using 5k word chunks for all types
-            # Use recursive splitter for 5k word chunks instead of page-based splitting
-            split_result = self.recursive_splitter.split_text(content)
-            
-            # RecursiveCharacterTextSplitter returns strings
-            text_chunks = split_result
+            # EXCEPT Excel files which are already optimally chunked
+            if file_ext not in ['.xlsx', '.xls']:
+                # Use recursive splitter for non-Excel files
+                split_result = self.recursive_splitter.split_text(content)
+                text_chunks = split_result
                 
             # Create Document objects with metadata
             docs = []
@@ -154,6 +158,64 @@ class DocumentProcessor:
             # Fallback to text reading
             return file_path.read_text(encoding='utf-8'), "TEXT"
 
+    async def _extract_excel_text(self, file_path: Path) -> tuple[list, str]:
+        """Extract structured JSON representation from Excel file with multiple sheets - ONE SHEET PER CHUNK."""
+        try:
+            import pandas as pd
+            import json
+            
+            # 🎯 KEY: sheet_name=None reads ALL sheets into a dictionary
+            all_sheets = pd.read_excel(file_path, sheet_name=None, engine='openpyxl')
+            
+            # 🔧 NEW APPROACH: Return structured JSON for each sheet
+            sheet_chunks = []
+            
+            for sheet_name, df in all_sheets.items():
+                # 📊 OPTION 3: Full JSON with Metadata (OPTIMAL for LLM)
+                try:
+                    # Convert dtypes to serializable format
+                    dtypes_dict = {}
+                    for col, dtype in df.dtypes.items():
+                        dtypes_dict[str(col)] = str(dtype)
+                    
+                    # Create structured JSON object
+                    sheet_data = {
+                        "excel_metadata": {
+                            "file_name": file_path.name,
+                            "sheet_name": sheet_name,
+                            "shape": {"rows": df.shape[0], "columns": df.shape[1]},
+                            "has_data": not df.empty
+                        },
+                        "table_structure": {
+                            "columns": [str(col) for col in df.columns.tolist()],
+                            "column_types": dtypes_dict,
+                            "index": [str(idx) for idx in df.index.tolist()]
+                        },
+                        "table_data": df.to_dict('records') if not df.empty else [],
+                        "summary_text": f"Excel sheet '{sheet_name}' from {file_path.name} with {df.shape[0]} rows and {df.shape[1]} columns"
+                    }
+                    
+                    # Convert to JSON string for storage (preserves structure)
+                    sheet_json = json.dumps(sheet_data, indent=2, default=str)
+                    sheet_chunks.append(sheet_json)
+                    
+                except Exception as sheet_error:
+                    # Fallback for problematic sheets
+                    fallback_content = f"# Excel Data: {file_path.name}\n\n## Sheet: {sheet_name}\n\n"
+                    if df.empty:
+                        fallback_content += "*(Empty sheet)*\n\n"
+                    else:
+                        fallback_content += df.to_string(index=False) + "\n\n"
+                    sheet_chunks.append(fallback_content)
+                    print(f"⚠️ Using fallback for sheet '{sheet_name}': {str(sheet_error)}")
+                
+            return sheet_chunks, "EXCEL"
+            
+        except Exception as e:
+            # Fallback with informative error message
+            print(f"⚠️ Excel processing failed for {file_path.name}: {str(e)}")
+            return [f"Excel processing failed: {str(e)}\nFile: {file_path.name}"], "TEXT"
+
 class PersistentDocumentStore:
     """Thread-safe persistent document store using file system."""
     
@@ -218,14 +280,41 @@ logger = logging.getLogger(__name__)
 print(f"🔧 MODULE LOADED: document_tools.py at {__file__}")  # Module load detection
 
 # --- Tool Implementations ---
+def extract_clean_filename(filename):
+    """Extract clean filename from timestamped names"""
+    import re
+    
+    # Pattern: YYYYMMDD_HHMMSS_uuid_original_filename
+    # We want to extract just the original_filename part
+    parts = filename.split('_')
+    
+    # If it starts with date pattern (8 digits), it's timestamped
+    if len(parts) >= 3 and re.match(r'^\d{8}$', parts[0]) and re.match(r'^\d{6}$', parts[1]):
+        # Find where the UUID ends (UUIDs have hyphens)
+        for i, part in enumerate(parts[2:], start=2):
+            if '-' in part:  # This is likely the UUID part
+                # Everything after this should be the original filename
+                if i + 1 < len(parts):
+                    original_parts = parts[i+1:]
+                    return '_'.join(original_parts)
+                break
+    
+    # If no timestamp pattern found, return as-is
+    return filename
+
 async def upload_document(file_path: str, session_id: str = "unknown", additional_metadata: dict = None, original_filename: str = None) -> dict:
-    """Upload document with enhanced metadata tracking."""
+    """Upload document with enhanced metadata tracking and clean display names."""
     result = await document_processor.process_document(file_path)
     if not result["success"]: return {"status": "error", "message": result.get("error")}
     
     chunks = result["documents"]
     doc_name = Path(file_path).name
-    display_name = original_filename or Path(file_path).name
+    
+    # Extract clean display name
+    if original_filename:
+        display_name = extract_clean_filename(original_filename)
+    else:
+        display_name = extract_clean_filename(Path(file_path).name)
     
     # Enhanced metadata for each chunk
     enhanced_chunks = []

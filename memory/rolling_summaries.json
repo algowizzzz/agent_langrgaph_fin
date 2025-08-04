@@ -1,38 +1,23 @@
 {
   "summaries": [
     {
-      "summary_id": "sum_20250802_131316",
-      "content": "Conversation with 10 user queries and 1 assistant responses. Key topics: risk_factors, capital, document_analysis, search_queries, basel",
+      "summary_id": "sum_20250804_134414",
+      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, document_analysis, search_queries, financial",
       "original_message_count": 11,
-      "timespan": "2025-08-02T12:53:39.491643 - 2025-08-02T13:13:16.435618",
+      "timespan": "2025-08-04T13:40:11.141713 - 2025-08-04T13:44:14.336317",
       "topics": [
         "risk_factors",
-        "capital",
-        "document_analysis",
-        "search_queries",
-        "basel"
-      ],
-      "created_at": "2025-08-02T13:13:16.435770"
-    },
-    {
-      "summary_id": "sum_20250802_235720",
-      "content": "Conversation with 9 user queries and 2 assistant responses. Key topics: risk_factors, capital, document_analysis, search_queries, financial",
-      "original_message_count": 11,
-      "timespan": "2025-08-02T13:04:05.963545 - 2025-08-02T23:57:20.308356",
-      "topics": [
-        "risk_factors",
-        "capital",
         "document_analysis",
         "search_queries",
         "financial"
       ],
-      "created_at": "2025-08-02T23:57:20.308918"
+      "created_at": "2025-08-04T13:44:14.336485"
     },
     {
-      "summary_id": "sum_20250802_235927",
+      "summary_id": "sum_20250804_134455",
       "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, capital, document_analysis, search_queries, financial",
       "original_message_count": 11,
-      "timespan": "2025-08-02T13:15:52.904527 - 2025-08-02T23:59:27.723345",
+      "timespan": "2025-08-04T13:42:53.817396 - 2025-08-04T13:44:55.263232",
       "topics": [
         "risk_factors",
         "capital",
@@ -40,88 +25,115 @@
         "search_queries",
         "financial"
       ],
-      "created_at": "2025-08-02T23:59:27.723619"
+      "created_at": "2025-08-04T13:44:55.263740"
     },
     {
-      "summary_id": "sum_20250803_150048",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, governance, document_analysis, search_queries, financial",
+      "summary_id": "sum_20250804_134941",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
       "original_message_count": 11,
-      "timespan": "2025-08-02T23:57:49.881203 - 2025-08-03T15:00:48.726265",
+      "timespan": "2025-08-04T13:44:18.505112 - 2025-08-04T13:49:41.596160",
       "topics": [
         "risk_factors",
-        "governance",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-04T13:49:41.596341"
+    },
+    {
+      "summary_id": "sum_20250804_140452",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, governance",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T13:45:01.985938 - 2025-08-04T14:04:52.858420",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "governance"
+      ],
+      "created_at": "2025-08-04T14:04:52.859199"
+    },
+    {
+      "summary_id": "sum_20250804_140548",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, governance",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T13:49:59.395811 - 2025-08-04T14:05:48.311013",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "governance"
+      ],
+      "created_at": "2025-08-04T14:05:48.311190"
+    },
+    {
+      "summary_id": "sum_20250804_140640",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T14:05:07.796448 - 2025-08-04T14:06:40.682498",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-04T14:06:40.682934"
+    },
+    {
+      "summary_id": "sum_20250804_142803",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T14:06:01.579207 - 2025-08-04T14:28:03.052937",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-04T14:28:03.053131"
+    },
+    {
+      "summary_id": "sum_20250804_143019",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T14:26:27.446757 - 2025-08-04T14:30:19.360127",
+      "topics": [
+        "document_analysis"
+      ],
+      "created_at": "2025-08-04T14:30:19.360374"
+    },
+    {
+      "summary_id": "sum_20250804_151645",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: capital, document_analysis, search_queries, financial, reporting",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T14:28:09.863738 - 2025-08-04T15:16:45.247051",
+      "topics": [
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "financial",
+        "reporting"
+      ],
+      "created_at": "2025-08-04T15:16:45.247234"
+    },
+    {
+      "summary_id": "sum_20250804_151823",
+      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, capital, document_analysis, search_queries, financial",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T14:30:57.907491 - 2025-08-04T15:18:23.180365",
+      "topics": [
+        "risk_factors",
+        "capital",
         "document_analysis",
         "search_queries",
         "financial"
       ],
-      "created_at": "2025-08-03T15:00:48.726844"
-    },
-    {
-      "summary_id": "sum_20250803_150840",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, governance, document_analysis, financial",
-      "original_message_count": 11,
-      "timespan": "2025-08-02T23:59:43.717131 - 2025-08-03T15:08:40.361178",
-      "topics": [
-        "risk_factors",
-        "governance",
-        "document_analysis",
-        "financial"
-      ],
-      "created_at": "2025-08-03T15:08:40.361524"
-    },
-    {
-      "summary_id": "sum_20250803_151026",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, financial, reporting",
-      "original_message_count": 11,
-      "timespan": "2025-08-03T15:01:12.117331 - 2025-08-03T15:10:26.234778",
-      "topics": [
-        "document_analysis",
-        "financial",
-        "reporting"
-      ],
-      "created_at": "2025-08-03T15:10:26.235083"
-    },
-    {
-      "summary_id": "sum_20250803_151248",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis, financial, reporting",
-      "original_message_count": 11,
-      "timespan": "2025-08-03T15:08:58.301850 - 2025-08-03T15:12:48.686790",
-      "topics": [
-        "document_analysis",
-        "financial",
-        "reporting"
-      ],
-      "created_at": "2025-08-03T15:12:48.687006"
-    },
-    {
-      "summary_id": "sum_20250803_151417",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis",
-      "original_message_count": 11,
-      "timespan": "2025-08-03T15:11:32.839163 - 2025-08-03T15:14:17.714345",
-      "topics": [
-        "document_analysis"
-      ],
-      "created_at": "2025-08-03T15:14:17.715002"
-    },
-    {
-      "summary_id": "sum_20250803_151601",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis",
-      "original_message_count": 11,
-      "timespan": "2025-08-03T15:12:58.486798 - 2025-08-03T15:16:01.152327",
-      "topics": [
-        "document_analysis"
-      ],
-      "created_at": "2025-08-03T15:16:01.152587"
-    },
-    {
-      "summary_id": "sum_20250803_151825",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis",
-      "original_message_count": 11,
-      "timespan": "2025-08-03T15:14:45.372546 - 2025-08-03T15:18:25.313012",
-      "topics": [
-        "document_analysis"
-      ],
-      "created_at": "2025-08-03T15:18:25.313605"
+      "created_at": "2025-08-04T15:18:23.180500"
     }
   ]
 }

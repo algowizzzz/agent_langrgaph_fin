@@ -83,11 +83,146 @@ async def llm_with_retry(prompt: str, max_retries: int = MAX_RETRIES) -> str:
                     logger.error(f"LLM call failed after {max_retries} attempts: {e}")
                     raise
 
+async def refine_synthesis(documents: List[Dict], query: str, synthesis_type: str = "summary") -> Dict[str, Any]:
+    """
+    Refine approach for large document sets: process 10 chunks at a time, building cumulative analysis.
+    """
+    logger.info(f"🔄 Starting refine synthesis for {len(documents)} documents")
+    
+    try:
+        # Initialize running analysis
+        running_analysis = ""
+        total_processed = 0
+        batch_size = 10
+        
+        # Process documents in batches of 10
+        for batch_start in range(0, len(documents), batch_size):
+            batch_end = min(batch_start + batch_size, len(documents))
+            batch = documents[batch_start:batch_end]
+            batch_num = (batch_start // batch_size) + 1
+            
+            logger.info(f"🔄 Processing batch {batch_num}: documents {batch_start+1}-{batch_end}")
+            
+            # Extract content from current batch
+            batch_content = []
+            for i, doc in enumerate(batch):
+                if isinstance(doc, dict):
+                    if 'content' in doc:
+                        content = doc['content']
+                    elif 'page_content' in doc:
+                        content = doc['page_content']
+                    elif 'text' in doc:
+                        content = doc['text']
+                    else:
+                        content = str(doc)
+                else:
+                    content = str(doc)
+                
+                # For Excel sheets, extract sheet name from content
+                sheet_name = f"Sheet {batch_start + i + 1}"
+                if "## Sheet:" in content:
+                    lines = content.split('\n')
+                    for line in lines:
+                        if line.startswith('## Sheet:'):
+                            sheet_name = line.replace('## Sheet:', '').strip()
+                            break
+                
+                batch_content.append(f"=== {sheet_name} ===\n{content}")
+            
+            # Create refine prompt
+            if batch_num == 1:
+                # First batch - initial analysis
+                refine_prompt = f"""Please analyze the following data to address this query: "{query}"
+
+Data to analyze:
+{chr(10).join(batch_content)}
+
+Please provide a comprehensive analysis addressing the query. This is the first batch of data, so provide initial insights and findings.
+
+Analysis:"""
+            else:
+                # Subsequent batches - refine previous analysis
+                refine_prompt = f"""Please update and refine the previous analysis with new data.
+
+Original Query: "{query}"
+
+Previous Analysis:
+{running_analysis}
+
+New Data (Batch {batch_num}):
+{chr(10).join(batch_content)}
+
+Please provide an updated analysis that:
+1. Integrates findings from the new data
+2. Updates previous conclusions if needed
+3. Maintains cumulative insights
+4. Addresses the original query comprehensively
+
+Updated Analysis:"""
+            
+            # Get LLM response for this batch
+            try:
+                batch_result = await llm_with_retry(refine_prompt)
+                running_analysis = batch_result.strip()
+                total_processed += len(batch)
+                
+                logger.info(f"✅ Completed batch {batch_num}, total processed: {total_processed}/{len(documents)}")
+                
+            except Exception as e:
+                return SynthesisError.create_error(
+                    error_type="refine_batch_failed",
+                    message=f"Refine synthesis failed at batch {batch_num}: {str(e)}",
+                    suggested_action="retry_or_reduce_batch_size",
+                    retryable=True
+                )
+        
+        # Final validation
+        if not running_analysis or len(running_analysis.strip()) < 50:
+            return SynthesisError.create_error(
+                error_type="insufficient_refine_result",
+                message="Refine synthesis produced insufficient content",
+                suggested_action="retry_with_modified_approach",
+                retryable=True
+            )
+        
+        logger.info(f"🎉 Refine synthesis completed successfully for {len(documents)} documents")
+        
+        return {
+            "success": True,
+            "synthesis_type": synthesis_type,
+            "query": query,
+            "result": running_analysis,
+            "documents_processed": len(documents),
+            "content_length": len(running_analysis),
+            "processing_details": {
+                "approach": "refine",
+                "batch_size": batch_size,
+                "total_batches": (len(documents) + batch_size - 1) // batch_size,
+                "model_used": config.ai.anthropic_model if config_available else "unknown",
+                "documents_count": len(documents),
+                "source": "documents"
+            }
+        }
+        
+    except Exception as e:
+        return SynthesisError.create_error(
+            error_type="refine_synthesis_failed",
+            message=f"Refine synthesis failed: {str(e)}",
+            suggested_action="fallback_to_single_pass_or_retry",
+            retryable=True
+        )
+
 async def synthesize_content(documents: List[Dict], query: str, synthesis_type: str = "summary") -> Dict[str, Any]:
     """
     Synthesize content from multiple documents with proper error handling.
+    Uses refine approach for >10 chunks, processing 10 at a time.
     """
     logger.info(f"Synthesizing {synthesis_type} for query: '{query}' from {len(documents)} documents")
+    
+    # 🔧 NEW: Check if we need refine approach (>10 chunks)
+    if len(documents) > 10:
+        logger.info(f"🔄 Using REFINE approach for {len(documents)} chunks (>10), processing 10 at a time")
+        return await refine_synthesis(documents, query, synthesis_type)
     
     # Input validation
     if not documents:

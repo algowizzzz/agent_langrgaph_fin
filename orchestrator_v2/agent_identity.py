@@ -283,8 +283,16 @@ class FinanceRiskAgentIdentity:
             # 📊 PRIORITY 2: Single document → Route by file type
             single_doc = active_docs[0].lower()
             
-            # CSV/Excel files → DATA_ANALYSIS
+            # CSV/Excel files → Check for multi-sheet Excel
             if any(single_doc.endswith(ext) for ext in ['.csv', '.xlsx', '.xls']):
+                # 🔧 NEW: Multi-sheet Excel files → MULTI_DOC_COMPARISON
+                if single_doc.endswith(('.xlsx', '.xls')):
+                    chunk_count = self._get_document_chunk_count(active_docs[0])
+                    if chunk_count > 1:
+                        print(f"📊 Excel file {active_docs[0]} has {chunk_count} sheets → MULTI_DOC_COMPARISON")
+                        return WorkflowType.MULTI_DOC_COMPARISON
+                
+                # Single sheet Excel or CSV → DATA_ANALYSIS
                 return WorkflowType.DATA_ANALYSIS
             
             # PDF/DOCX/TXT files → DOCUMENT_ANALYSIS  

@@ -147,14 +147,14 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
                 error_message=validation_message
             )
         
-        # Generate file ID and create global directory (cross-session storage)
+        # Generate file ID and create processed files directory
         file_id = str(uuid.uuid4())
-        upload_dir = Path(f"./global_uploads")
-        upload_dir.mkdir(exist_ok=True)
+        processed_dir = Path(f"./processed_files")
+        processed_dir.mkdir(exist_ok=True)
         
-        # Save file with enhanced naming for cross-session access
+        # Save file with enhanced naming in processed directory
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        temp_file_path = upload_dir / f"{timestamp}_{file_id}_{file.filename}"
+        temp_file_path = processed_dir / f"{timestamp}_{file_id}_{file.filename}"
         with open(temp_file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
         
@@ -164,7 +164,7 @@ async def upload_file(session_id: str, file: UploadFile = File(...)):
         
         # Determine file type
         file_ext = Path(file.filename).suffix.lower()
-        file_type_map = {'.pdf': 'PDF', '.docx': 'DOCX', '.csv': 'CSV', '.txt': 'TXT'}
+        file_type_map = {'.pdf': 'PDF', '.docx': 'DOCX', '.csv': 'CSV', '.txt': 'TXT', '.xlsx': 'EXCEL', '.xls': 'EXCEL'}
         file_type = file_type_map.get(file_ext, 'UNKNOWN')
         
         # Process document through orchestrator's document tools
