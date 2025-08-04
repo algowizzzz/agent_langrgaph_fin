@@ -85,8 +85,8 @@ class EnhancedPlanningEngine(PlanningEngine):
         if workflow_type == WorkflowType.DOCUMENT_ANALYSIS:
             return await self._create_document_analysis_plan(context)
         
-        elif workflow_type == WorkflowType.FINANCIAL_COMPARISON:
-            return await self._create_financial_comparison_plan(context)
+        elif workflow_type == WorkflowType.MULTI_DOC_COMPARISON:
+            return await self._create_multi_doc_comparison_plan(context)
         
         elif workflow_type == WorkflowType.QA_FALLBACK_CHAIN:
             return await self._create_qa_fallback_plan(context)
@@ -94,8 +94,6 @@ class EnhancedPlanningEngine(PlanningEngine):
         elif workflow_type == WorkflowType.DATA_ANALYSIS:
             return await self._create_data_analysis_plan(context)
         
-        elif workflow_type == WorkflowType.PRODUCTIVITY_ASSISTANCE:
-            return await self._create_productivity_plan(context)
         
         elif workflow_type == WorkflowType.MEMORY_SEARCH:
             return await self._create_memory_search_plan(context)
@@ -121,11 +119,14 @@ class EnhancedPlanningEngine(PlanningEngine):
         )
         
         # Step 1: Search uploaded document
+        doc_name = context.active_documents[0] if context.active_documents else None
+        logger.info(f"🔍 DOCUMENT ANALYSIS DEBUG: active_documents={context.active_documents}, doc_name={doc_name}")
+        
         step_1 = ExecutionStep(
             step_id="search_document",
             tool_name="search_uploaded_docs",
             parameters={
-                "doc_name": context.active_documents[0],
+                "doc_name": doc_name,
                 "query": context.user_query
             },
             condition=ConditionType.ALWAYS,
@@ -159,9 +160,9 @@ class EnhancedPlanningEngine(PlanningEngine):
             }
         )
     
-    async def _create_financial_comparison_plan(self, context: PlanningContext) -> ExecutionPlan:
+    async def _create_multi_doc_comparison_plan(self, context: PlanningContext) -> ExecutionPlan:
         """Create plan for multi-document financial comparison workflow."""
-        plan_id = f"financial_comparison_{int(time.time())}"
+        plan_id = f"multi_doc_comparison_{int(time.time())}"
         steps = {}
         
         if len(context.active_documents) < 2:
@@ -171,7 +172,7 @@ class EnhancedPlanningEngine(PlanningEngine):
         
         # Generate structured prompt for financial comparison
         structured_prompt = self.agent_identity.get_structured_prompt(
-            WorkflowType.FINANCIAL_COMPARISON,
+            WorkflowType.MULTI_DOC_COMPARISON,
             documents=", ".join(context.active_documents),
             comparison_type="similarities and differences"
         )
@@ -197,7 +198,7 @@ class EnhancedPlanningEngine(PlanningEngine):
             parameters={
                 "documents": "$search_multi_docs",
                 "query": context.user_query,
-                "synthesis_type": "financial_comparison"
+                "synthesis_type": "multi_doc_comparison"
             },
             dependencies=["search_multi_docs"],
             condition=ConditionType.ON_SUCCESS,
@@ -209,8 +210,8 @@ class EnhancedPlanningEngine(PlanningEngine):
             plan_id=plan_id,
             steps=steps,
             metadata={
-                "workflow_type": WorkflowType.FINANCIAL_COMPARISON.value,
-                "strategy": "financial_comparison",
+                "workflow_type": WorkflowType.MULTI_DOC_COMPARISON.value,
+                "strategy": "multi_doc_comparison",
                 "documents": context.active_documents,
                 "chunk_size": 5000,
                 "agent_identity": "AI Finance and Risk Agent"
@@ -288,11 +289,14 @@ class EnhancedPlanningEngine(PlanningEngine):
         )
         
         # Step 1: Search uploaded CSV/table data  
+        doc_name = context.active_documents[0] if context.active_documents else "table_data"
+        logger.info(f"🔍 DATA ANALYSIS DEBUG: active_documents={context.active_documents}, doc_name={doc_name}")
+        
         step_1 = ExecutionStep(
             step_id="search_table_data",
             tool_name="search_uploaded_docs",
             parameters={
-                "doc_name": context.active_documents[0] if context.active_documents else "table_data",
+                "doc_name": doc_name,
                 "query": context.user_query
             },
             condition=ConditionType.ALWAYS,
@@ -379,8 +383,6 @@ class EnhancedPlanningEngine(PlanningEngine):
             plan_id=plan_id,
             steps=steps,
             metadata={
-                "workflow_type": WorkflowType.PRODUCTIVITY_ASSISTANCE.value,
-                "strategy": "productivity_assistance",
                 "agent_identity": "AI Finance and Risk Agent"
             }
         )

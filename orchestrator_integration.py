@@ -191,13 +191,18 @@ class OrchestratorIntegration:
         status = {
             "integration_version": "2.0",
             "orchestrator_version": "2.0",
+            "v2_enabled": True,  # ✅ NEW: Properly report V2 as enabled
             "v2_status": None
         }
         
         try:
-            status["v2_status"] = self.orchestrator_v2.get_system_status()
+            v2_status = self.orchestrator_v2.get_system_status()
+            status["v2_status"] = v2_status
+            # V2 is fully enabled if orchestrator is working and has no errors
+            status["v2_enabled"] = v2_status is not None and v2_status.get("status") == "active"
         except Exception as e:
             status["v2_status"] = {"error": str(e)}
+            status["v2_enabled"] = False  # Disable if V2 has errors
         
         return status
     

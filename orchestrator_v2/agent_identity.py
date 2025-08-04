@@ -24,10 +24,9 @@ class MemorySource(Enum):
 class WorkflowType(Enum):
     """Types of workflows the agent can execute."""
     DOCUMENT_ANALYSIS = "document_analysis"
-    FINANCIAL_COMPARISON = "financial_comparison"
+    MULTI_DOC_COMPARISON = "multi_doc_comparison"
     QA_FALLBACK_CHAIN = "qa_fallback_chain"
     DATA_ANALYSIS = "data_analysis"
-    PRODUCTIVITY_ASSISTANCE = "productivity_assistance"
     MEMORY_SEARCH = "memory_search"
 
 
@@ -91,10 +90,10 @@ class FinanceRiskAgentIdentity:
                 ]
             ),
             
-            "financial_comparison": AgentCapability(
+            "multi_doc_comparison": AgentCapability(
                 name="Multi-Document Financial Comparison",
                 description="Compare multiple financial documents using 5k word chunks and refine method",
-                workflow_type=WorkflowType.FINANCIAL_COMPARISON,
+                workflow_type=WorkflowType.MULTI_DOC_COMPARISON,
                 trigger_patterns=["compare", "differences", "similarities", "versus", "contrast"],
                 tools_required=["chunk_documents", "refine_method", "financial_analysis_prompt"],
                 examples=[
@@ -124,17 +123,6 @@ class FinanceRiskAgentIdentity:
                 ]
             ),
             
-            "productivity": AgentCapability(
-                name="Productivity Assistant",
-                description="Help with daily tasks integrated with financial and risk expertise",
-                workflow_type=WorkflowType.PRODUCTIVITY_ASSISTANCE,
-                trigger_patterns=["help me", "assist", "plan", "organize", "schedule"],
-                tools_required=["search_knowledge_base"],
-                examples=[
-                    "Help me analyze this quarterly report",
-                    "Plan my financial review process"
-                ]
-            ),
             
             "memory_search": AgentCapability(
                 name="Memory Search",
@@ -189,7 +177,7 @@ class FinanceRiskAgentIdentity:
     def _setup_prompt_templates(self):
         """Setup structured prompt templates for financial analysis."""
         self.prompt_templates = {
-            "financial_comparison": {
+            "multi_doc_comparison": {
                 "objective": "Compare {documents} for {comparison_type} as a financial analyst",
                 "persona": "You are an expert financial analyst with deep knowledge of financial markets, risk assessment, and regulatory frameworks.",
                 "output_format": """
@@ -273,7 +261,7 @@ class FinanceRiskAgentIdentity:
     
     def classify_query_workflow(self, user_query: str, active_documents: List[str] = None) -> WorkflowType:
         """
-        Classify user query to determine appropriate workflow.
+        Classify user query to determine appropriate workflow based on FILE TYPE.
         
         Args:
             user_query: The user's question or request
@@ -285,38 +273,36 @@ class FinanceRiskAgentIdentity:
         query_lower = user_query.lower()
         active_docs = active_documents or []
         
-        # Priority 1: Document Analysis (if documents exist)
+        # 🎯 DETERMINISTIC FILE-TYPE + COUNT CLASSIFICATION
         if active_docs:
-            if len(active_docs) > 1:
-                # Multi-document analysis
-                if any(pattern in query_lower for pattern in ["compare", "difference", "similar", "versus"]):
-                    return WorkflowType.FINANCIAL_COMPARISON
             
-            # Single document analysis - prioritize when documents are available
-            # Check for document-focused keywords OR any content query when docs exist
-            doc_keywords = [
-                "analyze", "what is", "what does", "what are", "explain", "summarize", 
-                "mentioned", "types", "kinds", "list", "identify", "find", "show", 
-                "tell me about", "tell me", "describe", "review", "discuss", "examine",
-                "how does", "how is", "how are", "content", "information", "details",
-                "says", "contains", "includes", "cover", "about"
-            ]
-            if any(pattern in query_lower for pattern in doc_keywords):
+            # 📊 PRIORITY 1: Multiple documents (any type) → MULTI_DOC_COMPARISON
+            if len(active_docs) > 1:
+                return WorkflowType.MULTI_DOC_COMPARISON
+            
+            # 📊 PRIORITY 2: Single document → Route by file type
+            single_doc = active_docs[0].lower()
+            
+            # CSV/Excel files → DATA_ANALYSIS
+            if any(single_doc.endswith(ext) for ext in ['.csv', '.xlsx', '.xls']):
+                return WorkflowType.DATA_ANALYSIS
+            
+            # PDF/DOCX/TXT files → DOCUMENT_ANALYSIS  
+            if any(single_doc.endswith(ext) for ext in ['.pdf', '.docx', '.txt', '.doc']):
                 return WorkflowType.DOCUMENT_ANALYSIS
+            
+            # Unknown file type → Default to DOCUMENT_ANALYSIS
+            return WorkflowType.DOCUMENT_ANALYSIS
         
-        # Priority 2: Data Analysis (CSV/Excel detection)
-        if any(pattern in query_lower for pattern in ["table", "csv", "data", "calculate", "chart", "graph"]):
-            return WorkflowType.DATA_ANALYSIS
-        
-        # Priority 3: Memory Search (user mentions memory/recall)
-        if any(pattern in query_lower for pattern in ["remember", "memory", "mentioned", "said before", "recall", "previous", "discussed"]):
+        # 🧠 NO DOCUMENTS: Check for explicit memory search patterns
+        if any(pattern in query_lower for pattern in ["remember", "memory", "mentioned", "said before", "recall", "previous", "discussed", "discuss", "mention", "what did we"]):
             return WorkflowType.MEMORY_SEARCH
         
-        # Priority 4: Productivity Assistance
-        if any(pattern in query_lower for pattern in ["help me", "assist", "plan", "organize"]):
-            return WorkflowType.PRODUCTIVITY_ASSISTANCE
+        # 📊 NO DOCUMENTS: Check for data analysis keywords (for general data questions)
+        if any(pattern in query_lower for pattern in ["table", "csv", "data analysis", "calculate", "chart", "graph", "statistics"]):
+            return WorkflowType.DATA_ANALYSIS
         
-        # Default: Q&A Fallback Chain
+        # ❓ DEFAULT: Q&A Fallback Chain (no documents, no special patterns)
         return WorkflowType.QA_FALLBACK_CHAIN
     
     def get_memory_source_for_query(self, workflow_type: WorkflowType, active_documents: List[str] = None) -> MemorySource:
@@ -348,8 +334,8 @@ class FinanceRiskAgentIdentity:
         Returns:
             Structured prompt with objective, persona, and output format
         """
-        if workflow_type == WorkflowType.FINANCIAL_COMPARISON:
-            template = self.prompt_templates["financial_comparison"]
+        if workflow_type == WorkflowType.MULTI_DOC_COMPARISON:
+            template = self.prompt_templates["multi_doc_comparison"]
         elif workflow_type == WorkflowType.DOCUMENT_ANALYSIS:
             template = self.prompt_templates["document_analysis"]
         elif workflow_type == WorkflowType.DATA_ANALYSIS:

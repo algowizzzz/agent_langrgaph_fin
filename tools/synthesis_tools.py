@@ -315,17 +315,23 @@ Response:"""
         
         logger.info(f"Successfully synthesized {synthesis_type} for query '{query}'")
         
+        # Add source indication for Q&A responses using LLM knowledge
+        final_result = synthesis_result.strip()
+        if llm_fallback_needed and synthesis_type in ["qa_response", "summary"]:
+            final_result += "\n\n*Source: LLM Built-in Knowledge (no relevant documents found in internal knowledge base)*"
+        
         return {
             "success": True,
             "synthesis_type": synthesis_type,
             "query": query,
-            "result": synthesis_result.strip(),
+            "result": final_result,
             "documents_processed": len(documents),
             "content_length": len(synthesis_result),
             "processing_details": {
                 "model_used": config.ai.anthropic_model if config_available else "unknown",
                 "prompt_length": len(prompt),
-                "documents_count": len(documents)
+                "documents_count": len(documents),
+                "source": "llm_knowledge" if llm_fallback_needed else "documents"
             }
         }
         

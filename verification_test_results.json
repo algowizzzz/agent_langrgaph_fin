@@ -1,0 +1,112 @@
+{
+  "test_timestamp": 1754327504.2889862,
+  "overall_status": "PASS",
+  "server_status": true,
+  "verification_endpoints": {
+    "status": {
+      "status_code": 200,
+      "success": true,
+      "response_size": 238,
+      "has_data": true,
+      "data_keys": [
+        "verification_active",
+        "total_function_calls",
+        "successful_calls",
+        "failed_calls",
+        "registered_functions"
+      ]
+    },
+    "integrity": {
+      "status_code": 200,
+      "success": true,
+      "response_size": 361,
+      "has_data": true,
+      "data_keys": [
+        "verification_active",
+        "total_function_calls",
+        "successful_calls",
+        "failed_calls",
+        "registered_functions"
+      ]
+    },
+    "call-history": {
+      "status_code": 200,
+      "success": true,
+      "response_size": 286,
+      "has_data": true,
+      "data_keys": [
+        "summary",
+        "recent_calls",
+        "total_records"
+      ]
+    },
+    "test/search": {
+      "status_code": 200,
+      "success": true,
+      "response_size": 113,
+      "has_data": true,
+      "data_keys": [
+        "test_status",
+        "function_called",
+        "result_count",
+        "has_error",
+        "verification_triggered"
+      ]
+    },
+    "test/comprehensive": {
+      "status_code": 200,
+      "success": true,
+      "response_size": 868,
+      "has_data": true,
+      "data_keys": [
+        "verification_test_timestamp",
+        "integrity_check",
+        "direct_search_test",
+        "orchestrator_test",
+        "overall_status"
+      ]
+    },
+    "test/csv-analysis": {
+      "status_code": 200,
+      "success": true,
+      "response_size": 2441,
+      "has_data": true,
+      "data_keys": [
+        "orchestrator_result",
+        "verification_status",
+        "test_timestamp",
+        "function_calls_during_test"
+      ]
+    },
+    "force-verification-mode": {
+      "status_code": 200,
+      "success": true,
+      "response_size": 1049,
+      "has_data": true,
+      "data_keys": [
+        "status",
+        "verified_orchestrator_active",
+        "integrity_check",
+        "message"
+      ]
+    }
+  },
+  "main_chat_test": {
+    "status_code": 200,
+    "success": true,
+    "has_response": false,
+    "response_length": 0,
+    "contains_data": false,
+    "contains_error": false,
+    "processing_time": 12790
+  },
+  "comparison": {
+    "both_successful": true,
+    "verification_advantage": false,
+    "main_chat_advantage": false,
+    "both_failed": false,
+    "data_consistency": false,
+    "error_consistency": false,
+    "recommendation": "main_chat_ok"
+  }
+}

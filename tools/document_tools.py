@@ -215,6 +215,8 @@ document_processor = DocumentProcessor()
 document_chunk_store = PersistentDocumentStore()
 logger = logging.getLogger(__name__)
 
+print(f"🔧 MODULE LOADED: document_tools.py at {__file__}")  # Module load detection
+
 # --- Tool Implementations ---
 async def upload_document(file_path: str, session_id: str = "unknown", additional_metadata: dict = None, original_filename: str = None) -> dict:
     """Upload document with enhanced metadata tracking."""
@@ -320,7 +322,11 @@ async def search_multiple_docs(doc_names: List[str], query: str = None, filter_b
 
 async def search_uploaded_docs(doc_name: str, query: str = None, filter_by_metadata: dict = None, **kwargs) -> list:
     """Search single document (backward compatibility)."""
-    if doc_name not in document_chunk_store: return [{"error": f"Doc '{doc_name}' not found."}]
+    print(f"🔍 FUNCTION CALLED: search_uploaded_docs with doc_name='{doc_name}'")
+    print(f"🔍 SEARCH DEBUG: doc_name='{doc_name}', in_store={doc_name in document_chunk_store}, store_keys={len(list(document_chunk_store.keys()))}")
+    if doc_name not in document_chunk_store: 
+        print(f"❌ SEARCH DEBUG: Document '{doc_name}' NOT FOUND in store")
+        return [{"error": f"V2_FIXED_VERSION: Doc '{doc_name}' not found."}]
     
     # Start with all chunks for the document
     filtered_chunks = document_chunk_store[doc_name]

@@ -480,12 +480,15 @@ class OrchestratorV2:
                 "metadata": {"step_count": len(execution_plan.steps)}
             }
             
-            # Execute with streaming progress
+            # Execute with streaming progress using asyncio.Queue
+            progress_queue = asyncio.Queue()
+            
             async def progress_callback(result):
+                """Non-generator progress callback that puts events into queue"""
                 confidence = result.confidence_score
                 
                 if result.status == ExecutionStatus.COMPLETED:
-                    yield {
+                    event = {
                         "type": "tool_execution",
                         "step": result.step_id,
                         "message": f"✅ {result.step_id} completed",
@@ -497,7 +500,7 @@ class OrchestratorV2:
                         }
                     }
                 else:
-                    yield {
+                    event = {
                         "type": "tool_execution", 
                         "step": result.step_id,
                         "message": f"❌ {result.step_id} failed: {result.error}",
@@ -505,6 +508,8 @@ class OrchestratorV2:
                         "timestamp": time.time(),
                         "metadata": {"error": result.error}
                     }
+                
+                await progress_queue.put(event)
             
             yield {
                 "type": "reasoning_step",
@@ -514,15 +519,42 @@ class OrchestratorV2:
                 "timestamp": time.time()
             }
             
-            execution_results = await self.execution_engine.execute_plan(
-                plan=execution_plan,
-                context={
-                    "session_id": session_id,
-                    "active_documents": active_documents or [],
-                    "user_query": user_query
-                },
-                progress_callback=progress_callback
+            # Start execution as a background task
+            execution_task = asyncio.create_task(
+                self.execution_engine.execute_plan(
+                    plan=execution_plan,
+                    context={
+                        "session_id": session_id,
+                        "active_documents": active_documents or [],
+                        "user_query": user_query
+                    },
+                    progress_callback=progress_callback
+                )
             )
+            
+            # Process events from queue while execution runs
+            execution_results = None
+            while not execution_task.done():
+                try:
+                    # Wait for either an event or execution completion
+                    event = await asyncio.wait_for(progress_queue.get(), timeout=0.1)
+                    yield event
+                    progress_queue.task_done()
+                except asyncio.TimeoutError:
+                    # No event available, continue checking if execution is done
+                    continue
+            
+            # Get the final execution results
+            execution_results = await execution_task
+            
+            # Process any remaining events in queue
+            while not progress_queue.empty():
+                try:
+                    event = progress_queue.get_nowait()
+                    yield event
+                    progress_queue.task_done()
+                except asyncio.QueueEmpty:
+                    break
             
             # Synthesis phase
             yield {

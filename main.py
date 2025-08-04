@@ -17,6 +17,7 @@ from models import (
     FrontendChatRequest, FrontendChatResponse, FrontendUploadResponse
 )
 from tools.document_tools import get_all_documents, remove_document, upload_document
+from verification_endpoints import include_verification_endpoints
 
 # Set up logging
 logging.basicConfig(
@@ -26,6 +27,9 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="BMO Documentation Analysis Tool")
+
+# Include verification endpoints
+include_verification_endpoints(app)
 
 # CORS middleware
 app.add_middleware(

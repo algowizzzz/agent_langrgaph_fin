@@ -357,6 +357,11 @@ class ExecutionEngine:
             # Resolve parameters
             resolved_params = self._resolve_parameters(step.parameters)
             
+            # Debug logging for document search issues
+            if step.tool_name == "search_uploaded_docs":
+                logger.info(f"🔍 EXECUTION DEBUG: tool={step.tool_name}, resolved_params={resolved_params}")
+                print(f"🔍 EXECUTION PRINT: About to call {step.tool_name} with params {resolved_params}")
+            
             # Validate parameters
             is_valid, errors = tool_meta.validate_inputs(resolved_params)
             if not is_valid:
