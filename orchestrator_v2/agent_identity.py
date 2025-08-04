@@ -294,7 +294,13 @@ class FinanceRiskAgentIdentity:
             
             # Single document analysis - prioritize when documents are available
             # Check for document-focused keywords OR any content query when docs exist
-            doc_keywords = ["analyze", "what is", "explain", "summarize", "mentioned", "types", "kinds", "list", "identify", "find", "show", "tell me about"]
+            doc_keywords = [
+                "analyze", "what is", "what does", "what are", "explain", "summarize", 
+                "mentioned", "types", "kinds", "list", "identify", "find", "show", 
+                "tell me about", "tell me", "describe", "review", "discuss", "examine",
+                "how does", "how is", "how are", "content", "information", "details",
+                "says", "contains", "includes", "cover", "about"
+            ]
             if any(pattern in query_lower for pattern in doc_keywords):
                 return WorkflowType.DOCUMENT_ANALYSIS
         

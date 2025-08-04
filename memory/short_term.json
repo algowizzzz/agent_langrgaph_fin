@@ -47,7 +47,13 @@
       "content": "[{'page_content': '# CSV Data: 20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv\\n\\nEmployee ID          Name  Department  Salary Start Date Performance Rating\\n       E001    John Smith Engineering   85000 2022-01-15          Excellent\\n       E002 Sarah Johnson   Marketing   72000 2021-03-10               Good\\n       E003 Michael Brown Engineering   95000 2020-07-22          Excellent\\n       E004   Emily Davis          HR   68000 2023-02-01               Good\\n       E005  David Wilson     Finance   78000 2021-11-05       Satisfactory\\n       E006 Lisa Anderson Engineering   88000 2022-06-30          Excellent\\n       E007  James Taylor   Marketing   69000 2023-01-20               Good\\n       E008  Jennifer Lee     Finance   82000 2020-12-10          Excellent\\n       E009 Robert Garcia          HR   65000 2022-09-15               Good\\n       E010 Mary Martinez Engineering   92000 2021-05-18          Excellent', 'metadata': {'source': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'file_type': 'CSV', 'file_name': '20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'chunk_index': 0, 'uploaded_by_session': '12345', 'upload_timestamp': '2025-08-03T15:05:17.421888', 'file_size': 589, 'original_path': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'display_name': 'test_document.csv'}}]",
       "timestamp": "2025-08-03T15:19:06.334557",
       "session_id": "12345"
+    },
+    {
+      "role": "user",
+      "content": "How many previous messages are included in context?",
+      "timestamp": "2025-08-03T22:12:04.239552",
+      "session_id": "test_session"
     }
   ],
-  "count": 8
+  "count": 9
 }

@@ -29,7 +29,8 @@ from .planning_engine import PlanningContext, PlanningStrategy, QueryType
 # Import existing tools to register them
 from tools.document_tools import (
     upload_document, discover_document_structure, 
-    search_uploaded_docs, search_multiple_docs
+    search_uploaded_docs, search_multiple_docs,
+    get_all_documents, remove_document
 )
 from tools.synthesis_tools import synthesize_content
 from tools.search_tools import search_knowledge_base, search_conversation_history
@@ -132,6 +133,24 @@ class OrchestratorV2:
             category="search",
             reliability=ToolReliability.HIGH,
             estimated_duration=2.0
+        )
+        
+        self.tool_registry.register_function(
+            name="get_all_documents",
+            func=get_all_documents,
+            description="Get list of all uploaded documents across sessions",
+            category="document",
+            reliability=ToolReliability.HIGH,
+            estimated_duration=0.5
+        )
+        
+        self.tool_registry.register_function(
+            name="remove_document",
+            func=remove_document,
+            description="Remove a specific document from storage",
+            category="document",
+            reliability=ToolReliability.HIGH,
+            estimated_duration=0.5
         )
         
         # Synthesis tools
