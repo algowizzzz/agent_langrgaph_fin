@@ -23,7 +23,8 @@ from langchain_anthropic import ChatAnthropic
 from .tool_registry import ToolRegistry, ToolReliability, register_tool
 from .execution_engine import ExecutionEngine, ExecutionStatus
 from .state_management import StateManager, StateScope, ExecutionContext
-from .planning_engine import PlanningEngine, PlanningContext, PlanningStrategy, QueryType
+from .planning_engine_enhanced import EnhancedPlanningEngine
+from .planning_engine import PlanningContext, PlanningStrategy, QueryType
 
 # Import existing tools to register them
 from tools.document_tools import (
@@ -81,7 +82,7 @@ class OrchestratorV2:
             self.llm = None
         
         # Initialize engines
-        self.planning_engine = PlanningEngine(self.tool_registry, self.state_manager, self.llm)
+        self.planning_engine = EnhancedPlanningEngine(self.tool_registry, self.state_manager, self.llm)
         self.execution_engine = ExecutionEngine(self.tool_registry, self.config.max_parallel_steps)
         
         # Rate limiting
@@ -568,15 +569,49 @@ class OrchestratorV2:
         if not successful_outputs:
             return "I was unable to process your query successfully. Please try rephrasing or check the available documents."
         
-        # If we only have one successful output, use it directly
+        # Always synthesize responses for better user experience
+        # Even single outputs should be processed for readability
         if len(successful_outputs) == 1:
             output = successful_outputs[0]["output"]
-            if isinstance(output, str):
+            tool_name = successful_outputs[0]["tool_name"]
+            
+            # If it's already a synthesized response (string), return it
+            if isinstance(output, str) and len(output) > 50 and not output.startswith('[{'):
                 return output
+            # If it's a synthesis result dict, extract the result
             elif isinstance(output, dict) and "result" in output:
                 return str(output["result"])
+            # If it's raw document chunks or other structured data, synthesize it
             else:
-                return str(output)
+                # Create synthesis prompt for single output
+                try:
+                    synthesis_prompt = f"""
+User Query: "{user_query}"
+
+I have gathered the following information using {tool_name}:
+
+{str(output)[:2000]}
+
+Please create a comprehensive, well-structured response that directly answers the user's query using this information.
+
+Requirements:
+- Start with a direct answer to their question
+- Include the most relevant details from the information
+- Be concise but thorough  
+- Use a professional, helpful tone
+- Structure the response logically
+- If the information contains raw document chunks, synthesize them into readable prose
+
+Final Response:"""
+                    
+                    async with self.api_semaphore:
+                        response = await self.llm.ainvoke(synthesis_prompt)
+                        return response.content if hasattr(response, 'content') else str(response)
+                        
+                except Exception as e:
+                    logger.error(f"Failed to synthesize single output: {e}")
+                    # Fallback to raw output as string
+                    return str(output)
         
         # For multiple outputs, synthesize intelligently
         try:
@@ -672,3 +707,44 @@ Final Response:"""
     def get_execution_trace(self, execution_id: str) -> Optional[List[Dict[str, Any]]]:
         """Get detailed execution trace for debugging."""
         return self.state_manager.get_execution_trace(execution_id)
+    
+    def get_agent_info(self) -> Dict[str, Any]:
+        """
+        Get AI Finance and Risk Agent identity and capabilities information.
+        
+        Returns:
+            Dict containing agent name, version, specialization, and capabilities
+        """
+        return self.planning_engine.get_agent_info()
+    
+    def get_workflow_capabilities(self) -> List[str]:
+        """
+        Get list of available workflow capabilities.
+        
+        Returns:
+            List of workflow capability names
+        """
+        return self.planning_engine.get_workflow_capabilities()
+    
+    def describe_agent(self) -> str:
+        """
+        Get a human-readable description of the agent's capabilities.
+        
+        Returns:
+            Formatted string describing the agent
+        """
+        info = self.get_agent_info()
+        capabilities = ", ".join(info.get("core_capabilities", []))
+        
+        return f"""
+🤖 {info.get('name', 'AI Agent')} v{info.get('version', '1.0')}
+
+🎯 Specialization: {info.get('specialization', 'General AI Assistant')}
+
+🔧 Core Capabilities:
+{capabilities}
+
+💾 Memory Sources: {', '.join(info.get('memory_sources', []))}
+
+🔄 Workflow Types: {', '.join(info.get('workflow_types', []))}
+"""

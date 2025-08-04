@@ -171,6 +171,12 @@ class ConditionParser:
                 r'user_interaction_required', # User interaction
                 r'no_active_documents',     # No documents
                 r'if_no_active_documents',  # Conditional no documents
+                r'on_success',              # Standard success condition
+                r'on_failure',              # Standard failure condition
+                r'if_success',              # Alternative success condition
+                r'if_failure',              # Alternative failure condition
+                r'when_success',            # Another success condition
+                r'when_failure',            # Another failure condition
             ]
             
             # Check if expression matches known patterns
@@ -282,7 +288,10 @@ class PlanningEngine:
                 logger.error("No JSON found in LLM response")
                 return None
             
-            plan_data = json.loads(json_match.group(1))
+            # Clean up common JSON malformations before parsing
+            json_text = json_match.group(1)
+            json_text = self._clean_malformed_json(json_text)
+            plan_data = json.loads(json_text)
             
             # Validate plan structure
             if 'steps' not in plan_data:
@@ -312,6 +321,32 @@ class PlanningEngine:
         except Exception as e:
             logger.error(f"Error parsing LLM response: {e}")
             return None
+    
+    def _clean_malformed_json(self, json_text: str) -> str:
+        """
+        Clean up common malformations in LLM-generated JSON.
+        
+        Fixes issues like:
+        - Step references with extra braces: "{step_1" -> "step_1"
+        - Malformed dependency arrays
+        """
+        # Fix malformed step references in dependencies
+        # Pattern: "dependencies": ["{step_1", "step_2"] -> "dependencies": ["step_1", "step_2"]
+        json_text = re.sub(r'"\{(\w+)"', r'"\1"', json_text)
+        
+        # Fix incomplete step references (missing closing quote)
+        # Pattern: "{step_1 -> "step_1"
+        json_text = re.sub(r'"\{(\w+)([^"]*)', r'"\1\2', json_text)
+        
+        # Fix step references with extra characters
+        # Pattern: "{step_1' -> "step_1"
+        json_text = re.sub(r'"\{([^"]+)[\'"}]', r'"\1"', json_text)
+        
+        # Clean up any remaining malformed references
+        # Pattern: "{anything -> "anything
+        json_text = re.sub(r'"\{([^"]+)', r'"\1', json_text)
+        
+        return json_text
     
     async def _create_step_from_data(self, step_data: Dict, context: PlanningContext) -> Optional[ExecutionStep]:
         """
@@ -503,7 +538,7 @@ class PlanningEngine:
             step_id="synthesize",
             tool_name="synthesize_content",
             parameters={
-                "documents": "$search_docs.output",
+                "documents": "$search_docs",
                 "query": context.user_query
             },
             dependencies=["search_docs", "search_history"],

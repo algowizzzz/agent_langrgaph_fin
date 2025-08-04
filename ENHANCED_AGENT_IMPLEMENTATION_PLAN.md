@@ -32,13 +32,18 @@ Transform the current basic orchestrator into a sophisticated **AI Finance and R
    - **Document Analysis** (Priority 1 - if active_documents (uploaded docs) exist)
      - Single doc: Direct search and synthesis
      - Multi-doc: 5k word chunks → refine method for comparison analysis
+
    - **Q&A Workflow** (Priority 2 - comprehensive fallback chain)
-     - Step 1: Search uploaded docs (if any)
-     - Step 2: Knowledge base internal memory (embeddings)
+     - Step 1: Knowledge base internal memory (embeddings)
+     - Step 2: LLM knowledge base (if knowledge base says "idk")
      - Step 3: long-term conversation memory
-     - Step 4: LLM knowledge base (if knowledge base says "idk")
+
    - **Data Analysis** (Priority 3 - CSV/Excel detection or if table extracted from other file types), 
      - Table summary → Python calculations → Visualizations
+
+   - **Search memory** (Priority 4 - user mentions memory in prompt, check last few prompts, rolling sort term memory window and long term saved memory with direct search), 
+    
+
 
 4. **Enhance planning prompt with structured instructions and financial expertise**
    - Add few-shot examples for financial analysis workflows
@@ -47,13 +52,13 @@ Transform the current basic orchestrator into a sophisticated **AI Finance and R
    - Create productivity task guidance for daily workflow assistance
 
 #### **Phase 3: Main Workflows Implementation**
-5. **Implement document analysis workflow with intelligent processing**
+5. **Implement document analysis workflow with intelligent processing** context window drigen that is size of uplaoded documents, if les then 100k one single llm will suffice. if more chunk by 10k per chunk. the chunking and identification of small vs large done at type of uplaod doc. here simple vs multi llm call decided based on chosen chunking type. 
    - **Single Document:** Direct search and synthesis from uploaded content
-   - **Multi-Document (2+ docs):** 5k word chunks → refine method for deep analysis
+   - **Multi-Document (2+ docs):** 10k word chunks → refine method for deep analysis
    - **Financial Analysis Example:** "Compare similarities and differences as financial analyst"
      - Creates specific instruction prompt with objective, persona, output format structure, etc based on user query
      - Passes all chunks through refine method for comprehensive comparison
-   - **Chunking Strategy:** 5k words per chunk for optimal processing
+   - **Chunking Strategy:** 10k words per chunk for optimal processing
 
 6. **Implement Q&A workflow with comprehensive memory system**
    - **Example Query:** "What is risk?"

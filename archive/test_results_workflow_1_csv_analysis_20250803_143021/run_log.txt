@@ -1,0 +1,31 @@
+🚀 STARTING WORKFLOW: 📝 Conversational CSV Analysis 🚀
+======================================================================
+📄 Created temporary CSV at: ./test_documents/sample_data.csv
+  📤 Uploading 1 document(s)...
+    ✅ Uploaded: sample_data.csv
+
+  ❓ Query 1.1: Initial data summary
+  ⏳ Processing...
+    ✅ Status: SUCCESS (v?, conf: 0.00)
+    📝 Response: I'll help you understand the employee salary data from your CSV file.
+
+The dataset contains salary a...
+
+  ❓ Query 1.2: Follow-up calculation
+  ⏳ Processing...
+    ✅ Status: SUCCESS (v?, conf: 0.00)
+    📝 Response: I apologize, but I am unable to calculate the average salary by department as I don't have access to...
+
+  ❓ Query 1.3: Follow-up visualization
+  ⏳ Processing...
+    ✅ Status: SUCCESS (v?, conf: 0.00)
+    📝 Response: I apologize, but I am unable to create the requested bar chart showing average salaries by departmen...
+
+  ❓ Query 1.4: Follow-up insights
+  ⏳ Processing...
+    ✅ Status: SUCCESS (v2.0, conf: 0.95)
+    📝 Response: [{'page_content': '# CSV Data: sample_data.csv\n\n employee_id          name department  salary  exp...
+
+💾 All responses saved to: test_results_workflow_1_csv_analysis_20250803_143021/responses.json
+
+🎉 WORKFLOW EXECUTION COMPLETE 🎉

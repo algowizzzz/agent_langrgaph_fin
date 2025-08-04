@@ -1,0 +1,4 @@
+{
+    "status": "error",
+    "error": "'NoneType' object is not subscriptable"
+}

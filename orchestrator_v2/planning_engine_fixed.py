@@ -171,6 +171,12 @@ class ConditionParser:
                 r'user_interaction_required', # User interaction
                 r'no_active_documents',     # No documents
                 r'if_no_active_documents',  # Conditional no documents
+                r'on_success',              # Standard success condition
+                r'on_failure',              # Standard failure condition
+                r'if_success',              # Alternative success condition
+                r'if_failure',              # Alternative failure condition
+                r'when_success',            # Another success condition
+                r'when_failure',            # Another failure condition
             ]
             
             # Check if expression matches known patterns

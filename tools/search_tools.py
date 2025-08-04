@@ -57,12 +57,13 @@ async def search_knowledge_base(query: str) -> List[Dict]:
         )]
     
     # If we have files, we would implement actual search here
-    logger.info(f"Found {len(kb_files)} files in knowledge base")
+    # For now, return a placeholder that indicates LLM knowledge should be used
+    logger.info(f"Found {len(kb_files)} files in knowledge base, falling back to LLM knowledge")
     return [SearchError.create_error(
-        error_type="search_not_implemented",
-        message=f"Knowledge base search not yet implemented. Found {len(kb_files)} files available for search.",
-        suggested_action="implement_knowledge_base_search_or_use_document_search",
-        retryable=False
+        error_type="use_llm_knowledge",
+        message=f"Use LLM built-in knowledge to answer the query: {query}",
+        suggested_action="synthesize_answer_from_llm_knowledge",
+        retryable=True
     )]
 
 async def search_conversation_history(query: str) -> List[Dict]:

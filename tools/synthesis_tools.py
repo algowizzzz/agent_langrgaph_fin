@@ -118,21 +118,109 @@ async def synthesize_content(documents: List[Dict], query: str, synthesis_type: 
     try:
         # Process documents and extract content
         content_pieces = []
+        llm_fallback_needed = False
+        
+        # Group chunks by source document for better multi-document handling
+        source_groups = {}
+        
         for i, doc in enumerate(documents):
             # Handle different document formats
             if isinstance(doc, dict):
+                # Check if this is an error response that suggests using LLM knowledge
+                if doc.get('error_type') == 'use_llm_knowledge':
+                    llm_fallback_needed = True
+                    continue
+                
+                # Get source document name for grouping
+                source_doc = doc.get('source_document', f'Document_{i+1}')
+                if source_doc not in source_groups:
+                    source_groups[source_doc] = []
+                
+                # Extract content
                 if 'content' in doc:
-                    content_pieces.append(f"Document {i+1}: {doc['content']}")
+                    content = doc['content']
                 elif 'page_content' in doc:
-                    content_pieces.append(f"Document {i+1}: {doc['page_content']}")
+                    content = doc['page_content']
                 elif 'text' in doc:
-                    content_pieces.append(f"Document {i+1}: {doc['text']}")
+                    content = doc['text']
                 else:
-                    # Try to extract any text content
-                    text_content = str(doc)
-                    content_pieces.append(f"Document {i+1}: {text_content}")
+                    content = str(doc)
+                
+                source_groups[source_doc].append(content)
             else:
-                content_pieces.append(f"Document {i+1}: {str(doc)}")
+                # Handle non-dict documents
+                source_doc = f'Document_{i+1}'
+                if source_doc not in source_groups:
+                    source_groups[source_doc] = []
+                source_groups[source_doc].append(str(doc))
+        
+        # Format content with clear source document identification
+        for source_name, chunks in source_groups.items():
+            # Create a readable source name
+            if 'car24_chpt1' in source_name.lower():
+                display_name = "CAR Guidelines Chapter 1"
+            elif 'car24_chpt7' in source_name.lower():
+                display_name = "CAR Guidelines Chapter 7"
+            elif 'riskandfinace' in source_name.lower():
+                display_name = "Risk and Finance Guide"
+            else:
+                # Use a shortened version of the filename
+                display_name = source_name.split('_')[-1] if '_' in source_name else source_name
+            
+            # Combine all chunks from this source
+            combined_content = "\n\n".join(chunks)
+            content_pieces.append(f"=== {display_name} ===\n{combined_content}")
+        
+        # If we have multiple sources, add a clear header for comparison
+        if len(source_groups) > 1:
+            comparison_header = f"\n\nYou are comparing {len(source_groups)} separate documents:\n"
+            for i, source_name in enumerate(source_groups.keys(), 1):
+                if 'car24_chpt1' in source_name.lower():
+                    comparison_header += f"{i}. CAR Guidelines Chapter 1\n"
+                elif 'car24_chpt7' in source_name.lower():
+                    comparison_header += f"{i}. CAR Guidelines Chapter 7\n"
+                else:
+                    short_name = source_name.split('_')[-1] if '_' in source_name else source_name
+                    comparison_header += f"{i}. {short_name}\n"
+            content_pieces.insert(0, comparison_header)
+        
+        # Handle LLM fallback for knowledge base queries
+        if not content_pieces and llm_fallback_needed:
+            logger.info(f"No documents found, using LLM knowledge for query: {query}")
+            
+            # Create a prompt that uses LLM's built-in knowledge
+            llm_prompt = f"""Please answer this query using your built-in knowledge:
+
+Query: {query}
+
+Please provide a comprehensive, professional response that:
+1. Directly answers the question
+2. Includes relevant details and context
+3. Uses a helpful, informative tone
+4. Is structured clearly and logically
+
+If this is about finance, risk, or business topics, provide expert-level insights appropriate for a professional context.
+
+Response:"""
+            
+            try:
+                response = await llm_with_retry(llm_prompt)
+                return {
+                    "success": True,
+                    "synthesis_type": synthesis_type,
+                    "query": query,
+                    "result": response,
+                    "source": "llm_knowledge_base",
+                    "confidence": 0.85  # High confidence for LLM built-in knowledge
+                }
+            except Exception as e:
+                logger.error(f"LLM fallback failed: {e}")
+                return SynthesisError.create_error(
+                    error_type="llm_synthesis_failed",
+                    message=f"Failed to generate response using LLM knowledge: {str(e)}",
+                    suggested_action="check_llm_configuration_and_connectivity",
+                    retryable=True
+                )
         
         if not content_pieces:
             return SynthesisError.create_error(
