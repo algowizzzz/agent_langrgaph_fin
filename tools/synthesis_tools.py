@@ -415,6 +415,25 @@ Please provide:
 
 Comparison:"""
         
+        elif synthesis_type == "system_awareness":
+            # Special handling for system awareness queries to list actual tools
+            prompt = f"""The user is asking about system capabilities. Please provide a detailed response using the provided system information.
+
+Query: {query}
+
+System Information:
+{chr(10).join(content_pieces)}
+
+Requirements:
+- If the query asks about "tools", list ALL individual tool names with descriptions
+- If there's an "available_tools" section with "all_tools", enumerate each tool specifically
+- Include the total number of tools available
+- Be specific and comprehensive, not just categorical
+- Use the exact tool names and descriptions from the data
+- If there are 23 tools, list all 23 tools individually
+
+Response:"""
+        
         else:
             prompt = f"""Please synthesize the following documents to address the query.
 

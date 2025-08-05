@@ -17,7 +17,7 @@ from models import (
     FrontendChatRequest, FrontendChatResponse, FrontendUploadResponse
 )
 from tools.document_tools import get_all_documents, remove_document, upload_document
-from verification_endpoints import include_verification_endpoints
+# Verification endpoints removed - archived for production stability
 
 # Set up logging
 logging.basicConfig(
@@ -28,8 +28,7 @@ logger = logging.getLogger(__name__)
 
 app = FastAPI(title="BMO Documentation Analysis Tool")
 
-# Include verification endpoints
-include_verification_endpoints(app)
+# Verification endpoints removed for production stability
 
 # CORS middleware
 app.add_middleware(
@@ -274,7 +273,8 @@ async def chat(request: FrontendChatRequest):
         )
         
         # Determine active documents (support both single and multiple)
-        active_docs = []
+        # Use None to trigger smart auto-discovery when no documents specified
+        active_docs = None
         if request.active_documents:
             active_docs = request.active_documents
         elif request.active_document:

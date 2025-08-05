@@ -272,6 +272,10 @@ class PersistentDocumentStore:
     def clear(self):
         """Clear all documents."""
         self._save({})
+    
+    def items(self):
+        """Get all document name/chunks pairs."""
+        return self._load().items()
 
 document_processor = DocumentProcessor()
 document_chunk_store = PersistentDocumentStore()
@@ -410,12 +414,34 @@ async def search_multiple_docs(doc_names: List[str], query: str = None, filter_b
     return all_chunks
 
 async def search_uploaded_docs(doc_name: str, query: str = None, filter_by_metadata: dict = None, **kwargs) -> list:
-    """Search single document (backward compatibility)."""
+    """Search single document with improved error handling and cache coherency."""
     print(f"🔍 FUNCTION CALLED: search_uploaded_docs with doc_name='{doc_name}'")
-    print(f"🔍 SEARCH DEBUG: doc_name='{doc_name}', in_store={doc_name in document_chunk_store}, store_keys={len(list(document_chunk_store.keys()))}")
-    if doc_name not in document_chunk_store: 
+    
+    # Force cache refresh to ensure consistency
+    document_chunk_store._cache = None
+    
+    # Check if document exists with detailed debugging
+    doc_exists = doc_name in document_chunk_store
+    store_size = len(list(document_chunk_store.keys()))
+    
+    print(f"🔍 SEARCH DEBUG: doc_name='{doc_name}', in_store={doc_exists}, store_keys={store_size}")
+    
+    if not doc_exists:
         print(f"❌ SEARCH DEBUG: Document '{doc_name}' NOT FOUND in store")
-        return [{"error": f"V2_FIXED_VERSION: Doc '{doc_name}' not found."}]
+        print(f"📋 Available documents: {list(document_chunk_store.keys())[:3]}...")
+        
+        # Check for similar names (fuzzy matching)
+        available_docs = list(document_chunk_store.keys())
+        similar_docs = [d for d in available_docs if doc_name.split('_')[-1].replace('.pdf', '') in d]
+        
+        if similar_docs:
+            print(f"🔍 SUGGESTION: Found similar documents: {similar_docs[:2]}")
+            return [{"error": f"Document '{doc_name}' not found. Similar documents available: {similar_docs[:2]}"}]
+        else:
+            return [{"error": f"Document '{doc_name}' not found. {store_size} documents available in store."}]
+    
+    # Successfully found document
+    print(f"✅ SEARCH SUCCESS: Document found with {len(document_chunk_store[doc_name])} chunks")
     
     # Start with all chunks for the document
     filtered_chunks = document_chunk_store[doc_name]
@@ -424,11 +450,15 @@ async def search_uploaded_docs(doc_name: str, query: str = None, filter_by_metad
     if filter_by_metadata:
         key, value = list(filter_by_metadata.items())[0]
         filtered_chunks = [c for c in filtered_chunks if value == c.get("metadata", {}).get(key)]
+        print(f"🔍 METADATA FILTER: {len(filtered_chunks)} chunks after metadata filter")
         
     # Apply keyword query filter with proper boolean logic
     if query:
+        original_count = len(filtered_chunks)
         filtered_chunks = _apply_search_query(filtered_chunks, query)
+        print(f"🔍 QUERY FILTER: {len(filtered_chunks)} chunks after query filter (was {original_count})")
         
+    print(f"🔍 FINAL RESULT: Returning {len(filtered_chunks)} chunks")
     return filtered_chunks
 
 # Cross-session document management

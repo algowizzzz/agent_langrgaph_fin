@@ -362,6 +362,11 @@ class ExecutionEngine:
                 logger.info(f"🔍 EXECUTION DEBUG: tool={step.tool_name}, resolved_params={resolved_params}")
                 print(f"🔍 EXECUTION PRINT: About to call {step.tool_name} with params {resolved_params}")
             
+            # Debug logging for synthesis issues
+            if step.tool_name == "synthesize_content":
+                print(f"🔧 SYNTHESIS DEBUG: resolved_params={resolved_params}")
+                print(f"🔧 SYNTHESIS DEBUG: available step_outputs={list(self.step_outputs.keys())}")
+            
             # Validate parameters
             is_valid, errors = tool_meta.validate_inputs(resolved_params)
             if not is_valid:
@@ -401,6 +406,12 @@ class ExecutionEngine:
                 result = await self._call_tool(tool_meta.function, resolved_params)
             
             execution_time = time.time() - start_time
+            
+            # Debug step output storage
+            if step.tool_name in ["search_uploaded_docs", "synthesize_content"]:
+                print(f"🔧 STEP OUTPUT DEBUG: {step.step_id} -> {type(result)} with {len(result) if isinstance(result, list) else 'non-list'} items")
+                if isinstance(result, list) and len(result) > 0:
+                    print(f"🔧 FIRST ITEM: {type(result[0])} - {list(result[0].keys()) if isinstance(result[0], dict) else 'non-dict'}")
             
             return ExecutionResult(
                 step_id=step.step_id,
@@ -448,37 +459,47 @@ class ExecutionEngine:
         resolved = {}
         
         for key, value in parameters.items():
-            if isinstance(value, str) and value.startswith("$"):
-                # Reference to previous step output
-                ref = value[1:]  # Remove $ prefix
-                if "." in ref:
-                    step_id, field = ref.split(".", 1)
-                    if step_id in self.step_outputs:
-                        step_output = self.step_outputs[step_id]
-                        if isinstance(step_output, list) and len(step_output) > 0:
-                            # If the output is a list, assume we're accessing the first element
-                            resolved[key] = self._get_nested_value(step_output[0], field)
-                        else:
-                            resolved[key] = self._get_nested_value(step_output, field)
-                    else:
-                        raise ValueError(f"Referenced step '{step_id}' not found")
-                else:
-                    # Direct step output reference
-                    if ref in self.step_outputs:
-                        resolved[key] = self.step_outputs[ref]
-                    else:
-                        raise ValueError(f"Referenced step '{ref}' not found")
-            elif isinstance(value, str) and value.startswith("@"):
-                # Context variable reference
-                context_key = value[1:]
-                if context_key in self.execution_context:
-                    resolved[key] = self.execution_context[context_key]
-                else:
-                    raise ValueError(f"Context variable '{context_key}' not found")
-            else:
-                resolved[key] = value
+            resolved[key] = self._resolve_value(value)
         
         return resolved
+    
+    def _resolve_value(self, value: Any) -> Any:
+        """Recursively resolve a value that might contain references."""
+        if isinstance(value, str) and value.startswith("$"):
+            # Reference to previous step output
+            ref = value[1:]  # Remove $ prefix
+            if "." in ref:
+                step_id, field = ref.split(".", 1)
+                if step_id in self.step_outputs:
+                    step_output = self.step_outputs[step_id]
+                    if isinstance(step_output, list) and len(step_output) > 0:
+                        # If the output is a list, assume we're accessing the first element
+                        return self._get_nested_value(step_output[0], field)
+                    else:
+                        return self._get_nested_value(step_output, field)
+                else:
+                    raise ValueError(f"Referenced step '{step_id}' not found")
+            else:
+                # Direct step output reference
+                if ref in self.step_outputs:
+                    return self.step_outputs[ref]
+                else:
+                    raise ValueError(f"Referenced step '{ref}' not found")
+        elif isinstance(value, str) and value.startswith("@"):
+            # Context variable reference
+            context_key = value[1:]
+            if context_key in self.execution_context:
+                return self.execution_context[context_key]
+            else:
+                raise ValueError(f"Context variable '{context_key}' not found")
+        elif isinstance(value, list):
+            # Recursively resolve list elements
+            return [self._resolve_value(item) for item in value]
+        elif isinstance(value, dict):
+            # Recursively resolve dictionary values
+            return {k: self._resolve_value(v) for k, v in value.items()}
+        else:
+            return value
     
     def _get_nested_value(self, obj: Any, field_path: str) -> Any:
         """Get nested value from object using dot notation."""

@@ -1,0 +1,85 @@
+{
+  "id": "conv_2899410b",
+  "messages": [
+    {
+      "role": "assistant",
+      "content": "I have access to a comprehensive set of tools that enable me to assist with financial analysis, risk assessment, and document processing. Here are the key tools organized by category:\n\nDocument Management:\n- Upload, process, and store documents (PDF, DOCX, TXT, CSV, Excel)\n- Search and analyze uploaded documents\n- Compare multiple documents simultaneously\n- Remove documents from storage\n- Discover document structure and metadata\n\nAnalysis Capabilities:\n- Document analysis and synthesis\n- Multi-document financial comparison\n- Progressive data analysis\n- Content synthesis and summarization\n- Knowledge base search and integration\n\nCore System Functions:\n- Q&A with comprehensive fallback chain\n- Memory search across multiple sources\n- System self-awareness and capability reporting\n- Workflow management and execution\n\nMemory and Data Sources:\n- Access to uploaded documents\n- Knowledge base embeddings\n- Long-term conversation history\n- Built-in LLM knowledge base\n\nI can work with multiple document formats and maintain a document store that currently contains 6 documents. All these tools are designed to provide comprehensive financial analysis, risk assessment, and productivity support.\n\nWould you like me to elaborate on any specific tool or capability?",
+      "timestamp": "2025-08-04T19:12:58.782430",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:14:12.158856",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:15:45.212538",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:17:02.020329",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "I have access to a comprehensive set of tools that enable me to assist with financial analysis, risk assessment, and document processing. Here are the key tools organized by category:\n\nDocument Management:\n- Upload, process, and store documents (PDF, DOCX, TXT, CSV, Excel)\n- Search and analyze uploaded documents\n- Compare multiple documents simultaneously\n- Remove documents from storage\n- Discover document structure and metadata\n\nAnalysis Capabilities:\n- Document analysis and synthesis\n- Multi-document financial comparison\n- Progressive data analysis\n- Content synthesis and summarization\n- Knowledge base search and integration\n\nCore System Functions:\n- Q&A with comprehensive fallback chain\n- Memory search across multiple sources\n- System self-awareness and capability reporting\n- Workflow management and execution\n\nMemory and Data Sources:\n- Access to uploaded documents\n- Knowledge base embeddings\n- Long-term conversation history\n- Built-in LLM knowledge base\n\nI can work with multiple document formats and maintain a document store that currently contains 6 documents. All these tools are designed to provide comprehensive financial analysis, risk assessment, and productivity support.\n\nWould you like me to elaborate on any specific tool or capability?",
+      "timestamp": "2025-08-04T19:17:12.739042",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "I have access to a comprehensive set of tools that enable me to assist with financial analysis, risk assessment, and document processing. Here are the key tools organized by category:\n\nDocument Management:\n- Upload, process, and store documents (PDF, DOCX, TXT, CSV, Excel)\n- Search and analyze uploaded documents\n- Compare multiple documents simultaneously\n- Remove documents from storage\n- Discover document structure and metadata\n\nAnalysis Capabilities:\n- Document analysis and synthesis\n- Multi-document financial comparison\n- Progressive data analysis\n- Content synthesis and summarization\n- Knowledge base search and integration\n\nCore System Functions:\n- Q&A with comprehensive fallback chain\n- Memory search across multiple sources\n- System self-awareness and capability reporting\n- Workflow management and execution\n\nMemory and Data Sources:\n- Access to uploaded documents\n- Knowledge base embeddings\n- Long-term conversation history\n- Built-in LLM knowledge base\n\nI can work with multiple document formats and maintain a document store that currently contains 6 documents. All these tools are designed to provide comprehensive financial analysis, risk assessment, and productivity support.\n\nWould you like me to elaborate on any specific tool or capability?",
+      "timestamp": "2025-08-04T19:17:12.739042",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:18:19.392364",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "I have access to a comprehensive set of tools that enable me to assist with financial analysis, risk assessment, and document processing. Here are the key tools organized by category:\n\nDocument Management:\n- Upload, process, and store documents (PDF, DOCX, TXT, CSV, Excel)\n- Search and analyze uploaded documents\n- Compare multiple documents simultaneously\n- Remove documents from storage\n- Discover document structure and metadata\n\nAnalysis Capabilities:\n- Document analysis and synthesis\n- Multi-document financial comparison\n- Progressive data analysis\n- Content synthesis and summarization\n- Knowledge base search and integration\n\nCore System Functions:\n- Q&A with comprehensive fallback chain\n- Memory search across multiple sources\n- System self-awareness and capability reporting\n- Workflow management and execution\n\nMemory and Data Sources:\n- Access to uploaded documents\n- Knowledge base embeddings\n- Long-term conversation history\n- Built-in LLM knowledge base\n\nI can work with multiple document formats and maintain a document store that currently contains 6 documents. All these tools are designed to provide comprehensive financial analysis, risk assessment, and productivity support.\n\nWould you like me to elaborate on any specific tool or capability?",
+      "timestamp": "2025-08-04T19:18:29.955549",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:20:25.673744",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "System information is available but could not be properly extracted.",
+      "timestamp": "2025-08-04T19:20:31.816199",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:21:38.449671",
+      "session_id": "terminal-test-session"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250804_192138",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, search_queries, financial, reporting",
+    "original_message_count": 11,
+    "timespan": "2025-08-04T19:12:58.782430 - 2025-08-04T19:21:38.449671",
+    "topics": [
+      "document_analysis",
+      "search_queries",
+      "financial",
+      "reporting"
+    ],
+    "created_at": "2025-08-04T19:21:38.449920"
+  },
+  "created_at": "2025-08-04T19:21:38.450300"
+}

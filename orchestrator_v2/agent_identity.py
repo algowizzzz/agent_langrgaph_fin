@@ -28,6 +28,7 @@ class WorkflowType(Enum):
     QA_FALLBACK_CHAIN = "qa_fallback_chain"
     DATA_ANALYSIS = "data_analysis"
     MEMORY_SEARCH = "memory_search"
+    SYSTEM_AWARENESS = "system_awareness"
 
 
 @dataclass
@@ -134,6 +135,20 @@ class FinanceRiskAgentIdentity:
                     "What did we discuss about risk last week?",
                     "Remember when you mentioned that financial strategy?",
                     "Recall our previous conversation about investments"
+                ]
+            ),
+            
+            "system_awareness": AgentCapability(
+                name="System Self-Awareness",
+                description="Provide accurate information about agent capabilities, tools, documents, and workflows",
+                workflow_type=WorkflowType.SYSTEM_AWARENESS,
+                trigger_patterns=["what documents", "what tools", "what workflows", "what capabilities", "what can you", "what do you have access"],
+                tools_required=["get_agent_capabilities", "get_available_documents", "get_workflow_information"],
+                examples=[
+                    "What documents do you have access to?",
+                    "What tools do you have access to?",
+                    "What workflows do you have access to?",
+                    "What are your capabilities?"
                 ]
             )
         }
@@ -259,19 +274,113 @@ class FinanceRiskAgentIdentity:
             "workflow_types": [wf.value for wf in WorkflowType]
         }
     
+    def _auto_discover_documents_from_query(self, user_query: str) -> List[str]:
+        """
+        Intelligent document discovery based on query content.
+        
+        Strategy:
+        1. Check for specific document names/keywords in query
+        2. If specific documents found, use those
+        3. If no specific documents but query suggests document analysis, use all documents
+        4. If query is general knowledge, return empty list (use LLM knowledge)
+        """
+        from tools.document_tools import document_chunk_store
+        
+        try:
+            all_docs = list(document_chunk_store.keys())
+            if not all_docs:
+                return []
+            
+            query_lower = user_query.lower()
+            specific_docs = []
+            
+            # 🎯 STEP 1: Look for specific document references
+            for doc in all_docs:
+                doc_lower = doc.lower()
+                # Extract readable parts of filename for matching
+                readable_parts = []
+                
+                # Extract original filename parts (after timestamps and UUIDs)
+                if '_' in doc:
+                    parts = doc.split('_')
+                    for part in parts:
+                        if len(part) > 3 and not part.replace('-', '').isalnum():
+                            readable_parts.append(part.lower())
+                
+                # Check for matches
+                for part in readable_parts:
+                    if part in query_lower:
+                        specific_docs.append(doc)
+                        print(f"🎯 Auto-discovered document: {doc} (matched: {part})")
+                        break
+                
+                # Check for common patterns
+                if any(keyword in query_lower for keyword in ['techtrend', 'financials', 'excel']) and 'techtrend' in doc_lower:
+                    if doc not in specific_docs:
+                        specific_docs.append(doc)
+                        print(f"🎯 Auto-discovered document: {doc} (TechTrend pattern)")
+                
+                if any(keyword in query_lower for keyword in ['bmo', 'bank', 'annual']) and 'bmo' in doc_lower:
+                    if doc not in specific_docs:
+                        specific_docs.append(doc)
+                        print(f"🎯 Auto-discovered document: {doc} (BMO pattern)")
+                
+                if any(keyword in query_lower for keyword in ['risk', 'finance']) and 'risk' in doc_lower:
+                    if doc not in specific_docs:
+                        specific_docs.append(doc)
+                        print(f"🎯 Auto-discovered document: {doc} (Risk pattern)")
+                
+                if any(keyword in query_lower for keyword in ['car24', 'capital', 'regulatory']) and 'car24' in doc_lower:
+                    if doc not in specific_docs:
+                        specific_docs.append(doc)
+                        print(f"🎯 Auto-discovered document: {doc} (CAR24 pattern)")
+            
+            # 🎯 STEP 2: If specific documents found, use those
+            if specific_docs:
+                return specific_docs
+            
+            # 🎯 STEP 3: If query suggests document analysis but no specific docs, use all
+            document_indicators = [
+                'analyze', 'summary', 'summarize', 'document', 'file', 'report', 'data',
+                'table', 'excel', 'csv', 'financial', 'metrics', 'compare', 'contrast'
+            ]
+            
+            if any(indicator in query_lower for indicator in document_indicators):
+                print(f"🎯 Query suggests document analysis, using all {len(all_docs)} documents")
+                return all_docs
+            
+            # 🎯 STEP 4: General knowledge query - no documents needed
+            print(f"🎯 General knowledge query detected, no documents needed")
+            return []
+            
+        except Exception as e:
+            print(f"⚠️ Error in auto-discovery: {e}")
+            return []
+    
     def classify_query_workflow(self, user_query: str, active_documents: List[str] = None) -> WorkflowType:
         """
         Classify user query to determine appropriate workflow based on FILE TYPE.
+        Smart document scoping: auto-discover relevant documents from query content.
         
         Args:
             user_query: The user's question or request
-            active_documents: List of uploaded documents
+            active_documents: List of uploaded documents (if None, auto-discover from query)
             
         Returns:
             WorkflowType for the most appropriate workflow
         """
         query_lower = user_query.lower()
-        active_docs = active_documents or []
+        
+        # 🧠 SMART DOCUMENT SCOPING: Auto-discover if not explicitly provided
+        if not active_documents:
+            active_docs = self._auto_discover_documents_from_query(user_query)
+        else:
+            active_docs = active_documents
+        
+        # 🤖 PRIORITY 0: System self-awareness queries (takes precedence over all others)
+        if any(pattern in query_lower for pattern in ["what documents", "what tools", "what workflows", "what capabilities", "what can you", "what do you have access"]):
+            print(f"🤖 Self-awareness query detected → SYSTEM_AWARENESS")
+            return WorkflowType.SYSTEM_AWARENESS
         
         # 🎯 DETERMINISTIC FILE-TYPE + COUNT CLASSIFICATION
         if active_docs:
@@ -283,16 +392,10 @@ class FinanceRiskAgentIdentity:
             # 📊 PRIORITY 2: Single document → Route by file type
             single_doc = active_docs[0].lower()
             
-            # CSV/Excel files → Check for multi-sheet Excel
+            # CSV/Excel files → Always DATA_ANALYSIS (multi-sheet Excel handled within data analysis)
             if any(single_doc.endswith(ext) for ext in ['.csv', '.xlsx', '.xls']):
-                # 🔧 NEW: Multi-sheet Excel files → MULTI_DOC_COMPARISON
-                if single_doc.endswith(('.xlsx', '.xls')):
-                    chunk_count = self._get_document_chunk_count(active_docs[0])
-                    if chunk_count > 1:
-                        print(f"📊 Excel file {active_docs[0]} has {chunk_count} sheets → MULTI_DOC_COMPARISON")
-                        return WorkflowType.MULTI_DOC_COMPARISON
-                
-                # Single sheet Excel or CSV → DATA_ANALYSIS
+                chunk_count = self._get_document_chunk_count(active_docs[0]) if single_doc.endswith(('.xlsx', '.xls')) else 1
+                print(f"📊 Excel/CSV file {active_docs[0]} has {chunk_count} chunks → DATA_ANALYSIS")
                 return WorkflowType.DATA_ANALYSIS
             
             # PDF/DOCX/TXT files → DOCUMENT_ANALYSIS  
@@ -301,6 +404,14 @@ class FinanceRiskAgentIdentity:
             
             # Unknown file type → Default to DOCUMENT_ANALYSIS
             return WorkflowType.DOCUMENT_ANALYSIS
+        
+        # 🔍 INTELLIGENT DOCUMENT DISCOVERY: Auto-discover relevant documents based on query content
+        if not active_docs:
+            discovered_docs = self._discover_relevant_documents(user_query)
+            if discovered_docs:
+                print(f"🔍 Auto-discovered {len(discovered_docs)} relevant documents: {[doc.split('_')[-1] for doc in discovered_docs[:3]]}")
+                # Re-classify with discovered documents
+                return self.classify_query_workflow(user_query, discovered_docs)
         
         # 🧠 NO DOCUMENTS: Check for explicit memory search patterns
         if any(pattern in query_lower for pattern in ["remember", "memory", "mentioned", "said before", "recall", "previous", "discussed", "discuss", "mention", "what did we"]):
@@ -375,6 +486,17 @@ Please analyze the provided information according to the above structure.
     def list_all_capabilities(self) -> List[str]:
         """List all available capabilities."""
         return list(self.capabilities.keys())
+    
+    def _get_document_chunk_count(self, doc_name: str) -> int:
+        """Get the number of chunks for a document from the document store."""
+        try:
+            from tools.document_tools import document_chunk_store
+            if doc_name in document_chunk_store:
+                return len(document_chunk_store[doc_name])
+            return 0
+        except Exception as e:
+            print(f"Error getting chunk count for {doc_name}: {e}")
+            return 0
 
 
 # Global instance for the agent identity

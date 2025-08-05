@@ -51,11 +51,20 @@ class OrchestratorIntegration:
         This method handles all queries exclusively through Orchestrator 2.0.
         """
         
-        # Normalize active documents parameter
+        # Normalize active documents parameter with smart auto-discovery
         if active_documents is None and active_document:
             active_documents = [active_document]
         elif active_documents is None:
-            active_documents = []
+            # 🧠 SMART DOCUMENT SCOPING: Auto-discover relevant documents
+            from orchestrator_v2.agent_identity import FinanceRiskAgentIdentity
+            agent_identity = FinanceRiskAgentIdentity()
+            active_documents = agent_identity._auto_discover_documents_from_query(user_query)
+            
+            if active_documents:
+                logger.info(f"🎯 Auto-discovered {len(active_documents)} documents: {[doc.split('_')[-1] for doc in active_documents]}")
+            else:
+                logger.info("🎯 No documents auto-discovered, using general knowledge")
+                active_documents = []
         
         try:
             logger.info("🚀 Using Orchestrator 2.0")

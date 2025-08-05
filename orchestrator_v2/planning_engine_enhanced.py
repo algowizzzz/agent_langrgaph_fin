@@ -98,6 +98,9 @@ class EnhancedPlanningEngine(PlanningEngine):
         elif workflow_type == WorkflowType.MEMORY_SEARCH:
             return await self._create_memory_search_plan(context)
         
+        elif workflow_type == WorkflowType.SYSTEM_AWARENESS:
+            return await self._create_system_awareness_plan(context)
+        
         else:
             # Fallback to standard template planning
             return await self._create_template_plan(context, strategy)
@@ -127,10 +130,10 @@ class EnhancedPlanningEngine(PlanningEngine):
             tool_name="search_uploaded_docs",
             parameters={
                 "doc_name": doc_name,
-                "query": context.user_query
+                "query": None  # No query filter for comprehensive document analysis
             },
             condition=ConditionType.ALWAYS,
-            description="Search uploaded document for relevant information"
+            description="Search uploaded document for comprehensive analysis (no filtering)"
         )
         steps["search_document"] = step_1
         
@@ -290,6 +293,28 @@ class EnhancedPlanningEngine(PlanningEngine):
         
         # Step 1: Search uploaded CSV/table data  
         doc_name = context.active_documents[0] if context.active_documents else "table_data"
+        
+        # BUGFIX: If no active_documents but user query mentions a specific Excel file, try to extract it
+        if not context.active_documents and any(ext in context.user_query.lower() for ext in ['.xlsx', '.csv', 'techtrend', 'financials']):
+            # Try to extract document name from query
+            from tools.document_tools import document_chunk_store
+            try:
+                available_docs = list(document_chunk_store.keys())
+                for query_word in context.user_query.lower().split():
+                    for doc in available_docs:
+                        if 'techtrend' in query_word and 'techtrend' in doc.lower():
+                            doc_name = doc
+                            logger.info(f"🔧 AUTO-DETECTED DOCUMENT: {doc_name} from query: {context.user_query}")
+                            break
+                        elif query_word.replace('.xlsx', '').replace('.csv', '') in doc.lower():
+                            doc_name = doc
+                            logger.info(f"🔧 AUTO-DETECTED DOCUMENT: {doc_name} from query: {context.user_query}")
+                            break
+                    if doc_name != "table_data":
+                        break
+            except Exception as e:
+                logger.warning(f"Failed to auto-detect document: {e}")
+        
         logger.info(f"🔍 DATA ANALYSIS DEBUG: active_documents={context.active_documents}, doc_name={doc_name}")
         
         step_1 = ExecutionStep(
@@ -439,6 +464,64 @@ class EnhancedPlanningEngine(PlanningEngine):
                 "strategy": "memory_search",
                 "agent_identity": "AI Finance and Risk Agent",
                 "memory_sources": ["conversation_history", "long_term_memory"]
+            }
+        )
+    
+    async def _create_system_awareness_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """Create plan for system self-awareness queries."""
+        plan_id = f"system_awareness_{int(time.time())}"
+        steps = {}
+        
+        query_lower = context.user_query.lower()
+        
+        # Determine which system tool to call based on query content
+        if any(pattern in query_lower for pattern in ["what documents", "documents do you have", "available documents"]):
+            tool_name = "get_available_documents"
+            description = "Get information about available documents"
+        elif any(pattern in query_lower for pattern in ["what tools", "tools do you have", "what capabilities", "capabilities"]):
+            tool_name = "get_agent_capabilities" 
+            description = "Get comprehensive agent capabilities information"
+        elif any(pattern in query_lower for pattern in ["what workflows", "workflows do you have"]):
+            tool_name = "get_workflow_information"
+            description = "Get detailed workflow information"
+        else:
+            # Default to comprehensive capabilities for general self-awareness queries
+            tool_name = "get_agent_capabilities"
+            description = "Get comprehensive agent capabilities information"
+        
+        # Step 1: Call the appropriate system awareness tool
+        step_1 = ExecutionStep(
+            step_id="get_system_info",
+            tool_name=tool_name,
+            parameters={},
+            condition=ConditionType.ALWAYS,
+            description=description
+        )
+        steps["get_system_info"] = step_1
+        
+        # Step 2: Synthesize the system information into a user-friendly response
+        step_2 = ExecutionStep(
+            step_id="synthesize_system_info",
+            tool_name="synthesize_content", 
+            parameters={
+                "documents": ["$get_system_info"],  # Wrap in list for synthesize_content
+                "query": context.user_query,
+                "synthesis_type": "system_awareness"
+            },
+            dependencies=["get_system_info"],
+            condition=ConditionType.ON_SUCCESS,
+            description="Format system information into user-friendly response"
+        )
+        steps["synthesize_system_info"] = step_2
+        
+        return ExecutionPlan(
+            plan_id=plan_id,
+            steps=steps,
+            metadata={
+                "workflow_type": WorkflowType.SYSTEM_AWARENESS.value,
+                "strategy": "system_awareness",
+                "agent_identity": "AI Finance and Risk Agent",
+                "system_tool": tool_name
             }
         )
     

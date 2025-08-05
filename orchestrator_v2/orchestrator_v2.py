@@ -18,6 +18,8 @@ from typing import Any, Dict, List, Optional, AsyncGenerator, Callable
 from dataclasses import dataclass
 import json
 
+from .agent_identity import WorkflowType
+
 from langchain_anthropic import ChatAnthropic
 
 from .tool_registry import ToolRegistry, ToolReliability, register_tool
@@ -37,6 +39,7 @@ from tools.search_tools import search_knowledge_base, search_conversation_histor
 from tools.code_execution_tools import execute_python_code, process_table_data, calculate_statistics
 from tools.visualization_tools import create_chart, create_wordcloud, create_statistical_plot, create_comparison_chart
 from tools.text_analytics_tools import analyze_text_metrics, extract_key_phrases, analyze_sentiment, extract_entities
+from tools.system_tools import get_agent_capabilities, get_available_documents, get_workflow_information
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +72,8 @@ class OrchestratorV2:
         self.config = config or OrchestratorConfig()
         
         # Initialize core components
-        self.tool_registry = ToolRegistry()
+        from .tool_registry import global_tool_registry
+        self.tool_registry = global_tool_registry
         self.state_manager = StateManager(
             persistence_dir=self.config.persistence_dir if self.config.enable_persistence else None
         )
@@ -345,15 +349,26 @@ class OrchestratorV2:
                 }
             )
             
-            # Generate final response
-            final_answer = await self._synthesize_final_response(
-                user_query=user_query,
-                execution_results=execution_results,
-                context=context
-            )
+            # Generate final response - skip final synthesis for system_awareness to preserve detailed tool listings  
+            # Check if this is a system awareness query based on patterns (same logic as agent_identity)
+            query_lower = user_query.lower()
+            is_system_awareness = any(pattern in query_lower for pattern in ["what documents", "what tools", "what workflows", "what capabilities", "what can you", "what do you have access"])
             
-            # Calculate overall confidence
-            confidence_score = self._calculate_overall_confidence(execution_results)
+            logger.info(f"🔧 BYPASS DEBUG: user_query={user_query}, is_system_awareness={is_system_awareness}")
+            
+            if is_system_awareness:
+                logger.info("🚀 BYPASSING final synthesis for system_awareness - using direct extraction")
+                final_answer = self._extract_system_awareness_response(execution_results)
+                confidence_score = self._calculate_overall_confidence(execution_results)
+            else:
+                logger.info(f"🔄 Using normal final synthesis for non-system-awareness query")
+                final_answer = await self._synthesize_final_response(
+                    user_query=user_query,
+                    execution_results=execution_results,
+                    context=context
+                )
+                # Calculate overall confidence
+                confidence_score = self._calculate_overall_confidence(execution_results)
             
             # Get execution summary
             execution_summary = self.execution_engine.get_execution_summary()
@@ -565,8 +580,14 @@ class OrchestratorV2:
                 "timestamp": time.time()
             }
             
-            final_answer = await self._synthesize_final_response(user_query, execution_results, context)
-            final_confidence = self._calculate_overall_confidence(execution_results)
+            # For system_awareness queries, skip final synthesis to preserve detailed tool listings
+            if query_type.value == "system_awareness":
+                # Extract the synthesis result directly without re-processing
+                final_answer = self._extract_system_awareness_response(execution_results)
+                final_confidence = self._calculate_overall_confidence(execution_results)
+            else:
+                final_answer = await self._synthesize_final_response(user_query, execution_results, context)
+                final_confidence = self._calculate_overall_confidence(execution_results)
             
             # Final result
             yield {
@@ -708,6 +729,58 @@ Final Response:"""
                 return output
             else:
                 return str(output)
+    
+    def _extract_system_awareness_response(self, execution_results: Dict[str, Any]) -> str:
+        """Extract system awareness response directly without re-synthesis to preserve detailed tool listings."""
+        
+        logger.info(f"🔍 EXTRACTION DEBUG: execution_results keys: {list(execution_results.keys()) if execution_results else 'None'}")
+        
+        if not execution_results:
+            return "No system information available."
+        
+        # Debug: log the structure of execution results
+        for key, value in execution_results.items():
+            logger.info(f"🔍 EXTRACTION DEBUG: {key} -> {type(value)} -> {str(value)[:200]}...")
+        
+        # Look for the synthesize_system_info step result
+        if "synthesize_system_info" in execution_results:
+            synthesis_result = execution_results["synthesize_system_info"]
+            logger.info(f"🔍 EXTRACTION DEBUG: Found synthesize_system_info -> {type(synthesis_result)}")
+            
+            # Handle ExecutionResult objects
+            if hasattr(synthesis_result, 'output'):
+                output_data = synthesis_result.output
+                logger.info(f"🔍 EXTRACTION DEBUG: Got output -> {type(output_data)} -> {str(output_data)[:200]}...")
+                if isinstance(output_data, dict) and "result" in output_data:
+                    result_content = output_data["result"]
+                    logger.info(f"🔍 EXTRACTION DEBUG: Extracted result content length: {len(result_content)}")
+                    return result_content
+            # Handle direct dict (fallback)
+            elif isinstance(synthesis_result, dict) and "result" in synthesis_result:
+                result_content = synthesis_result["result"]
+                logger.info(f"🔍 EXTRACTION DEBUG: Extracted result content length: {len(result_content)}")
+                return result_content
+        
+        # Fallback: look for any synthesis-related results
+        for step_name, result in execution_results.items():
+            if "synthesis" in step_name.lower() or "system" in step_name.lower():
+                logger.info(f"🔍 EXTRACTION DEBUG: Checking fallback {step_name} -> {type(result)}")
+                # Handle ExecutionResult objects
+                if hasattr(result, 'output'):
+                    output_data = result.output
+                    if isinstance(output_data, dict) and "result" in output_data:
+                        return output_data["result"]
+                    elif isinstance(output_data, str):
+                        return output_data
+                # Handle direct data
+                elif isinstance(result, dict) and "result" in result:
+                    return result["result"]
+                elif isinstance(result, str):
+                    return result
+        
+        # Final fallback
+        logger.warning("🔍 EXTRACTION DEBUG: Could not find synthesis result in execution_results")
+        return "System information is available but could not be properly extracted."
     
     def _calculate_overall_confidence(self, execution_results: Dict[str, Any]) -> float:
         """Calculate overall confidence score from execution results."""
