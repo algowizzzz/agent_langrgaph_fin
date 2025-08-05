@@ -108,7 +108,17 @@
       "conv_2c95e9da",
       "conv_ca2ecd96",
       "conv_67673f9e",
-      "conv_50606165"
+      "conv_50606165",
+      "conv_974daf4c",
+      "conv_19580171",
+      "conv_f6408bf7",
+      "conv_58a5aca2",
+      "conv_754e1a41",
+      "conv_604d4830",
+      "conv_7fa27b30",
+      "conv_b23e7103",
+      "conv_87be8c09",
+      "conv_09ef7ada"
     ],
     "regulatory": [
       "conv_18a81393",
@@ -174,7 +184,16 @@
       "conv_2c95e9da",
       "conv_ca2ecd96",
       "conv_67673f9e",
-      "conv_50606165"
+      "conv_50606165",
+      "conv_974daf4c",
+      "conv_f6408bf7",
+      "conv_58a5aca2",
+      "conv_754e1a41",
+      "conv_604d4830",
+      "conv_7fa27b30",
+      "conv_b23e7103",
+      "conv_87be8c09",
+      "conv_09ef7ada"
     ],
     "compliance": [
       "conv_18a81393",
@@ -207,7 +226,14 @@
       "conv_66ae76bf",
       "conv_e6280f8c",
       "conv_1469cd24",
-      "conv_19a78264"
+      "conv_19a78264",
+      "conv_f6408bf7",
+      "conv_58a5aca2",
+      "conv_754e1a41",
+      "conv_604d4830",
+      "conv_b23e7103",
+      "conv_87be8c09",
+      "conv_09ef7ada"
     ],
     "wrong_way_risk": [
       "conv_18a81393",
@@ -216,7 +242,13 @@
       "conv_2c95e9da",
       "conv_ca2ecd96",
       "conv_67673f9e",
-      "conv_50606165"
+      "conv_50606165",
+      "conv_974daf4c",
+      "conv_f6408bf7",
+      "conv_58a5aca2",
+      "conv_754e1a41",
+      "conv_604d4830",
+      "conv_09ef7ada"
     ],
     "capital": [
       "conv_18a81393",
@@ -305,7 +337,17 @@
       "conv_65f241c2",
       "conv_ca2ecd96",
       "conv_67673f9e",
-      "conv_50606165"
+      "conv_50606165",
+      "conv_974daf4c",
+      "conv_f6408bf7",
+      "conv_58a5aca2",
+      "conv_754e1a41",
+      "conv_604d4830",
+      "conv_4512bc66",
+      "conv_7fa27b30",
+      "conv_b23e7103",
+      "conv_87be8c09",
+      "conv_09ef7ada"
     ],
     "audit": [
       "conv_90006982"
@@ -496,7 +538,13 @@
       "conv_65f241c2",
       "conv_ca2ecd96",
       "conv_67673f9e",
-      "conv_50606165"
+      "conv_50606165",
+      "conv_974daf4c",
+      "conv_0d0d5d50",
+      "conv_4512bc66",
+      "conv_7fa27b30",
+      "conv_b23e7103",
+      "conv_87be8c09"
     ],
     "financial": [
       "conv_4ddbef9d",
@@ -584,7 +632,10 @@
       "conv_fef4e2a8",
       "conv_a1e110c3",
       "conv_52ac19cf",
-      "conv_65f241c2"
+      "conv_65f241c2",
+      "conv_19580171",
+      "conv_0d0d5d50",
+      "conv_4512bc66"
     ],
     "search_queries": [
       "conv_482563a1",
@@ -691,7 +742,10 @@
       "conv_fef4e2a8",
       "conv_a1e110c3",
       "conv_52ac19cf",
-      "conv_65f241c2"
+      "conv_65f241c2",
+      "conv_0d0d5d50",
+      "conv_4512bc66",
+      "conv_7fa27b30"
     ],
     "reporting": [
       "conv_ba6d5dbc",
@@ -716,7 +770,8 @@
       "conv_0efb8e31",
       "conv_35bfc2a4",
       "conv_fef4e2a8",
-      "conv_65f241c2"
+      "conv_65f241c2",
+      "conv_4512bc66"
     ],
     "basel": [
       "conv_c1c3f2fe",
@@ -2467,6 +2522,133 @@
         "document_analysis"
       ],
       "created_at": "2025-08-04T20:25:44.925974"
+    },
+    "conv_974daf4c": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, wrong_way_risk, capital, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "wrong_way_risk",
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-04T22:20:59.623516"
+    },
+    "conv_19580171": {
+      "summary": "Conversation with 7 user queries and 4 assistant responses. Key topics: risk_factors, financial",
+      "topics": [
+        "risk_factors",
+        "financial"
+      ],
+      "created_at": "2025-08-04T22:32:49.204523"
+    },
+    "conv_0d0d5d50": {
+      "summary": "Conversation with 7 user queries and 4 assistant responses. Key topics: document_analysis, search_queries, financial",
+      "topics": [
+        "document_analysis",
+        "search_queries",
+        "financial"
+      ],
+      "created_at": "2025-08-04T22:53:08.258093"
+    },
+    "conv_f6408bf7": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:01:04.719475"
+    },
+    "conv_58a5aca2": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:11:18.992214"
+    },
+    "conv_754e1a41": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:12:33.200351"
+    },
+    "conv_604d4830": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:17:43.446311"
+    },
+    "conv_4512bc66": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: capital, document_analysis, search_queries, financial, reporting",
+      "topics": [
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "financial",
+        "reporting"
+      ],
+      "created_at": "2025-08-04T23:19:39.111673"
+    },
+    "conv_7fa27b30": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-04T23:22:15.393965"
+    },
+    "conv_b23e7103": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-04T23:24:35.637150"
+    },
+    "conv_87be8c09": {
+      "summary": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-04T23:26:04.960195"
+    },
+    "conv_09ef7ada": {
+      "summary": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:27:38.448371"
     }
   }
 }

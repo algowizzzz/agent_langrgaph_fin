@@ -1,2 +1,44 @@
 .env
 .env
+
+# Logs
+*.log
+*.log.*
+
+# Temporary files
+*.tmp
+*.temp
+*~
+*.backup
+*.bak
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Test results and debug files
+*test_results*.md
+*TEST_RESULTS*.md
+PM_*.md
+debug_*.py
+
+# Backup files
+*backup*.json
+
+# Memory and conversation files (optional - comment out if you want to track these)
+memory/conversations/
+memory/rolling_summaries.json
+memory/search_index.json
+memory/short_term.json
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# nohup output
+nohup.out
