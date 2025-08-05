@@ -78,10 +78,33 @@ class OrchestratorV2:
             persistence_dir=self.config.persistence_dir if self.config.enable_persistence else None
         )
         
-        # Initialize LLM
+        # Initialize LLM with dynamic provider selection
         try:
-            self.llm = ChatAnthropic(model="claude-3-5-sonnet-20241022", temperature=0)
-            logger.info(f"Orchestrator 2.0 LLM initialized: {self.llm.model}")
+            # Import config to get provider settings
+            try:
+                from config import Config
+                config = Config()
+                
+                # Use same provider logic as synthesis_tools
+                if config.ai.llm_provider == "gemini" and config.ai.gemini_api_key:
+                    import google.generativeai as genai
+                    genai.configure(api_key=config.ai.gemini_api_key)
+                    self.llm = genai.GenerativeModel(config.ai.gemini_model)
+                    logger.info(f"Orchestrator 2.0 LLM initialized with Gemini: {config.ai.gemini_model}")
+                elif config.ai.llm_provider == "openai" and config.ai.openai_api_key:
+                    from langchain_openai import ChatOpenAI
+                    self.llm = ChatOpenAI(model=config.ai.openai_model, temperature=0, api_key=config.ai.openai_api_key)
+                    logger.info(f"Orchestrator 2.0 LLM initialized with OpenAI: {config.ai.openai_model}")
+                elif config.ai.anthropic_api_key:
+                    from langchain_anthropic import ChatAnthropic
+                    self.llm = ChatAnthropic(model=config.ai.anthropic_model, temperature=0, api_key=config.ai.anthropic_api_key)
+                    logger.info(f"Orchestrator 2.0 LLM initialized with Anthropic: {config.ai.anthropic_model}")
+                else:
+                    logger.error("No valid API key found for any LLM provider")
+                    self.llm = None
+            except ImportError:
+                logger.error("Config module not available - no LLM provider configured")
+                self.llm = None
         except Exception as e:
             logger.error(f"Failed to initialize LLM: {e}")
             self.llm = None
@@ -677,8 +700,17 @@ Requirements:
 Final Response:"""
                     
                     async with self.api_semaphore:
-                        response = await self.llm.ainvoke(synthesis_prompt)
-                        return response.content if hasattr(response, 'content') else str(response)
+                        # Handle Gemini API calls (different interface)
+                        if hasattr(self.llm, 'generate_content'):
+                            # Gemini API call
+                            import asyncio
+                            loop = asyncio.get_event_loop()
+                            response = await loop.run_in_executor(None, self.llm.generate_content, synthesis_prompt)
+                            return response.text
+                        else:
+                            # Langchain interface (OpenAI/Anthropic)
+                            response = await self.llm.ainvoke(synthesis_prompt)
+                            return response.content if hasattr(response, 'content') else str(response)
                         
                 except Exception as e:
                     logger.error(f"Failed to synthesize single output: {e}")
@@ -715,8 +747,17 @@ Requirements:
 Final Response:"""
             
             async with self.api_semaphore:
-                response = await self.llm.ainvoke(synthesis_prompt)
-                return response.content if hasattr(response, 'content') else str(response)
+                # Handle Gemini API calls (different interface)
+                if hasattr(self.llm, 'generate_content'):
+                    # Gemini API call
+                    import asyncio
+                    loop = asyncio.get_event_loop()
+                    response = await loop.run_in_executor(None, self.llm.generate_content, synthesis_prompt)
+                    return response.text
+                else:
+                    # Langchain interface (OpenAI/Anthropic)
+                    response = await self.llm.ainvoke(synthesis_prompt)
+                    return response.content if hasattr(response, 'content') else str(response)
                 
         except Exception as e:
             logger.error(f"Failed to synthesize final response: {e}")

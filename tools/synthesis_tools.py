@@ -22,8 +22,14 @@ llm_error = None
 
 if config_available:
     try:
-        # Try OpenAI first (since Anthropic is over quota)
-        if config.ai.llm_provider == "openai" and config.ai.openai_api_key:
+        # Try Gemini first (if configured)
+        if config.ai.llm_provider == "gemini" and config.ai.gemini_api_key:
+            import google.generativeai as genai
+            genai.configure(api_key=config.ai.gemini_api_key)
+            llm = genai.GenerativeModel(config.ai.gemini_model)
+            logger.info(f"Synthesis LLM initialized successfully with Gemini model: {config.ai.gemini_model}")
+        # Fallback to OpenAI 
+        elif config.ai.llm_provider == "openai" and config.ai.openai_api_key:
             from langchain_openai import ChatOpenAI
             llm = ChatOpenAI(
                 model=config.ai.openai_model,
@@ -31,7 +37,7 @@ if config_available:
                 api_key=config.ai.openai_api_key
             )
             logger.info(f"Synthesis LLM initialized successfully with OpenAI model: {config.ai.openai_model}")
-        # Fallback to Anthropic if OpenAI not configured
+        # Fallback to Anthropic if others not configured
         elif config.ai.anthropic_api_key:
             from langchain_anthropic import ChatAnthropic
             llm = ChatAnthropic(
@@ -41,7 +47,7 @@ if config_available:
             )
             logger.info(f"Synthesis LLM initialized successfully with Anthropic model: {config.ai.anthropic_model}")
         else:
-            llm_error = "No valid API key found for OpenAI or Anthropic"
+            llm_error = "No valid API key found for Gemini, OpenAI, or Anthropic"
             logger.error(llm_error)
     except Exception as e:
         llm_error = f"Failed to initialize LLM for synthesis: {e}"
@@ -83,10 +89,19 @@ async def llm_with_retry(prompt: str, max_retries: int = MAX_RETRIES) -> str:
     async with CONNECTION_SEMAPHORE:
         for attempt in range(max_retries):
             try:
-                response = await llm.ainvoke(prompt)
-                if hasattr(response, 'content'):
-                    return response.content
-                return str(response)
+                # Handle Gemini API calls (different interface)
+                if hasattr(llm, 'generate_content'):
+                    # Gemini API call
+                    import asyncio
+                    loop = asyncio.get_event_loop()
+                    response = await loop.run_in_executor(None, llm.generate_content, prompt)
+                    return response.text
+                else:
+                    # Langchain interface (OpenAI/Anthropic)
+                    response = await llm.ainvoke(prompt)
+                    if hasattr(response, 'content'):
+                        return response.content
+                    return str(response)
             except Exception as e:
                 wait_time = BASE_DELAY * (2 ** attempt)
                 logger.warning(f"LLM call attempt {attempt + 1} failed: {e}. Retrying in {wait_time}s...")

@@ -16,11 +16,13 @@ class Config:
             # API keys loaded from environment
             self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
             self.openai_api_key = os.getenv("OPENAI_API_KEY")
-            self.llm_provider = os.getenv("LLM_PROVIDER", "openai")  # Default to openai
+            self.gemini_api_key = os.getenv("GEMINI_API_KEY")
+            self.llm_provider = os.getenv("LLM_PROVIDER", "gemini").lower()  # Default to gemini
             
             # Model configurations
             self.anthropic_model = "claude-3-5-sonnet-20241022"
             self.openai_model = "gpt-4o"
+            self.gemini_model = "gemini-1.5-flash"
             
             # Document chunking settings for ~10k tokens  
             self.chunk_size = 40000  # ~10,000 tokens (4 chars per token average)
