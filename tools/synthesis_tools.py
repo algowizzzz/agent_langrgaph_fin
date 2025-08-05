@@ -22,15 +22,29 @@ llm_error = None
 
 if config_available:
     try:
-        from langchain_anthropic import ChatAnthropic
-        llm = ChatAnthropic(
-            model=config.ai.anthropic_model,
-            temperature=0,
-            api_key=config.ai.anthropic_api_key
-        )
-        logger.info(f"Synthesis LLM initialized successfully with model: {config.ai.anthropic_model}")
+        # Try OpenAI first (since Anthropic is over quota)
+        if config.ai.llm_provider == "openai" and config.ai.openai_api_key:
+            from langchain_openai import ChatOpenAI
+            llm = ChatOpenAI(
+                model=config.ai.openai_model,
+                temperature=0,
+                api_key=config.ai.openai_api_key
+            )
+            logger.info(f"Synthesis LLM initialized successfully with OpenAI model: {config.ai.openai_model}")
+        # Fallback to Anthropic if OpenAI not configured
+        elif config.ai.anthropic_api_key:
+            from langchain_anthropic import ChatAnthropic
+            llm = ChatAnthropic(
+                model=config.ai.anthropic_model,
+                temperature=0,
+                api_key=config.ai.anthropic_api_key
+            )
+            logger.info(f"Synthesis LLM initialized successfully with Anthropic model: {config.ai.anthropic_model}")
+        else:
+            llm_error = "No valid API key found for OpenAI or Anthropic"
+            logger.error(llm_error)
     except Exception as e:
-        llm_error = f"Failed to initialize ChatAnthropic for synthesis: {e}"
+        llm_error = f"Failed to initialize LLM for synthesis: {e}"
         logger.error(llm_error)
 else:
     llm_error = "Configuration not available for LLM initialization"

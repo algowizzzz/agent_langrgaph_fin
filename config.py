@@ -13,9 +13,15 @@ class Config:
 
     class AI:
         def __init__(self):
-            # The API key is now loaded from the environment
+            # API keys loaded from environment
             self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+            self.openai_api_key = os.getenv("OPENAI_API_KEY")
+            self.llm_provider = os.getenv("LLM_PROVIDER", "openai")  # Default to openai
+            
+            # Model configurations
             self.anthropic_model = "claude-3-5-sonnet-20241022"
+            self.openai_model = "gpt-4o"
+            
             # Document chunking settings for ~10k tokens  
             self.chunk_size = 40000  # ~10,000 tokens (4 chars per token average)
             self.chunk_overlap = 2000  # Better context overlap for large chunks
