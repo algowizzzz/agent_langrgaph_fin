@@ -1,0 +1,449 @@
+"""
+Enhanced Planning Engine with AI Finance and Risk Agent Integration
+
+This module extends the planning engine with intelligent query routing,
+structured prompts, and comprehensive fallback chain support.
+"""
+
+import logging
+import json
+import time
+from typing import Any, Dict, List, Optional
+from dataclasses import asdict
+
+from .planning_engine import PlanningEngine, PlanningContext, PlanningStrategy, QueryType
+from .execution_engine import ExecutionStep, ExecutionPlan, ConditionType
+from .tool_registry import ToolRegistry
+from .state_management import StateManager
+from .agent_identity import agent_identity, WorkflowType, MemorySource
+
+logger = logging.getLogger(__name__)
+
+
+class EnhancedPlanningEngine(PlanningEngine):
+    """
+    Enhanced planning engine with AI Finance and Risk Agent capabilities.
+    
+    Features:
+    - Intelligent query routing based on workflow classification
+    - Structured prompt generation for financial analysis
+    - Comprehensive memory fallback chain implementation
+    - Context-aware planning with agent identity integration
+    """
+    
+    def __init__(self, tool_registry: ToolRegistry, state_manager: StateManager, llm: Any = None):
+        super().__init__(tool_registry, state_manager, llm)
+        self.agent_identity = agent_identity
+        logger.info(f"Enhanced Planning Engine initialized with {self.agent_identity.agent_name}")
+    
+    async def create_execution_plan(self, context: PlanningContext, strategy: PlanningStrategy = PlanningStrategy.ADAPTIVE) -> ExecutionPlan:
+        """
+        Create an execution plan using AI Finance and Risk Agent intelligence.
+        
+        Enhanced with:
+        - Workflow classification
+        - Memory source routing
+        - Structured prompt generation
+        - Agent identity integration
+        """
+        logger.info(f"🎯 AI Finance and Risk Agent creating plan for: '{context.user_query[:100]}...'")
+        
+        try:
+            # Classify workflow type using agent identity
+            workflow_type = self.agent_identity.classify_query_workflow(
+                context.user_query, 
+                context.active_documents
+            )
+            logger.info(f"📋 Classified workflow: {workflow_type.value}")
+            
+            # Determine memory source based on workflow and context
+            primary_memory_source = self.agent_identity.get_memory_source_for_query(
+                workflow_type, 
+                context.active_documents
+            )
+            logger.info(f"💾 Primary memory source: {primary_memory_source.value}")
+            
+            # Create workflow-specific execution plan
+            plan = await self._create_workflow_specific_plan(context, workflow_type, strategy)
+            
+            # Validate plan
+            if plan and len(plan.steps) > 0:
+                logger.info(f"✅ Created {workflow_type.value} plan with {len(plan.steps)} steps")
+                return plan
+            
+            # Fallback to parent planning if enhanced planning fails
+            logger.warning("Enhanced planning failed, falling back to standard planning")
+            return await super().create_execution_plan(context, strategy)
+            
+        except Exception as e:
+            logger.error(f"Enhanced planning error: {e}")
+            return await super().create_execution_plan(context, strategy)
+    
+    async def _create_workflow_specific_plan(self, context: PlanningContext, workflow_type: WorkflowType, strategy: PlanningStrategy) -> ExecutionPlan:
+        """Create execution plan based on specific workflow type."""
+        
+        if workflow_type == WorkflowType.DOCUMENT_ANALYSIS:
+            return await self._create_document_analysis_plan(context)
+        
+        elif workflow_type == WorkflowType.FINANCIAL_COMPARISON:
+            return await self._create_financial_comparison_plan(context)
+        
+        elif workflow_type == WorkflowType.QA_FALLBACK_CHAIN:
+            return await self._create_qa_fallback_plan(context)
+        
+        elif workflow_type == WorkflowType.DATA_ANALYSIS:
+            return await self._create_data_analysis_plan(context)
+        
+        elif workflow_type == WorkflowType.PRODUCTIVITY_ASSISTANCE:
+            return await self._create_productivity_plan(context)
+        
+        elif workflow_type == WorkflowType.MEMORY_SEARCH:
+            return await self._create_memory_search_plan(context)
+        
+        else:
+            # Fallback to standard template planning
+            return await self._create_template_plan(context, strategy)
+    
+    async def _create_document_analysis_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """Create plan for single document analysis workflow."""
+        plan_id = f"doc_analysis_{int(time.time())}"
+        steps = {}
+        
+        if not context.active_documents:
+            # No documents - route to knowledge base
+            return await self._create_qa_fallback_plan(context)
+        
+        # Generate structured prompt for document analysis
+        structured_prompt = self.agent_identity.get_structured_prompt(
+            WorkflowType.DOCUMENT_ANALYSIS,
+            document=context.active_documents[0],
+            analysis_type="comprehensive financial analysis"
+        )
+        
+        # Step 1: Search uploaded document
+        step_1 = ExecutionStep(
+            step_id="search_document",
+            tool_name="search_uploaded_docs",
+            parameters={
+                "doc_name": context.active_documents[0],
+                "query": context.user_query
+            },
+            condition=ConditionType.ALWAYS,
+            description="Search uploaded document for relevant information"
+        )
+        steps["search_document"] = step_1
+        
+        # Step 2: Synthesize response with structured prompt  
+        step_2 = ExecutionStep(
+            step_id="synthesize_analysis",
+            tool_name="synthesize_content",
+            parameters={
+                "documents": "$search_document",
+                "query": context.user_query,
+                "synthesis_type": "analysis"
+            },
+            dependencies=["search_document"],
+            condition=ConditionType.ON_SUCCESS,
+            description="Synthesize document analysis with financial expertise"
+        )
+        steps["synthesize_analysis"] = step_2
+        
+        return ExecutionPlan(
+            plan_id=plan_id,
+            steps=steps,
+            metadata={
+                "workflow_type": WorkflowType.DOCUMENT_ANALYSIS.value,
+                "strategy": "document_analysis",
+                "documents": context.active_documents,
+                "agent_identity": "AI Finance and Risk Agent"
+            }
+        )
+    
+    async def _create_financial_comparison_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """Create plan for multi-document financial comparison workflow."""
+        plan_id = f"financial_comparison_{int(time.time())}"
+        steps = {}
+        
+        if len(context.active_documents) < 2:
+            # Not enough documents for comparison
+            logger.warning("Financial comparison requires 2+ documents, falling back to document analysis")
+            return await self._create_document_analysis_plan(context)
+        
+        # Generate structured prompt for financial comparison
+        structured_prompt = self.agent_identity.get_structured_prompt(
+            WorkflowType.FINANCIAL_COMPARISON,
+            documents=", ".join(context.active_documents),
+            comparison_type="similarities and differences"
+        )
+        
+        # Step 1: Search multiple documents with 10k word context consideration
+        # For comparison, we need broader content, so use a general search or no query filter
+        step_1 = ExecutionStep(
+            step_id="search_multi_docs",
+            tool_name="search_multiple_docs",
+            parameters={
+                "doc_names": context.active_documents,
+                "query": None  # No query filter to get more comprehensive content
+            },
+            condition=ConditionType.ALWAYS,
+            description="Search multiple documents for financial comparison analysis"
+        )
+        steps["search_multi_docs"] = step_1
+        
+        # Step 2: Apply synthesize_content for financial analysis
+        step_2 = ExecutionStep(
+            step_id="refine_analysis",
+            tool_name="synthesize_content",
+            parameters={
+                "documents": "$search_multi_docs",
+                "query": context.user_query,
+                "synthesis_type": "financial_comparison"
+            },
+            dependencies=["search_multi_docs"],
+            condition=ConditionType.ON_SUCCESS,
+            description="Apply refine method with financial analyst expertise"
+        )
+        steps["refine_analysis"] = step_2
+        
+        return ExecutionPlan(
+            plan_id=plan_id,
+            steps=steps,
+            metadata={
+                "workflow_type": WorkflowType.FINANCIAL_COMPARISON.value,
+                "strategy": "financial_comparison",
+                "documents": context.active_documents,
+                "chunk_size": 5000,
+                "agent_identity": "AI Finance and Risk Agent"
+            }
+        )
+    
+    async def _create_qa_fallback_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """Create plan for Q&A with comprehensive fallback chain."""
+        plan_id = f"qa_fallback_{int(time.time())}"
+        steps = {}
+        
+        # Create simple Q&A fallback with available tools
+        step_count = 1
+        first_step_added = False
+        
+        # Step 1: Try knowledge base first
+        step_1 = ExecutionStep(
+            step_id="knowledge_search",
+            tool_name="search_knowledge_base",
+            parameters={
+                "query": context.user_query
+            },
+            condition=ConditionType.ALWAYS,
+            description="Search knowledge base for financial information"
+        )
+        steps["knowledge_search"] = step_1
+        first_step_added = True
+        
+        # Step 2: Try conversation history
+        step_2 = ExecutionStep(
+            step_id="conversation_search",
+            tool_name="search_conversation_history",
+            parameters={
+                "query": context.user_query
+            },
+            condition=ConditionType.ON_FAILURE,
+            description="Search conversation history for context"
+        )
+        steps["conversation_search"] = step_2
+        
+        # Step 3: Synthesize final answer
+        step_3 = ExecutionStep(
+            step_id="synthesize_fallback",
+            tool_name="synthesize_content",
+            parameters={
+                "documents": "$knowledge_search",
+                "query": context.user_query,
+                "synthesis_type": "qa_response"
+            },
+            dependencies=["knowledge_search"],
+            condition=ConditionType.ON_SUCCESS,
+            description="Synthesize response with financial expertise"
+        )
+        steps["synthesize_fallback"] = step_3
+        
+        return ExecutionPlan(
+            plan_id=plan_id,
+            steps=steps,
+            metadata={
+                "workflow_type": WorkflowType.QA_FALLBACK_CHAIN.value,
+                "strategy": "qa_fallback_chain",
+                "fallback_chain": ["knowledge_base", "conversation_history", "synthesis"],
+                "agent_identity": "AI Finance and Risk Agent"
+            }
+        )
+    
+    async def _create_data_analysis_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """Create plan for progressive data analysis workflow."""
+        plan_id = f"data_analysis_{int(time.time())}"
+        steps = {}
+        
+        # Generate structured prompt for data analysis
+        structured_prompt = self.agent_identity.get_structured_prompt(
+            WorkflowType.DATA_ANALYSIS
+        )
+        
+        # Step 1: Search uploaded CSV/table data  
+        step_1 = ExecutionStep(
+            step_id="search_table_data",
+            tool_name="search_uploaded_docs",
+            parameters={
+                "doc_name": context.active_documents[0] if context.active_documents else "table_data",
+                "query": context.user_query
+            },
+            condition=ConditionType.ALWAYS,
+            description="Search uploaded table/CSV data"
+        )
+        steps["search_table_data"] = step_1
+        
+        # Step 2: Synthesize table summary
+        step_2 = ExecutionStep(
+            step_id="table_summary",
+            tool_name="synthesize_content",
+            parameters={
+                "documents": "$search_table_data",
+                "query": context.user_query,
+                "synthesis_type": "data_summary"
+            },
+            dependencies=["search_table_data"],
+            condition=ConditionType.ON_SUCCESS,
+            description="Generate table data summary with financial context"
+        )
+        steps["table_summary"] = step_2
+        
+        # Step 3: Python calculations (if requested)
+        if any(word in context.user_query.lower() for word in ["calculate", "add", "compute", "total"]):
+            step_3 = ExecutionStep(
+                step_id="python_calculations",
+                tool_name="execute_python_code",
+                parameters={
+                    "code_request": context.user_query,
+                    "data_context": "$table_summary"
+                },
+                dependencies=["table_summary"],
+                condition=ConditionType.ON_SUCCESS,
+                description="Execute Python calculations based on user request"
+            )
+            steps["python_calculations"] = step_3
+        
+        # Step 4: Visualization (if requested)
+        if any(word in context.user_query.lower() for word in ["chart", "graph", "plot", "visualize"]):
+            step_4 = ExecutionStep(
+                step_id="create_visualization",
+                tool_name="create_chart",
+                parameters={
+                    "chart_request": context.user_query,
+                    "data_context": "$table_summary"
+                },
+                dependencies=["table_summary"],
+                condition=ConditionType.ON_SUCCESS,
+                description="Create visualization based on user request"
+            )
+            steps["create_visualization"] = step_4
+        
+        return ExecutionPlan(
+            plan_id=plan_id,
+            steps=steps,
+            metadata={
+                "workflow_type": WorkflowType.DATA_ANALYSIS.value,
+                "strategy": "data_analysis",
+                "progressive_workflow": True,
+                "agent_identity": "AI Finance and Risk Agent"
+            }
+        )
+    
+    async def _create_productivity_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """Create plan for productivity assistance with financial expertise."""
+        plan_id = f"productivity_{int(time.time())}"
+        steps = {}
+        
+        # Step 1: Analyze productivity request with financial context
+        step_1 = ExecutionStep(
+            step_id="productivity_analysis",
+            tool_name="llm_synthesis",
+            parameters={
+                "query": context.user_query,
+                "expertise": "financial analysis and productivity",
+                "context": "productivity assistance with financial specialization"
+            },
+            condition=ConditionType.ALWAYS,
+            description="Provide productivity assistance with financial expertise"
+        )
+        steps["productivity_analysis"] = step_1
+        
+        return ExecutionPlan(
+            plan_id=plan_id,
+            steps=steps,
+            metadata={
+                "workflow_type": WorkflowType.PRODUCTIVITY_ASSISTANCE.value,
+                "strategy": "productivity_assistance",
+                "agent_identity": "AI Finance and Risk Agent"
+            }
+        )
+    
+    async def _create_memory_search_plan(self, context: PlanningContext) -> ExecutionPlan:
+        """Create plan for memory search workflow - search conversation history and saved memories."""
+        plan_id = f"memory_search_{int(time.time())}"
+        steps = {}
+        
+        # Step 1: Search conversation history
+        step_1 = ExecutionStep(
+            step_id="search_conversation",
+            tool_name="search_conversation_history",
+            parameters={
+                "query": context.user_query
+            },
+            condition=ConditionType.ALWAYS,
+            description="Search through conversation history for relevant memories"
+        )
+        steps["search_conversation"] = step_1
+        
+        # Step 2: Search knowledge base for long-term memory
+        step_2 = ExecutionStep(
+            step_id="search_long_term_memory",
+            tool_name="search_knowledge_base",
+            parameters={
+                "query": context.user_query
+            },
+            condition=ConditionType.ALWAYS,
+            description="Search knowledge base for saved long-term memories"
+        )
+        steps["search_long_term_memory"] = step_2
+        
+        # Step 3: Synthesize memory results
+        step_3 = ExecutionStep(
+            step_id="synthesize_memory_results",
+            tool_name="synthesize_content",
+            parameters={
+                "documents": "$search_conversation",
+                "query": context.user_query,
+                "synthesis_type": "memory_recall"
+            },
+            dependencies=["search_conversation", "search_long_term_memory"],
+            condition=ConditionType.ON_SUCCESS,
+            description="Synthesize conversation history and memory results with financial expertise"
+        )
+        steps["synthesize_memory_results"] = step_3
+        
+        return ExecutionPlan(
+            plan_id=plan_id,
+            steps=steps,
+            metadata={
+                "workflow_type": WorkflowType.MEMORY_SEARCH.value,
+                "strategy": "memory_search",
+                "agent_identity": "AI Finance and Risk Agent",
+                "memory_sources": ["conversation_history", "long_term_memory"]
+            }
+        )
+    
+    def get_agent_info(self) -> Dict[str, Any]:
+        """Get agent identity information."""
+        return self.agent_identity.get_agent_info()
+    
+    def get_workflow_capabilities(self) -> List[str]:
+        """Get list of available workflow capabilities."""
+        return self.agent_identity.list_all_capabilities()

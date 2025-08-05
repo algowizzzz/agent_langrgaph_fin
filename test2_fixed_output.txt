@@ -1,0 +1,38 @@
+🔍 Testing system status...
+✅ System Status:
+   📊 Status: operational
+   🤖 Orchestrator V2: ✅
+   💾 Memory: ✅
+   📄 Multi-docs: ✅
+   🌊 Streaming: ✅
+
+🔍 Testing query: 'compare and contrast the information in the 2 chapters as a cro assistant --doc 20250801_231927_e702b3a7-5cbd-4557-b46b-9d352384f3ac_car24_chpt1_0.pdf 20250801_231934_cb90fddd-c3b9-4a48-8bba-d55d28f0a3b0_car24_chpt7.pdf'
+============================================================
+📄 Using document(s): ['20250801_231927_e702b3a7-5cbd-4557-b46b-9d352384f3ac_car24_chpt1_0.pdf', '20250801_231934_cb90fddd-c3b9-4a48-8bba-d55d28f0a3b0_car24_chpt7.pdf']
+✅ SUCCESS!
+📝 Answer: As a CRO Assistant, I'll provide a structured comparison of the two chapters focusing on their key differences and relevance to risk management:
+
+Key Differences:
+
+1. Scope and Purpose
+- Chapter 1: Provides the foundational framework for risk-based capital requirements, covering broad capital adequacy standards and regulatory compliance requirements for banks, bank holding companies, and trust/loan companies
+- Chapter 7: Focuses specifically on settlement and counterparty risk, with detailed methodologies for calculating exposures and capital requirements for derivatives and securities financing transactions
+
+2. Regulatory Framework
+- Chapter 1: Establishes the core capital requirements including:
+  * Minimum capital ratios (CET1 4.5%, Tier 1 6%, Total Capital 8%)
+  * Capital buffers (Conservation Buffer 2.5%, Countercyclical Buffer 0-2.5%)
+  * Special provisions for D-SIBs (1% surcharge plus Domestic Stability Buffer)
+- Chapter 7: Provides specific risk calculation methodologies and exposure measurements
+
+3. Implementation Focus
+- Chapter 1: Sets the overall regulatory context and compliance framework
+- Chapter 7: Offers technical guidance on specific risk calculations and capital treatments
+
+From a CRO perspective, these chapters are complementary:
+- Chapter 1 provides the essential framework needed to ensure overall capital adequacy
+- Chapter 7 offers the detailed technical requirements needed for specific risk calculations
+
+This structure allows for both broad strategic capital planning (Chapter 1) and detailed risk management implementation (Chapter 7) within the institution's risk management framework.
+⏱️  Time: 26789ms
+🎯 Confidence: 0

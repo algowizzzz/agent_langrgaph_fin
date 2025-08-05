@@ -1,0 +1,29 @@
+🔍 Testing system status...
+✅ System Status:
+   📊 Status: operational
+   🤖 Orchestrator V2: ✅
+   💾 Memory: ✅
+   📄 Multi-docs: ✅
+   🌊 Streaming: ✅
+
+🔍 Testing query: 'compare and contrast the information in the 2 chapters as a cro assistant --doc 20250801_224731_070aafb2-d92e-4598-8725-93b8e55a3583_car24_chpt1_0_simple.txt 20250801_225612_eb32239c-edbd-4efa-82c5-1d7dea2ab6ac_car24_chpt7.pdf'
+============================================================
+📄 Using document(s): ['20250801_224731_070aafb2-d92e-4598-8725-93b8e55a3583_car24_chpt1_0_simple.txt', '20250801_225612_eb32239c-edbd-4efa-82c5-1d7dea2ab6ac_car24_chpt7.pdf']
+✅ SUCCESS!
+📝 Answer: I apologize, but I am unable to provide a comparison between the two chapters at this time since the source documents appear to be inaccessible or missing. As a CRO assistant, I aim to provide accurate and detailed financial comparisons, but this requires access to the actual content.
+
+To properly assist you, I would need:
+1. Access to the complete content of both chapters
+2. The specific financial guidelines and requirements from each chapter
+3. Any relevant regulatory context or frameworks being discussed
+
+Once you provide the actual content of these chapters, I can offer:
+- A detailed comparison of their financial implications
+- Analysis of contrasting requirements and guidelines
+- Key similarities and differences between the chapters
+- Specific insights from a CRO perspective
+- Relevant compliance considerations
+
+Please feel free to share the document contents, and I will be happy to provide a thorough comparative analysis that meets your needs.
+⏱️  Time: 7768ms
+🎯 Confidence: 0

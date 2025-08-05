@@ -1,0 +1,39 @@
+🔍 Testing system status...
+✅ System Status:
+   📊 Status: operational
+   🤖 Orchestrator V2: ✅
+   💾 Memory: ✅
+   📄 Multi-docs: ✅
+   🌊 Streaming: ✅
+
+🔍 Testing query: 'what is risk --doc riskandfinace.pdf'
+============================================================
+📄 Using document(s): ['riskandfinace.pdf']
+✅ SUCCESS!
+📝 Answer: Risk is the uncertainty or potential for loss in financial decisions or investments. It represents the possibility that actual outcomes may deviate from expected results due to various factors such as market volatility, economic changes, or unforeseen events.
+
+Key aspects of risk include:
+
+1. Measurement
+- Evaluated through the likelihood and magnitude of deviations from expected outcomes
+- Quantifies potential losses or negative impacts
+
+2. Major Types of Financial Risk
+- Market Risk: Related to price fluctuations in financial markets
+- Credit Risk: Associated with potential loan defaults
+- Liquidity Risk: Difficulty in converting assets to cash
+- Operational Risk: Failures in processes or systems
+
+3. Importance in Decision Making
+- Risk is a fundamental consideration in financial planning
+- Helps in making informed decisions about investments and resource allocation
+- Requires careful balancing against potential returns
+
+Understanding risk is essential for individuals, businesses, and organizations as it allows them to:
+- Make more informed financial decisions
+- Develop appropriate risk management strategies
+- Balance potential rewards against possible losses
+
+This comprehensive view of risk helps stakeholders better prepare for and respond to uncertainties in their financial activities.
+⏱️  Time: 13110ms
+🎯 Confidence: 0

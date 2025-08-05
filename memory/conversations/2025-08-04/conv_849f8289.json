@@ -1,0 +1,85 @@
+{
+  "id": "conv_849f8289",
+  "messages": [
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:18:19.392364",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "I have access to a comprehensive set of tools that enable me to assist with financial analysis, risk assessment, and document processing. Here are the key tools organized by category:\n\nDocument Management:\n- Upload, process, and store documents (PDF, DOCX, TXT, CSV, Excel)\n- Search and analyze uploaded documents\n- Compare multiple documents simultaneously\n- Remove documents from storage\n- Discover document structure and metadata\n\nAnalysis Capabilities:\n- Document analysis and synthesis\n- Multi-document financial comparison\n- Progressive data analysis\n- Content synthesis and summarization\n- Knowledge base search and integration\n\nCore System Functions:\n- Q&A with comprehensive fallback chain\n- Memory search across multiple sources\n- System self-awareness and capability reporting\n- Workflow management and execution\n\nMemory and Data Sources:\n- Access to uploaded documents\n- Knowledge base embeddings\n- Long-term conversation history\n- Built-in LLM knowledge base\n\nI can work with multiple document formats and maintain a document store that currently contains 6 documents. All these tools are designed to provide comprehensive financial analysis, risk assessment, and productivity support.\n\nWould you like me to elaborate on any specific tool or capability?",
+      "timestamp": "2025-08-04T19:18:29.955549",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:20:25.673744",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "System information is available but could not be properly extracted.",
+      "timestamp": "2025-08-04T19:20:31.816199",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:21:38.449671",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:21:38.449671",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "System information is available but could not be properly extracted.",
+      "timestamp": "2025-08-04T19:21:44.426887",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:23:15.254198",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "I have access to 23 tools in total. Here is a comprehensive list of all available tools with their descriptions:\n\n1. get_agent_capabilities - Retrieve agent capability information\n2. get_available_documents - Get information about available documents\n3. get_workflow_information - Get details about available workflows\n4. upload_document - Process and store new documents (PDF, DOCX, TXT, CSV, Excel)\n5. discover_document_structure - Analyze document structure and metadata\n6. search_uploaded_docs - Search and retrieve uploaded documents\n7. search_multiple_docs - Compare and analyze multiple documents simultaneously\n8. get_all_documents - List all available documents\n9. remove_document - Remove documents from storage\n10. synthesize_content - Generate analysis and summaries from documents\n11. search_knowledge_base - Access external knowledge resources\n12. search_conversation_history - Access previous conversation context\n13. execute_python_code - Execute custom calculations and data processing\n14. process_table_data - Process structured table and spreadsheet data\n15. calculate_statistics - Calculate financial metrics and statistical measures\n16. create_chart - Generate charts and graphs from data\n17. create_wordcloud - Create visual word frequency representations\n18. create_statistical_plot - Generate statistical plots and distributions\n19. create_comparison_chart - Create comparative visualizations\n20. analyze_text_metrics - Analyze text structure and readability metrics\n21. extract_key_phrases - Extract important phrases and concepts\n22. analyze_sentiment - Analyze emotional tone and sentiment\n23. extract_entities - Extract named entities and key terms\n\nThese tools span multiple categories including:\n- High reliability system tools\n- Document management\n- Search capabilities\n- Content synthesis\n- Computational functions\n- Visualization tools\n- Analysis features\n\nI can work with various document formats including PDF, DOCX, TXT, CSV, and multi-sheet Excel files. All tools are currently operational and available through the live registry.",
+      "timestamp": "2025-08-04T19:23:21.614767",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "user",
+      "content": "--query what tools do you have access to?",
+      "timestamp": "2025-08-04T19:24:09.527061",
+      "session_id": "terminal-test-session"
+    },
+    {
+      "role": "assistant",
+      "content": "I have access to 23 tools in total. Here is a comprehensive list of all available tools with their descriptions:\n\n1. get_agent_capabilities - Retrieve agent capability information\n2. get_available_documents - Get information about available documents\n3. get_workflow_information - Get details about available workflows\n4. upload_document - Process and store new documents (PDF, DOCX, TXT, CSV, Excel)\n5. discover_document_structure - Analyze document structure and metadata\n6. search_uploaded_docs - Search and retrieve uploaded documents\n7. search_multiple_docs - Compare and analyze multiple documents simultaneously\n8. get_all_documents - List all available documents\n9. remove_document - Remove documents from storage\n10. synthesize_content - Generate analysis and summaries from documents\n11. search_knowledge_base - Access external knowledge resources\n12. search_conversation_history - Access previous conversation context\n13. execute_python_code - Execute custom calculations and data processing\n14. process_table_data - Process structured table and spreadsheet data\n15. calculate_statistics - Calculate financial metrics and statistical measures\n16. create_chart - Generate charts and graphs from data\n17. create_wordcloud - Create visual word frequency representations\n18. create_statistical_plot - Generate statistical plots and distributions\n19. create_comparison_chart - Create comparative visualizations\n20. analyze_text_metrics - Analyze text structure and readability metrics\n21. extract_key_phrases - Extract important phrases and concepts\n22. analyze_sentiment - Analyze emotional tone and sentiment\n23. extract_entities - Extract named entities and key terms\n\nThese tools span multiple categories including:\n- High reliability system tools\n- Document management\n- Search capabilities\n- Content synthesis\n- Computational functions\n- Visualization tools\n- Analysis features\n\nI can work with various document formats including PDF, DOCX, TXT, CSV, and multi-sheet Excel files. All tools are currently operational and available through the live registry.",
+      "timestamp": "2025-08-04T19:24:15.558574",
+      "session_id": "terminal-test-session"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250804_192415",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, search_queries, financial, reporting",
+    "original_message_count": 11,
+    "timespan": "2025-08-04T19:18:19.392364 - 2025-08-04T19:24:15.558574",
+    "topics": [
+      "document_analysis",
+      "search_queries",
+      "financial",
+      "reporting"
+    ],
+    "created_at": "2025-08-04T19:24:15.559089"
+  },
+  "created_at": "2025-08-04T19:24:15.560095"
+}

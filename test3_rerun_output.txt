@@ -1,0 +1,28 @@
+🔍 Testing system status...
+✅ System Status:
+   📊 Status: operational
+   🤖 Orchestrator V2: ✅
+   💾 Memory: ✅
+   📄 Multi-docs: ✅
+   🌊 Streaming: ✅
+
+🔍 Testing query: 'explain the data and extract key insights --doc 20250801_215110_09205507-73f4-4fec-8792-3cdb156bcd39_test_business_data.csv'
+============================================================
+📄 Using document(s): ['20250801_215110_09205507-73f4-4fec-8792-3cdb156bcd39_test_business_data.csv']
+✅ SUCCESS!
+📝 Answer: I apologize, but I am unable to explain the data or extract key insights at this time because the data file appears to be missing or inaccessible, as indicated by the error message in the analysis results.
+
+To provide you with meaningful insights, I would need either:
+1. Access to the actual data file
+2. A direct description of the data you'd like to analyze
+
+If you could please:
+- Verify the data file is properly uploaded
+- Share the data in another format, or
+- Provide the information directly in text form
+
+I would be happy to help analyze the information and extract valuable insights once I have access to the underlying data.
+
+Please feel free to share the data again, and I'll provide a thorough analysis with key findings and meaningful insights tailored to your needs.
+⏱️  Time: 6969ms
+🎯 Confidence: 0

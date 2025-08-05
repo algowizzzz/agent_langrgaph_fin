@@ -45,7 +45,8 @@ class SessionCleanupResponse(BaseModel):
 class FrontendChatRequest(BaseModel):
     query: str
     session_id: str
-    active_document: Optional[str] = None
+    active_document: Optional[str] = None  # Backward compatibility
+    active_documents: Optional[List[str]] = []  # Multi-document support
 
 class ReasoningStep(BaseModel):
     tool_name: str
@@ -59,6 +60,7 @@ class FrontendChatResponse(BaseModel):
     processing_time_ms: int
     session_id: str
     error_message: Optional[str] = None
+    metadata: Optional[Dict] = None
 
 class FrontendUploadResponse(BaseModel):
     status: str = "success"

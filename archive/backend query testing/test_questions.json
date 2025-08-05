@@ -1,0 +1,288 @@
+{
+  "test_suites": {
+    "single_document": {
+      "cet_ratio_analysis": {
+        "description": "Test CET ratio understanding and document analysis (single document)",
+        "document_count": 1,
+        "questions": [
+          {
+            "query": "explain what is cet ratio?",
+            "use_document": true,
+            "description": "Basic CET ratio explanation"
+          },
+          {
+            "query": "how many times was risk mentioned in document?",
+            "use_document": true,
+            "description": "Word frequency analysis"
+          },
+          {
+            "query": "what is cet ratio? answer from prev response only without reading the document?",
+            "use_document": false,
+            "description": "Memory retention test"
+          },
+          {
+            "query": "what is the chapter name we are working with",
+            "use_document": true,
+            "description": "Document structure identification"
+          }
+        ]
+      },
+      "comprehensive_analysis": {
+        "description": "Comprehensive document analysis test suite (single document)",
+        "document_count": 1,
+        "questions": [
+          {
+            "query": "provide a comprehensive summary of this document",
+            "use_document": true,
+            "description": "Full document summarization"
+          },
+          {
+            "query": "what are the main regulatory requirements mentioned?",
+            "use_document": true,
+            "description": "Regulatory requirements extraction"
+          },
+          {
+            "query": "list all capital ratios mentioned in the document",
+            "use_document": true,
+            "description": "Capital ratio identification"
+          },
+          {
+            "query": "what are the key dates and deadlines mentioned?",
+            "use_document": true,
+            "description": "Timeline extraction"
+          },
+          {
+            "query": "explain the relationship between the previous concepts without reading the document",
+            "use_document": false,
+            "description": "Concept synthesis test"
+          }
+        ]
+      },
+      "memory_test": {
+        "description": "Test conversation memory and context retention (single document)",
+        "document_count": 1,
+        "questions": [
+          {
+            "query": "what is the main topic of this document?",
+            "use_document": true,
+            "description": "Initial context establishment"
+          },
+          {
+            "query": "based on our previous discussion, what was the main topic?",
+            "use_document": false,
+            "description": "Short-term memory test"
+          },
+          {
+            "query": "how does this relate to banking regulations?",
+            "use_document": false,
+            "description": "Context application test"
+          }
+        ]
+      }
+    },
+    "multi_document": {
+      "comparative_analysis": {
+        "description": "Compare and contrast multiple documents",
+        "document_count": 2,
+        "questions": [
+          {
+            "query": "compare and contrast the key themes between these documents",
+            "use_document": true,
+            "description": "Cross-document theme comparison"
+          },
+          {
+            "query": "what are the common regulatory requirements mentioned in both documents?",
+            "use_document": true,
+            "description": "Common requirements identification"
+          },
+          {
+            "query": "identify overlapping concepts and differences between the documents",
+            "use_document": true,
+            "description": "Overlap and difference analysis"
+          },
+          {
+            "query": "which document provides more comprehensive coverage of risk management?",
+            "use_document": true,
+            "description": "Comparative depth analysis"
+          },
+          {
+            "query": "based on our analysis, summarize the relationship between these documents without reading them again",
+            "use_document": false,
+            "description": "Multi-document memory synthesis"
+          }
+        ]
+      },
+      "regulatory_synthesis": {
+        "description": "Synthesize regulatory information across documents",
+        "document_count": 2,
+        "questions": [
+          {
+            "query": "synthesize information from both documents to explain the overall regulatory framework",
+            "use_document": true,
+            "description": "Framework synthesis"
+          },
+          {
+            "query": "how do these documents complement each other in terms of financial regulations?",
+            "use_document": true,
+            "description": "Complementary analysis"
+          },
+          {
+            "query": "identify any contradictions or inconsistencies between the documents",
+            "use_document": true,
+            "description": "Consistency analysis"
+          },
+          {
+            "query": "create a unified timeline of regulatory requirements from both documents",
+            "use_document": true,
+            "description": "Timeline consolidation"
+          }
+        ]
+      },
+      "cross_document_search": {
+        "description": "Search and extract information across multiple documents",
+        "document_count": 2,
+        "questions": [
+          {
+            "query": "find all mentions of 'capital ratio' across both documents and compare their contexts",
+            "use_document": true,
+            "description": "Cross-document term analysis"
+          },
+          {
+            "query": "which document contains more specific implementation guidance?",
+            "use_document": true,
+            "description": "Guidance depth comparison"
+          },
+          {
+            "query": "extract all numerical requirements (percentages, ratios, deadlines) from both documents",
+            "use_document": true,
+            "description": "Numerical data extraction"
+          },
+          {
+            "query": "identify the target audience for each document based on their content",
+            "use_document": true,
+            "description": "Audience identification"
+          }
+        ]
+      },
+      "scenario_analysis": {
+        "description": "Multi-document scenario testing",
+        "document_count": 2,
+        "questions": [
+          {
+            "query": "if I'm a bank compliance officer, how would I use these documents together?",
+            "use_document": true,
+            "description": "Practical application scenario"
+          },
+          {
+            "query": "what would be the sequence for implementing requirements from both documents?",
+            "use_document": true,
+            "description": "Implementation sequencing"
+          },
+          {
+            "query": "identify potential conflicts a financial institution might face when following both documents",
+            "use_document": true,
+            "description": "Conflict identification"
+          },
+          {
+            "query": "prioritize the requirements from both documents by urgency and importance",
+            "use_document": true,
+            "description": "Requirement prioritization"
+          }
+        ]
+      }
+    },
+    "stress_testing": {
+      "large_document_set": {
+        "description": "Test with multiple large documents",
+        "document_count": 3,
+        "questions": [
+          {
+            "query": "provide a comprehensive overview of all regulatory frameworks across these documents",
+            "use_document": true,
+            "description": "Multi-document framework overview"
+          },
+          {
+            "query": "create a master glossary of terms from all documents",
+            "use_document": true,
+            "description": "Consolidated glossary creation"
+          },
+          {
+            "query": "identify the most critical compliance requirements across all documents",
+            "use_document": true,
+            "description": "Critical requirements identification"
+          }
+        ]
+      },
+      "performance_testing": {
+        "description": "Test response times and quality with multiple documents",
+        "document_count": 2,
+        "questions": [
+          {
+            "query": "perform a detailed analysis of regulatory changes mentioned in these documents",
+            "use_document": true,
+            "description": "Complex analysis performance test"
+          },
+          {
+            "query": "generate a compliance checklist based on all documents",
+            "use_document": true,
+            "description": "Synthesis performance test"
+          },
+          {
+            "query": "explain the evolution of regulatory requirements shown across these documents",
+            "use_document": true,
+            "description": "Temporal analysis performance test"
+          }
+        ]
+      }
+    }
+  },
+  "question_categories": {
+    "comparison": [
+      "compare and contrast",
+      "identify differences",
+      "highlight similarities",
+      "which document provides better"
+    ],
+    "synthesis": [
+      "combine information from",
+      "synthesize across documents",
+      "create unified view",
+      "integrate concepts from"
+    ],
+    "extraction": [
+      "find all mentions",
+      "extract information",
+      "list all instances",
+      "identify specific data"
+    ],
+    "analysis": [
+      "analyze the relationship",
+      "evaluate the impact",
+      "assess the significance",
+      "determine the implications"
+    ],
+    "application": [
+      "how would you use",
+      "practical implementation",
+      "real-world application",
+      "scenario-based usage"
+    ]
+  },
+  "recommended_document_pairs": [
+    {
+      "pair": ["car24_chpt1_0.pdf", "riskandfinace.pdf"],
+      "description": "OSFI regulatory chapter with risk management document",
+      "best_for": ["regulatory_synthesis", "comparative_analysis"]
+    },
+    {
+      "pair": ["regulatory_doc_1.pdf", "regulatory_doc_2.pdf"],
+      "description": "Two related regulatory documents",
+      "best_for": ["cross_document_search", "scenario_analysis"]
+    },
+    {
+      "pair": ["policy_document.pdf", "implementation_guide.pdf"],
+      "description": "Policy and its implementation guide",
+      "best_for": ["scenario_analysis", "comparative_analysis"]
+    }
+  ]
+}

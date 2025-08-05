@@ -1,0 +1,82 @@
+{
+  "id": "conv_de712aeb",
+  "messages": [
+    {
+      "role": "user",
+      "content": "What is the total revenue?",
+      "timestamp": "2025-08-03T15:14:45.372546",
+      "session_id": "12345"
+    },
+    {
+      "role": "assistant",
+      "content": "[{'page_content': '# CSV Data: 20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv\\n\\nEmployee ID          Name  Department  Salary Start Date Performance Rating\\n       E001    John Smith Engineering   85000 2022-01-15          Excellent\\n       E002 Sarah Johnson   Marketing   72000 2021-03-10               Good\\n       E003 Michael Brown Engineering   95000 2020-07-22          Excellent\\n       E004   Emily Davis          HR   68000 2023-02-01               Good\\n       E005  David Wilson     Finance   78000 2021-11-05       Satisfactory\\n       E006 Lisa Anderson Engineering   88000 2022-06-30          Excellent\\n       E007  James Taylor   Marketing   69000 2023-01-20               Good\\n       E008  Jennifer Lee     Finance   82000 2020-12-10          Excellent\\n       E009 Robert Garcia          HR   65000 2022-09-15               Good\\n       E010 Mary Martinez Engineering   92000 2021-05-18          Excellent', 'metadata': {'source': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'file_type': 'CSV', 'file_name': '20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'chunk_index': 0, 'uploaded_by_session': '12345', 'upload_timestamp': '2025-08-03T15:05:17.421888', 'file_size': 589, 'original_path': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'display_name': 'test_document.csv'}}]",
+      "timestamp": "2025-08-03T15:14:53.965123",
+      "session_id": "12345"
+    },
+    {
+      "role": "user",
+      "content": "What is the total revenue?",
+      "timestamp": "2025-08-03T15:15:19.886136",
+      "session_id": "12345"
+    },
+    {
+      "role": "assistant",
+      "content": "[{'page_content': '# CSV Data: 20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv\\n\\nEmployee ID          Name  Department  Salary Start Date Performance Rating\\n       E001    John Smith Engineering   85000 2022-01-15          Excellent\\n       E002 Sarah Johnson   Marketing   72000 2021-03-10               Good\\n       E003 Michael Brown Engineering   95000 2020-07-22          Excellent\\n       E004   Emily Davis          HR   68000 2023-02-01               Good\\n       E005  David Wilson     Finance   78000 2021-11-05       Satisfactory\\n       E006 Lisa Anderson Engineering   88000 2022-06-30          Excellent\\n       E007  James Taylor   Marketing   69000 2023-01-20               Good\\n       E008  Jennifer Lee     Finance   82000 2020-12-10          Excellent\\n       E009 Robert Garcia          HR   65000 2022-09-15               Good\\n       E010 Mary Martinez Engineering   92000 2021-05-18          Excellent', 'metadata': {'source': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'file_type': 'CSV', 'file_name': '20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'chunk_index': 0, 'uploaded_by_session': '12345', 'upload_timestamp': '2025-08-03T15:05:17.421888', 'file_size': 589, 'original_path': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'display_name': 'test_document.csv'}}]",
+      "timestamp": "2025-08-03T15:15:29.806694",
+      "session_id": "12345"
+    },
+    {
+      "role": "user",
+      "content": "What is the total revenue?",
+      "timestamp": "2025-08-03T15:16:01.152327",
+      "session_id": "12345"
+    },
+    {
+      "role": "user",
+      "content": "What is the total revenue?",
+      "timestamp": "2025-08-03T15:16:01.152327",
+      "session_id": "12345"
+    },
+    {
+      "role": "assistant",
+      "content": "[{'page_content': '# CSV Data: 20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv\\n\\nEmployee ID          Name  Department  Salary Start Date Performance Rating\\n       E001    John Smith Engineering   85000 2022-01-15          Excellent\\n       E002 Sarah Johnson   Marketing   72000 2021-03-10               Good\\n       E003 Michael Brown Engineering   95000 2020-07-22          Excellent\\n       E004   Emily Davis          HR   68000 2023-02-01               Good\\n       E005  David Wilson     Finance   78000 2021-11-05       Satisfactory\\n       E006 Lisa Anderson Engineering   88000 2022-06-30          Excellent\\n       E007  James Taylor   Marketing   69000 2023-01-20               Good\\n       E008  Jennifer Lee     Finance   82000 2020-12-10          Excellent\\n       E009 Robert Garcia          HR   65000 2022-09-15               Good\\n       E010 Mary Martinez Engineering   92000 2021-05-18          Excellent', 'metadata': {'source': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'file_type': 'CSV', 'file_name': '20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'chunk_index': 0, 'uploaded_by_session': '12345', 'upload_timestamp': '2025-08-03T15:05:17.421888', 'file_size': 589, 'original_path': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'display_name': 'test_document.csv'}}]",
+      "timestamp": "2025-08-03T15:16:10.375138",
+      "session_id": "12345"
+    },
+    {
+      "role": "user",
+      "content": "What is the total revenue?",
+      "timestamp": "2025-08-03T15:17:28.094044",
+      "session_id": "12345"
+    },
+    {
+      "role": "assistant",
+      "content": "[{'page_content': '# CSV Data: 20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv\\n\\nEmployee ID          Name  Department  Salary Start Date Performance Rating\\n       E001    John Smith Engineering   85000 2022-01-15          Excellent\\n       E002 Sarah Johnson   Marketing   72000 2021-03-10               Good\\n       E003 Michael Brown Engineering   95000 2020-07-22          Excellent\\n       E004   Emily Davis          HR   68000 2023-02-01               Good\\n       E005  David Wilson     Finance   78000 2021-11-05       Satisfactory\\n       E006 Lisa Anderson Engineering   88000 2022-06-30          Excellent\\n       E007  James Taylor   Marketing   69000 2023-01-20               Good\\n       E008  Jennifer Lee     Finance   82000 2020-12-10          Excellent\\n       E009 Robert Garcia          HR   65000 2022-09-15               Good\\n       E010 Mary Martinez Engineering   92000 2021-05-18          Excellent', 'metadata': {'source': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'file_type': 'CSV', 'file_name': '20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'chunk_index': 0, 'uploaded_by_session': '12345', 'upload_timestamp': '2025-08-03T15:05:17.421888', 'file_size': 589, 'original_path': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'display_name': 'test_document.csv'}}]",
+      "timestamp": "2025-08-03T15:17:37.687934",
+      "session_id": "12345"
+    },
+    {
+      "role": "user",
+      "content": "What is the total revenue?",
+      "timestamp": "2025-08-03T15:18:12.943797",
+      "session_id": "12345"
+    },
+    {
+      "role": "assistant",
+      "content": "[{'page_content': '# CSV Data: 20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv\\n\\nEmployee ID          Name  Department  Salary Start Date Performance Rating\\n       E001    John Smith Engineering   85000 2022-01-15          Excellent\\n       E002 Sarah Johnson   Marketing   72000 2021-03-10               Good\\n       E003 Michael Brown Engineering   95000 2020-07-22          Excellent\\n       E004   Emily Davis          HR   68000 2023-02-01               Good\\n       E005  David Wilson     Finance   78000 2021-11-05       Satisfactory\\n       E006 Lisa Anderson Engineering   88000 2022-06-30          Excellent\\n       E007  James Taylor   Marketing   69000 2023-01-20               Good\\n       E008  Jennifer Lee     Finance   82000 2020-12-10          Excellent\\n       E009 Robert Garcia          HR   65000 2022-09-15               Good\\n       E010 Mary Martinez Engineering   92000 2021-05-18          Excellent', 'metadata': {'source': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'file_type': 'CSV', 'file_name': '20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'chunk_index': 0, 'uploaded_by_session': '12345', 'upload_timestamp': '2025-08-03T15:05:17.421888', 'file_size': 589, 'original_path': 'global_uploads/20250803_150517_a7c6ae22-06e8-40bd-a34e-08eea4834d5b_test_document.csv', 'display_name': 'test_document.csv'}}]",
+      "timestamp": "2025-08-03T15:18:25.313012",
+      "session_id": "12345"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250803_151825",
+    "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis",
+    "original_message_count": 11,
+    "timespan": "2025-08-03T15:14:45.372546 - 2025-08-03T15:18:25.313012",
+    "topics": [
+      "document_analysis"
+    ],
+    "created_at": "2025-08-03T15:18:25.313605"
+  },
+  "created_at": "2025-08-03T15:18:25.314443"
+}

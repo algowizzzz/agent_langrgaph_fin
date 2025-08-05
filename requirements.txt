@@ -1,34 +1,31 @@
-# FastAPI Backend
-fastapi==0.104.1
-uvicorn[standard]==0.24.0
-python-multipart==0.0.6
-pydantic==2.5.0
-pydantic-settings==2.1.0
+# Enhanced Document Intelligence Agent Requirements
 
-# Streamlit Frontend
-streamlit==1.28.1
-requests==2.31.0
-
-# LangChain & LangGraph (will be added in Sprint 2)
-# langchain==0.1.17
-# langgraph==0.0.55
-# langchain-community==0.0.38
-
-# AI/LLM (will be added in Sprint 2)
-# anthropic==0.25.0
+# Core Requirements (already installed)
+python-dotenv
+langchain-anthropic
+langchain
+langchain-core
 
 # Document Processing
-python-docx==1.1.0
-openpyxl==3.1.2
-PyPDF2==3.0.1
-pandas==2.1.4
+PyPDF2
+python-docx
+pandas
+openpyxl
 
-# File Export
-fpdf2==2.7.6
+# NEW: Code Execution & Data Analysis
+numpy
+matplotlib
+seaborn
 
-# Configuration
-PyYAML==6.0.1
+# NEW: Text Analytics
+textstat
+textblob
+nltk
 
-# Utilities
-python-dotenv==1.0.0
-uuid==1.30
+# NEW: Visualization
+wordcloud
+plotly  # Alternative/additional plotting library
+
+# Optional Performance Enhancements
+scipy  # For advanced statistics
+scikit-learn  # For ML-based text analysis

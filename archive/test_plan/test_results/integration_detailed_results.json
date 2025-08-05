@@ -1,0 +1,12 @@
+{
+  "phase": "integration",
+  "status": "failed",
+  "start_time": 1754237501.182337,
+  "end_time": 1754237503.0584419,
+  "duration": 1.8761048316955566,
+  "tests_run": 18,
+  "tests_passed": 15,
+  "tests_failed": 3,
+  "success_rate": 83.33333333333334,
+  "exit_code": 1
+}

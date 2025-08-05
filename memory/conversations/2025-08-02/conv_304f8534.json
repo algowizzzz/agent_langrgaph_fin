@@ -1,0 +1,84 @@
+{
+  "id": "conv_304f8534",
+  "messages": [
+    {
+      "role": "user",
+      "content": "summarize this document",
+      "timestamp": "2025-08-02T10:37:17.111174",
+      "session_id": "session_1754145413640_7avsqdzg3"
+    },
+    {
+      "role": "user",
+      "content": "Hello test",
+      "timestamp": "2025-08-02T10:41:36.447258",
+      "session_id": "debug_test"
+    },
+    {
+      "role": "assistant",
+      "content": "Hi there! Thanks for reaching out. I'm here and ready to help you analyze any documents you'd like to explore. I have access to several documents covering topics like finance and risk management. Let me know what specific information you're interested in learning more about, and I'll be happy to assist you!",
+      "timestamp": "2025-08-02T10:41:42.444458",
+      "session_id": "debug_test"
+    },
+    {
+      "role": "user",
+      "content": "Hello streaming test",
+      "timestamp": "2025-08-02T10:41:56.055473",
+      "session_id": "stream_debug"
+    },
+    {
+      "role": "user",
+      "content": "Simple test",
+      "timestamp": "2025-08-02T10:42:11.076418",
+      "session_id": "full_stream_test"
+    },
+    {
+      "role": "user",
+      "content": "Simple test",
+      "timestamp": "2025-08-02T10:42:11.076418",
+      "session_id": "full_stream_test"
+    },
+    {
+      "role": "user",
+      "content": "summarise document",
+      "timestamp": "2025-08-02T10:43:26.203379",
+      "session_id": "session_1754145286199_plbqii532"
+    },
+    {
+      "role": "user",
+      "content": "Hello streaming debug test",
+      "timestamp": "2025-08-02T10:45:38.123300",
+      "session_id": "debug_test_1754145938009"
+    },
+    {
+      "role": "user",
+      "content": "summarise the document",
+      "timestamp": "2025-08-02T11:14:10.858790",
+      "session_id": "session_1754147639991_wnnojt1mf"
+    },
+    {
+      "role": "user",
+      "content": "how many times is risk mentioned in the document",
+      "timestamp": "2025-08-02T11:16:40.914723",
+      "session_id": "session_1754147639991_wnnojt1mf"
+    },
+    {
+      "role": "user",
+      "content": "read the document again, and identify all instance of the word \"risk\"",
+      "timestamp": "2025-08-02T11:17:54.295922",
+      "session_id": "session_1754147639991_wnnojt1mf"
+    }
+  ],
+  "summary": {
+    "summary_id": "sum_20250802_111754",
+    "content": "Conversation with 10 user queries and 1 assistant responses. Key topics: risk_factors, document_analysis, search_queries",
+    "original_message_count": 11,
+    "timespan": "2025-08-02T10:37:17.111174 - 2025-08-02T11:17:54.295922",
+    "topics": [
+      "risk_factors",
+      "document_analysis",
+      "search_queries"
+    ],
+    "created_at": "2025-08-02T11:17:54.296202"
+  },
+  "created_at": "2025-08-02T11:17:54.297686"
+}

@@ -1,114 +1,142 @@
 {
   "summaries": [
     {
-      "summary_id": "sum_20250801_162858",
-      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: document_analysis, search_queries",
+      "summary_id": "sum_20250804_225308",
+      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: document_analysis, search_queries, financial",
       "original_message_count": 11,
-      "timespan": "2025-08-01T16:25:22.058462 - 2025-08-01T16:28:58.030225",
-      "topics": [
-        "document_analysis",
-        "search_queries"
-      ],
-      "created_at": "2025-08-01T16:28:58.030706"
-    },
-    {
-      "summary_id": "sum_20250801_163019",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, search_queries",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:26:38.464898 - 2025-08-01T16:30:19.210614",
-      "topics": [
-        "document_analysis",
-        "search_queries"
-      ],
-      "created_at": "2025-08-01T16:30:19.210745"
-    },
-    {
-      "summary_id": "sum_20250801_163100",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, search_queries",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:28:58.039866 - 2025-08-01T16:31:00.500963",
-      "topics": [
-        "document_analysis",
-        "search_queries"
-      ],
-      "created_at": "2025-08-01T16:31:00.501330"
-    },
-    {
-      "summary_id": "sum_20250801_163229",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:30:32.447513 - 2025-08-01T16:32:29.068139",
-      "topics": [
-        "document_analysis"
-      ],
-      "created_at": "2025-08-01T16:32:29.068450"
-    },
-    {
-      "summary_id": "sum_20250801_163631",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:31:01.845134 - 2025-08-01T16:36:31.635784",
-      "topics": [
-        "document_analysis"
-      ],
-      "created_at": "2025-08-01T16:36:31.636292"
-    },
-    {
-      "summary_id": "sum_20250801_163902",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:32:41.059644 - 2025-08-01T16:39:02.815391",
-      "topics": [
-        "document_analysis"
-      ],
-      "created_at": "2025-08-01T16:39:02.815786"
-    },
-    {
-      "summary_id": "sum_20250801_163956",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: document_analysis, search_queries, financial",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:37:15.085043 - 2025-08-01T16:39:56.687035",
+      "timespan": "2025-08-04T22:21:03.044272 - 2025-08-04T22:53:08.256922",
       "topics": [
         "document_analysis",
         "search_queries",
         "financial"
       ],
-      "created_at": "2025-08-01T16:39:56.687585"
+      "created_at": "2025-08-04T22:53:08.257075"
     },
     {
-      "summary_id": "sum_20250801_164152",
-      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: document_analysis, search_queries, financial",
+      "summary_id": "sum_20250804_230104",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
       "original_message_count": 11,
-      "timespan": "2025-08-01T16:39:17.156899 - 2025-08-01T16:41:52.006746",
-      "topics": [
-        "document_analysis",
-        "search_queries",
-        "financial"
-      ],
-      "created_at": "2025-08-01T16:41:52.007158"
-    },
-    {
-      "summary_id": "sum_20250801_181044",
-      "content": "Conversation with 7 user queries and 4 assistant responses. Key topics: document_analysis, financial",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:40:15.989637 - 2025-08-01T18:10:44.076242",
-      "topics": [
-        "document_analysis",
-        "financial"
-      ],
-      "created_at": "2025-08-01T18:10:44.077547"
-    },
-    {
-      "summary_id": "sum_20250801_181211",
-      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, document_analysis, financial",
-      "original_message_count": 11,
-      "timespan": "2025-08-01T16:42:02.638458 - 2025-08-01T18:12:11.506225",
+      "timespan": "2025-08-04T22:32:52.516720 - 2025-08-04T23:01:04.704098",
       "topics": [
         "risk_factors",
-        "document_analysis",
-        "financial"
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
       ],
-      "created_at": "2025-08-01T18:12:11.506915"
+      "created_at": "2025-08-04T23:01:04.712929"
+    },
+    {
+      "summary_id": "sum_20250804_231118",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T22:53:08.326008 - 2025-08-04T23:11:18.968078",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:11:18.983220"
+    },
+    {
+      "summary_id": "sum_20250804_231233",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T23:02:18.392674 - 2025-08-04T23:12:33.196423",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:12:33.198039"
+    },
+    {
+      "summary_id": "sum_20250804_231743",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T23:11:23.094934 - 2025-08-04T23:17:43.438353",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:17:43.442794"
+    },
+    {
+      "summary_id": "sum_20250804_231939",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: capital, document_analysis, search_queries, financial, reporting",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T23:14:57.910543 - 2025-08-04T23:19:39.110185",
+      "topics": [
+        "capital",
+        "document_analysis",
+        "search_queries",
+        "financial",
+        "reporting"
+      ],
+      "created_at": "2025-08-04T23:19:39.110533"
+    },
+    {
+      "summary_id": "sum_20250804_232215",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, capital, document_analysis, search_queries",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T23:17:48.879122 - 2025-08-04T23:22:15.392952",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "capital",
+        "document_analysis",
+        "search_queries"
+      ],
+      "created_at": "2025-08-04T23:22:15.393168"
+    },
+    {
+      "summary_id": "sum_20250804_232435",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T23:20:10.554701 - 2025-08-04T23:24:35.635468",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-04T23:24:35.635769"
+    },
+    {
+      "summary_id": "sum_20250804_232604",
+      "content": "Conversation with 5 user queries and 6 assistant responses. Key topics: risk_factors, regulatory, compliance, capital, document_analysis",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T23:23:10.848326 - 2025-08-04T23:26:04.959017",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "capital",
+        "document_analysis"
+      ],
+      "created_at": "2025-08-04T23:26:04.959177"
+    },
+    {
+      "summary_id": "sum_20250804_232738",
+      "content": "Conversation with 6 user queries and 5 assistant responses. Key topics: risk_factors, regulatory, compliance, wrong_way_risk, capital",
+      "original_message_count": 11,
+      "timespan": "2025-08-04T23:24:44.407105 - 2025-08-04T23:27:38.415058",
+      "topics": [
+        "risk_factors",
+        "regulatory",
+        "compliance",
+        "wrong_way_risk",
+        "capital"
+      ],
+      "created_at": "2025-08-04T23:27:38.433747"
     }
   ]
 }

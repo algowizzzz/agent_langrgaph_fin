@@ -1,0 +1,9 @@
+{
+    "status": "success",
+    "operation": "summary",
+    "data": {
+        "message": "CSV data processed from document chunks",
+        "content_summary": "Found 1 chunks with CSV content",
+        "sample_content": ""
+    }
+}

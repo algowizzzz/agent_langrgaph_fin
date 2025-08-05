@@ -13,15 +13,26 @@ class Config:
 
     class AI:
         def __init__(self):
-            # The API key is now loaded from the environment
+            # API keys loaded from environment
             self.anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
+            self.openai_api_key = os.getenv("OPENAI_API_KEY")
+            self.gemini_api_key = os.getenv("GEMINI_API_KEY")
+            self.llm_provider = os.getenv("LLM_PROVIDER", "gemini").lower()  # Default to gemini
+            
+            # Model configurations
             self.anthropic_model = "claude-3-5-sonnet-20241022"
+            self.openai_model = "gpt-4o"
+            self.gemini_model = "gemini-1.5-flash"
+            
+            # Document chunking settings for ~10k tokens  
+            self.chunk_size = 40000  # ~10,000 tokens (4 chars per token average)
+            self.chunk_overlap = 2000  # Better context overlap for large chunks
 
     class API:
         def __init__(self):
             self.host = "0.0.0.0"
             self.port = 8000
-            self.cors_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+            self.cors_origins = ["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000", "http://127.0.0.1:3001"]
 
     class Logging:
         def __init__(self):
@@ -30,12 +41,14 @@ class Config:
 
     class Upload:
         def __init__(self):
-            self.allowed_extensions = ['.pdf', '.docx', '.csv', '.txt']
+            self.allowed_extensions = ['.pdf', '.docx', '.csv', '.txt', '.xlsx', '.xls']
             self.allowed_mime_types = [
                 'application/pdf',
                 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
                 'text/csv',
-                'text/plain'
+                'text/plain',
+                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',  # .xlsx
+                'application/vnd.ms-excel'  # .xls
             ]
             self.max_file_size_mb = 200
 
